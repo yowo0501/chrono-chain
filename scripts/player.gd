@@ -50,7 +50,7 @@ func _process(_delta: float) -> void:
 	if dir == "":
 		return
 	facing = dir
-	var target := grid_pos + DIR_VECTOR[dir]
+	var target: Vector2i = grid_pos + DIR_VECTOR[dir]
 	if field != null and field.is_blocked(target):
 		_update_sprite(false)
 		return
