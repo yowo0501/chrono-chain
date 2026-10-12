@@ -30,6 +30,7 @@ var facing := "down"
 var _moving := false
 var _step := 0
 var _tween: Tween = null
+var input_locked := false
 
 
 func _ready() -> void:
@@ -37,6 +38,11 @@ func _ready() -> void:
 	grid_pos = Vector2i(round(position.x / TILE_SIZE), round(position.y / TILE_SIZE))
 	position = Vector2(grid_pos.x * TILE_SIZE, grid_pos.y * TILE_SIZE)
 	_update_sprite(false)
+	var camera := get_node_or_null("Camera2D") as Camera2D
+	if camera != null and field != null:
+		camera.position = Vector2(8, 8)
+		camera.limit_right = field.width() * TILE_SIZE
+		camera.limit_bottom = field.height() * TILE_SIZE
 
 
 func _unhandled_input(_event: InputEvent) -> void:
@@ -44,7 +50,7 @@ func _unhandled_input(_event: InputEvent) -> void:
 
 
 func _process(_delta: float) -> void:
-	if _moving:
+	if _moving or input_locked:
 		return
 	var dir := _read_direction()
 	if dir == "":
@@ -82,6 +88,8 @@ func _move_to(target: Vector2i) -> void:
 
 func _on_move_finished() -> void:
 	_moving = false
+	_update_sprite(false)
+	EncounterManager.step_completed(self)
 
 
 func _update_sprite(walking: bool) -> void:

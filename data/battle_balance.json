@@ -1,0 +1,10 @@
+{
+  "heroes": [
+    {"id": "chuheun", "name": "강추흔", "max_hp": 120, "attack": 24},
+    {"id": "yeonwoo", "name": "김연우", "max_hp": 100, "attack": 28}
+  ],
+  "monster": {"id": "shadow", "name": "그림자", "max_hp": 90, "attack": 16},
+  "monster_count": 2,
+  "encounter": {"safe_steps": 8, "chance_per_step": 0.12, "maximum_steps": 28},
+  "qte": {"duration": 3.2, "round_trips": 2, "perfect_half_width": 0.065}
+}
