@@ -12,6 +12,10 @@ var player: Node2D
 var screen: Control
 var overlay: CanvasLayer
 var transition: Control
+var armored_encounter := false
+
+func choose_armored(roll: float) -> bool:
+	return roll < 1.0 / 3.0
 
 func _ready() -> void:
 	rng.randomize()
@@ -23,6 +27,9 @@ func reset_party() -> void:
 	for hero in party:
 		hero.hp = hero.max_hp
 		hero.guarding = false
+		hero.attack_stacks = 0
+		hero.defense_stacks = 0
+		hero.focus_stacks = 0
 
 func should_encounter(completed_steps: int, roll: float) -> bool:
 	var settings: Dictionary = balance.encounter
@@ -45,6 +52,7 @@ func start_battle(walker: Node2D) -> void:
 	player.input_locked = true
 	steps = 0
 	encounters += 1
+	armored_encounter = choose_armored(rng.randf())
 	overlay = CanvasLayer.new()
 	overlay.layer = 50
 	add_child(overlay)
@@ -58,7 +66,7 @@ func _on_transition_covered() -> void:
 	if not active or not is_instance_valid(overlay):
 		return
 	screen = BattleScreen.new()
-	screen.setup(party, balance, rng)
+	screen.setup(party, balance, rng, armored_encounter)
 	screen.battle_finished.connect(_finish_battle)
 	screen.process_mode = Node.PROCESS_MODE_DISABLED
 	overlay.add_child(screen)
@@ -79,6 +87,9 @@ func _finish_battle(won: bool) -> void:
 		for hero in party:
 			hero.hp = hero.max_hp
 			hero.guarding = false
+			hero.attack_stacks = 0
+			hero.defense_stacks = 0
+			hero.focus_stacks = 0
 	if is_instance_valid(overlay):
 		overlay.queue_free()
 	screen = null

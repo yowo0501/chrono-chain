@@ -22,7 +22,10 @@ func fixture() -> Control:
 	var s := Screen.new()
 	var random := RandomNumberGenerator.new()
 	random.seed = 71
-	s.setup(manager.party.duplicate(true), manager.balance, random)
+	# This regression fixture models two enemy actions; live encounters use three.
+	var settings: Dictionary = manager.balance.duplicate(true)
+	settings.monster_count = 2
+	s.setup(manager.party.duplicate(true), settings, random)
 	root.add_child(s)
 	s.set_process(false)
 	s.advance(1.1)

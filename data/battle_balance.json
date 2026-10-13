@@ -4,7 +4,14 @@
     {"id": "yeonwoo", "name": "김연우", "max_hp": 100, "attack": 28}
   ],
   "monster": {"id": "shadow", "name": "그림자", "max_hp": 90, "attack": 16},
-  "monster_count": 2,
+  "monster_count": 3,
+  "armored_monster": {"id": "armored_shadow", "name": "중장 그림자", "max_hp": 480, "attack": 20, "action_interval": 2},
+  "timer": {"attack_cost": 2, "focus_cost": 2, "qte_duration": 1.8, "qte_half_width": 0.10, "spear_multipliers": [0, 3, 5, 7], "lightning_multipliers": [0, 2, 3, 5]},
+  "special_skills": {
+    "chuheun": [{"id": "timer", "name": "타이머", "cost": {"attack": 2, "defense": 0, "focus": 2}, "target": "single"}],
+    "yeonwoo": [{"id": "assassin", "name": "어쌔신 스텝", "cost": {"attack": 1, "defense": 2, "focus": 1}, "target": "all"}]
+  },
+  "assassin": {"qte_duration": 1.8, "qte_half_width": 0.10, "damage_multiplier": 6},
   "encounter": {"safe_steps": 8, "chance_per_step": 0.12, "maximum_steps": 28},
   "qte": {"duration": 3.2, "round_trips": 2, "perfect_half_width": 0.065}
 }
