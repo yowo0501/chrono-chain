@@ -6,6 +6,9 @@ signal finished
 enum Stage { PREP, JUMP, CHAIN, MORPH, AIM, THROW, FLIGHT, WAIT, LIGHTNING, LAND, CONFUSED, FALL, FLAT, RECOVER, DONE }
 const BLUE := Color("61cfff")
 const WHITE := Color("e9faff")
+# The generated special atlas has larger anatomy than the regular 384x240 cells.
+# Normalize its source pixels, then use the same world scale as regular actors.
+const ATLAS_TO_ACTOR := 0.60
 const LABELS := ["도약", "체인 변환", "조준 · 투척"]
 # Explicit atlas regions follow the generated gutters (the source is not a
 # mathematically uniform grid). This prevents neighboring feet/chain fragments.
@@ -115,6 +118,8 @@ func _enter(next: int) -> void:
 		finished.emit()
 
 func draw(screen) -> void:
+	var art_scale: float = screen.ACTOR_SCALE * ATLAS_TO_ACTOR
+	var relative_scale := art_scale / 0.62
 	var sky := origin + Vector2(95, -155)
 	var actor := sky
 	var frame := 0
@@ -135,17 +140,17 @@ func draw(screen) -> void:
 		Stage.MORPH:
 			motion_frame = 4 + mini(int(elapsed / 0.88 * 8), 7)
 			var glow := sin(clampf(elapsed / 0.88, 0, 1) * PI)
-			screen.draw_circle(sky + Vector2(30, -110), 35 + glow * 35, Color(0.15, 0.6, 1, glow * 0.13))
+			screen.draw_circle(sky + Vector2(30, -110) * relative_scale, (35 + glow * 35) * relative_scale, Color(0.15, 0.6, 1, glow * 0.13))
 		Stage.AIM:
 			frame = 6
-			screen.draw_dashed_line(sky + Vector2(35, -65), target_position, Color(0.4, 0.8, 1, 0.45), 1, 7)
+			screen.draw_dashed_line(sky + Vector2(35, -65) * relative_scale, target_position, Color(0.4, 0.8, 1, 0.45), 1, 7)
 			screen.draw_arc(target_position, 24, 0, TAU, 24, BLUE, 2)
 		Stage.THROW:
 			frame = 6 if elapsed < 0.07 else (7 if elapsed < 0.15 else 8)
 			actor.x += smoothstep(0.0, 0.22, elapsed) * 12.0
 		Stage.FLIGHT:
 			frame = 7 if elapsed < 0.15 else 8
-			var start := sky + Vector2(45, -70)
+			var start := sky + Vector2(45, -70) * relative_scale
 			var pos := start.lerp(target_position, clampf(elapsed / 0.38, 0, 1))
 			_draw_spear(screen, pos, (target_position - start).angle())
 		Stage.WAIT, Stage.LIGHTNING:
@@ -162,7 +167,7 @@ func draw(screen) -> void:
 			frame = 10 if elapsed < 0.4 else 11
 		Stage.CONFUSED:
 			frame = 12
-			screen._label("?", sky + Vector2(15, -165), WHITE, 46)
+			screen._label("?", sky + Vector2(15, -165) * relative_scale, WHITE, 30)
 		Stage.FALL:
 			frame = 13
 			actor = sky.lerp(origin, pow(clampf(elapsed / 0.55, 0, 1), 2))
@@ -181,15 +186,20 @@ func draw(screen) -> void:
 		var tops := [0.0, 304.0, 543.0, 815.0]
 		var heights := [304.0, 239.0, 272.0, 271.0]
 		region = Rect2((motion_frame % 4) * 362, tops[row], 362, heights[row])
-	var dimensions: Vector2 = region.size * 0.62
-	screen.draw_texture_rect_region(active_texture, Rect2(actor - Vector2(dimensions.x * 0.5, dimensions.y * 0.98), dimensions), region)
+	var dimensions: Vector2 = region.size * art_scale
+	if motion_frame < 0 and frame == 11:
+		# Resume the regular standing sprite before handing the turn back.
+		screen._frame(screen.calm_idle_texture, 0, 3, 2, Rect2(actor - screen.FOOT_ANCHOR * screen.ACTOR_SCALE, screen.ANIMATION_CELL * screen.ACTOR_SCALE))
+	else:
+		screen.draw_texture_rect_region(active_texture, Rect2(actor - Vector2(dimensions.x * 0.5, dimensions.y * 0.98), dimensions), region)
 	if feedback_time > 0:
 		screen._label(feedback, Vector2(335, 158), BLUE if feedback == "SUCCESS" else Color("ffb35a"), 21)
 
 func _draw_spear(screen, center: Vector2, angle: float) -> void:
 	var points := PackedVector2Array()
+	var weapon_scale: float = screen.ACTOR_SCALE * ATLAS_TO_ACTOR / 0.62
 	for corner in [Vector2(-90, -65), Vector2(90, -65), Vector2(90, 65), Vector2(-90, 65)]:
-		points.append(center + corner.rotated(angle))
+		points.append(center + (corner * weapon_scale).rotated(angle))
 	var region: Rect2 = REGIONS[15]
 	var tex_size: Vector2 = texture.get_size()
 	var uv_start := region.position / tex_size

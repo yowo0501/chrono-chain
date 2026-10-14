@@ -121,7 +121,7 @@ func _ready() -> void:
 	timer_motion_texture = load("res://assets/sprites/battle/chuheun-timer-v2.png")
 	focus_texture = load("res://assets/sprites/battle/focus.png")
 	assassin_texture = load("res://assets/sprites/battle/yeonwoo-assassin.png")
-	eyes_texture = load("res://assets/sprites/battle/yeonwoo-eyes.png")
+	eyes_texture = load("res://assets/sprites/battle/yeonwoo-eyes-v2.png")
 	_resize()
 	get_viewport().size_changed.connect(_resize)
 	_schedule(1.0, _start_party_turn)

@@ -5,6 +5,8 @@ signal finished
 enum Stage { MORPH, CUTIN, VANISH, QTE, MARK, RETURN, YAWN, SLASHES, EMBARRASSED, RECOVER, DONE }
 const BLUE := Color("61cfff")
 const WHITE := Color("e9faff")
+const CUTIN_WIDTH := 192.0
+const CUTIN_MAX_HEIGHT := 64.0 # Bounding box is 2.38% of the 768 x 672 canvas.
 var stage := Stage.MORPH
 var elapsed := 0.0
 var settings: Dictionary
@@ -16,6 +18,7 @@ var target_cursor := 0
 var damage := 0
 var texture: Texture2D
 var eyes: Texture2D
+var eyes_region := Rect2()
 
 func setup(config: Dictionary, power: int, from: Vector2, living: Array, atlas: Texture2D, cutin: Texture2D) -> void:
 	settings = config
@@ -23,6 +26,7 @@ func setup(config: Dictionary, power: int, from: Vector2, living: Array, atlas: 
 	targets = living.duplicate()
 	texture = atlas
 	eyes = cutin
+	eyes_region = Rect2(eyes.get_image().get_used_rect())
 	damage = roundi(power * float(config.damage_multiplier))
 
 func is_qte() -> bool:
@@ -114,9 +118,11 @@ func draw(screen) -> void:
 			_actor(screen, mini(int(elapsed / 0.65 * 4), 3), origin)
 		Stage.CUTIN:
 			_actor(screen, 4, origin)
-			screen.draw_rect(Rect2(0, 96, 768, 390), Color(0.01, 0.03, 0.06, 0.6))
-			var slide := (1.0 - smoothstep(0.0, 0.13, elapsed)) * -800.0 + smoothstep(0.51, 0.65, elapsed) * 800.0
-			screen.draw_texture_rect(eyes, Rect2(slide - 16, 156, 800, 267), false)
+			var appear := smoothstep(0.0, 0.13, elapsed)
+			var disappear := smoothstep(0.51, 0.65, elapsed)
+			var height := minf(CUTIN_MAX_HEIGHT, CUTIN_WIDTH * eyes_region.size.y / maxf(1.0, eyes_region.size.x))
+			var at := origin + Vector2(24 - (1.0 - appear) * 16 + disappear * 16, -172)
+			screen.draw_texture_rect_region(eyes, Rect2(at, Vector2(CUTIN_WIDTH, height)), eyes_region, Color(1, 1, 1, appear * (1.0 - disappear)))
 		Stage.VANISH:
 			var p := clampf(elapsed / 0.24, 0, 1)
 			for i in 3:

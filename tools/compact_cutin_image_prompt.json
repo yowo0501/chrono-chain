@@ -1,0 +1,6 @@
+{
+  "mode": "built-in image_gen",
+  "reference": "assets/sprites/battle/yeonwoo.png",
+  "output": "assets/sprites/battle/yeonwoo-eyes-v2.png",
+  "prompt": "Use case: stylized-concept. Create a SMALL, understated pixel-art eye cut-in for the woman Kim Yeonwoo shown in the reference battle sprite sheet. The reference image is the identity AND drawing style reference. Match her simple dark eyes, black straight bangs, pale warm skin, restrained expression and existing classic JRPG pixel sprite palette. This is NOT a glossy anime illustration: no detailed irises, no eyelashes glamour, no painterly shading, no sharp comic ink explosion, no lightning, no decorative shards. Two calm focused dark eyes and black bangs across a short horizontal rectangular band, slight 3/4 turn facing right. Compose as a 3:1 wide strip, intended to be displayed at only 192x64 pixels. Use chunky visible square pixel clusters, limited flat colors, 2-3 shading tones per material, modest simple facial features like the attached in-game sprites. Edge is a simple dark navy pixel border with very small muted blue accents. Transparent outside the strip; no text or logos. Keep this a quiet restrained portrait crop that naturally belongs next to the attached sprites."
+}
