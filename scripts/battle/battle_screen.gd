@@ -4,6 +4,7 @@ signal battle_finished(won: bool)
 const Rules = preload("res://scripts/battle/battle_rules.gd")
 const TimerSkill = preload("res://scripts/battle/timer_skill.gd")
 const AssassinSkill = preload("res://scripts/battle/assassin_skill.gd")
+const SupportSkill = preload("res://scripts/battle/support_skill.gd")
 const DESIGN := Vector2(768, 672)
 const INK := Color("0c1220")
 const PAPER := Color("e9edf4")
@@ -11,9 +12,11 @@ const MUTED := Color("97a7bc")
 const ORANGE := Color("ffb35a")
 const BLUE := Color("61cfff")
 const GREEN := Color("66dfb0")
-const HERO_POS := [Vector2(200, 414), Vector2(92, 324)]
+const HERO_POS := [Vector2(265, 370), Vector2(265, 232), Vector2(150, 300), Vector2(150, 438)]
+const SHIELD_POS := Vector2(382, 270)
 const FOE_POS := [Vector2(475, 416), Vector2(587, 340), Vector2(694, 264)]
-const ACTOR_SCALE := 0.75
+const FOUR_FOE_POS := [Vector2(475, 440), Vector2(660, 440), Vector2(475, 245), Vector2(660, 245)]
+const ACTOR_SCALE := 0.64
 const ANIMATION_CELL := Vector2(384, 240)
 const FOOT_ANCHOR := Vector2(128, 232)
 const SPECIAL_DURATION := 2.4
@@ -21,7 +24,7 @@ const FOCUS_DURATION := 1.0
 const CHUHEUN_IDLE_CYCLE := 1.6
 const YEONWOO_SPIN_CYCLE := 1.6
 const WINDUP_FRAMES := [8, 9, 10, 11, 12, 13]
-enum Phase { INTRO, COMMAND, TARGET, ATTACK_QTE, GUARD_QTE, RESOLVE, ENEMY, RESULT, TIMER, SKILLS, ASSASSIN }
+enum Phase { INTRO, COMMAND, TARGET, ATTACK_QTE, GUARD_QTE, RESOLVE, ENEMY, RESULT, TIMER, SKILLS, ASSASSIN, SUPPORT, BIND }
 
 var party: Array
 var enemies: Array = []
@@ -75,12 +78,76 @@ var assassin_cast: AssassinSkill
 var timer_motion_texture: Texture2D
 var focus_texture: Texture2D
 var assassin_texture: Texture2D
-var eyes_texture: Texture2D
 var skill_index := 0
 var target_action := "attack"
 var armored_encounter := false
+var field_context: Dictionary = {}
+var enemy_positions: Array[Vector2] = []
+var reveal_remaining := 0.0
+var boss_dark := false
+var boss_last_move_round := 0
+var support_cast: SupportSkill
+var shield_skip_round := -1
+var known_markers: Dictionary = {}
+var bind_elapsed := 0.0
+var bind_stage := 0
+var bind_targets: Array[int] = []
+var bind_trials: Dictionary = {}
+var swing_elapsed := 0.0
+var swing_damage := 0
+
+func marker_opacity(index: int, force: bool = false) -> float:
+	return 1.0 if force or known_markers.has(index) else visibility_strength()
+
+func remember_position_hit(cursor: float) -> int:
+	var hit := position_hit(cursor)
+	if hit >= 0:
+		known_markers[hit] = true
+	return hit
+
+var seola_shield_texture: Texture2D = load("res://assets/sprites/battle/seola-shield.png")
+var seola_overhead_texture: Texture2D = load("res://assets/sprites/battle/seola-overhead.png")
+
+func hero_position(index: int) -> Vector2:
+	if index == 2 and int(party[index].get("shield_turns", 0)) > 0 and int(party[index].hp) > 0:
+		return SHIELD_POS
+	return HERO_POS[index]
+
+func darkness_active() -> bool:
+	return boss_dark or not bool(field_context.get("light", true))
+
+func visibility_strength() -> float:
+	return 1.0 if not darkness_active() else clampf(reveal_remaining / 2.0, 0.0, 1.0)
+
+func reveal(seconds: float) -> void:
+	reveal_remaining = maxf(reveal_remaining, seconds)
+
+func position_hit(cursor: float) -> int:
+	return Rules.position_hit(cursor, enemy_positions, Rules.living(enemies), float(balance.qte.position_half_width))
+
+func _place_enemies() -> void:
+	enemy_positions.clear()
+	var slots: Array[float] = [250.0, 299.0, 348.0, 397.0, 443.0]
+	for i in enemies.size():
+		var slot := rng.randi_range(0, slots.size() - 1)
+		var y: float = slots[slot] + rng.randf_range(-5, 5)
+		slots.remove_at(slot)
+		var band := roundi((y-250.0)/49.0)
+		enemy_positions.append(Vector2(485 if band%2 == 0 else 640, y))
+
+func _boss_phase_check() -> void:
+	if not field_context.get("boss", false) or enemies.is_empty() or int(enemies[0].hp) <= 0:
+		return
+	if not boss_dark and float(enemies[0].hp) / enemies[0].max_hp <= float(balance.boss_phase.dark_hp_fraction):
+		boss_dark = true
+		reveal_remaining = 0
+		message = "보스가 빛을 삼켰다 · 위치 판정이 어둠에 숨었다"
+
+func foe_position(index: int) -> Vector2:
+	return enemy_positions[index]
 
 func setup(heroes: Array, settings: Dictionary, random: RandomNumberGenerator, armored: bool = false) -> void:
+	known_markers.clear()
 	party = heroes
 	balance = settings
 	rng = random
@@ -88,27 +155,29 @@ func setup(heroes: Array, settings: Dictionary, random: RandomNumberGenerator, a
 	for hero in party:
 		hero.guarding = false
 		for stack_name in ["attack_stacks", "defense_stacks", "focus_stacks"]:
-			if not hero.has(stack_name):
-				hero[stack_name] = 0
+			hero[stack_name] = clampi(int(hero.get(stack_name, 0)), 0, int(balance.stack_cap))
+		hero.shield_turns = 0
 	for i in int(balance.monster_count):
 		var enemy: Dictionary = (balance.armored_monster if armored else balance.monster).duplicate(true)
 		enemy.hp = enemy.max_hp
+		enemy.bind_turns = 0
 		enemy.name += " " + str(i + 1)
 		enemies.append(enemy)
 	message = "그림자 %d마리 출현" % enemies.size()
 	if armored:
 		heading = "중장 그림자가 앞을 가로막았다"
 		message = "중장 그림자 %d마리 출현 · 두 라운드마다 공격" % enemies.size()
+	_place_enemies()
 
 func _ready() -> void:
 	font = SystemFont.new()
 	font.font_names = PackedStringArray(["Malgun Gothic", "Noto Sans CJK KR", "Arial"])
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	for id in ["chuheun", "yeonwoo"]:
+	for id in ["chuheun", "yeonwoo", "seola", "wiseong"]:
 		textures.append(load("res://assets/sprites/battle/" + id + ".png"))
-		motion_textures.append(load("res://assets/sprites/battle/" + id + "-motion.png"))
-		expressive_textures.append(load("res://assets/sprites/battle/" + id + "-expressive.png"))
+		motion_textures.append(load("res://assets/sprites/battle/" + id + "-motion.png") if id in ["chuheun", "yeonwoo"] else null)
+		expressive_textures.append(load("res://assets/sprites/battle/" + id + "-expressive.png") if id in ["chuheun", "yeonwoo"] else null)
 	chain_texture = load("res://assets/sprites/battle/chain-extension.png")
 	calm_idle_texture = load("res://assets/sprites/battle/chuheun-idle-calm.png")
 	fixed_windup_body = load("res://assets/sprites/battle/yeonwoo-windup-body.png")
@@ -121,7 +190,6 @@ func _ready() -> void:
 	timer_motion_texture = load("res://assets/sprites/battle/chuheun-timer-v2.png")
 	focus_texture = load("res://assets/sprites/battle/focus.png")
 	assassin_texture = load("res://assets/sprites/battle/yeonwoo-assassin.png")
-	eyes_texture = load("res://assets/sprites/battle/yeonwoo-eyes-v2.png")
 	_resize()
 	get_viewport().size_changed.connect(_resize)
 	_schedule(1.0, _start_party_turn)
@@ -136,6 +204,20 @@ func _process(delta: float) -> void:
 	advance(delta)
 
 func advance(delta: float) -> void:
+	if phase == Phase.BIND:
+		_advance_bind(delta)
+		queue_redraw()
+		return
+	if action_kind == "shield_swing_return" and phase == Phase.RESOLVE:
+		swing_elapsed += delta
+		if swing_elapsed >= 0.7 and swing_damage >= 0:
+			enemies[target_index].hp = maxi(0,int(enemies[target_index].hp)-swing_damage)
+			hurt_enemy = target_index if swing_damage > 0 else -1
+			_effect(str(swing_damage) if swing_damage > 0 else "?",foe_position(target_index),swing_damage > 0)
+			swing_damage = -1
+	if phase != Phase.RESULT:
+		reveal_remaining = maxf(0.0, reveal_remaining - delta)
+	_boss_phase_check()
 	if not (phase == Phase.ASSASSIN and assassin_cast.is_qte()):
 		clock += delta
 	if action_kind == "focus" and phase == Phase.RESOLVE:
@@ -149,6 +231,10 @@ func advance(delta: float) -> void:
 		return
 	if phase == Phase.TIMER:
 		timer_cast.advance(delta)
+		queue_redraw()
+		return
+	if phase == Phase.SUPPORT:
+		support_cast.advance(delta)
 		queue_redraw()
 		return
 	if phase in [Phase.ATTACK_QTE, Phase.GUARD_QTE]:
@@ -225,7 +311,7 @@ func chain_points(index: int, elapsed: float) -> PackedVector2Array:
 		return PackedVector2Array()
 	var join: Array = joins[str(frame)]
 	var start := attack_anchor(index) + Vector2(join[0], join[1]) * ACTOR_SCALE
-	var end: Vector2 = FOE_POS[target_index] + Vector2(-24, -105) * ACTOR_SCALE
+	var end: Vector2 = foe_position(target_index) + Vector2(-24, -105) * ACTOR_SCALE
 	var reach := smoothstep(0.10, 0.20, elapsed) * (1.0 - smoothstep(0.40, 0.54, elapsed))
 	if reach <= 0.001:
 		return PackedVector2Array()
@@ -247,7 +333,7 @@ func _schedule(seconds: float, callback: Callable) -> void:
 
 func _start_party_turn() -> void:
 	for hero in party:
-		hero.guarding = false
+		hero.guarding = int(hero.get("shield_turns", 0)) > 0
 	hero_index = 0
 	_next_hero()
 
@@ -263,6 +349,15 @@ func _next_hero() -> void:
 		message = "그림자가 움직인다"
 		_schedule(0.55, _enemy_action)
 		return
+	if int(party[hero_index].get("shield_turns", 0)) > 0:
+		party[hero_index].guarding = true
+		action_kind = "guard"
+		action_index = hero_index
+		phase = Phase.RESOLVE
+		heading = str(party[hero_index].name) + " / 방패 전개"
+		message = "자동 수비 · 스택 획득 없음"
+		_schedule(0.65, _after_hero)
+		return
 	phase = Phase.COMMAND
 	command_index = 0
 	action_kind = ""
@@ -276,12 +371,10 @@ func select_command(index: int) -> void:
 		return
 	if index == 0:
 		target_action = "attack"
-		phase = Phase.TARGET
-		target_index = Rules.living(enemies)[0]
-		message = "공격할 그림자를 선택하세요"
+		_begin_attack()
 	elif index == 1:
 		party[hero_index].guarding = true
-		party[hero_index].defense_stacks += 1
+		_gain_stack(hero_index, "defense")
 		action_kind = "guard"
 		action_index = hero_index
 		message = str(party[hero_index].name) + "의 방어 태세"
@@ -289,7 +382,7 @@ func select_command(index: int) -> void:
 		_schedule(0.55, _after_hero)
 	elif index == 2:
 		var hero: Dictionary = party[hero_index]
-		hero.focus_stacks += 1
+		_gain_stack(hero_index, "focus")
 		action_kind = "focus"
 		action_index = hero_index
 		focus_elapsed = 0.0
@@ -335,6 +428,40 @@ func select_skill(index: int) -> void:
 		message = str(skill.name) + " 대상을 선택하세요"
 	elif target_action == "assassin":
 		_begin_assassin(skill)
+	elif target_action == "timer":
+		target_index = Rules.living(enemies)[0]
+		_begin_timer()
+	elif target_action == "shield_swing":
+		_pay_skill(skill)
+		phase = Phase.SUPPORT
+		action_kind = "swing_prepare"
+		action_index = hero_index
+		support_cast = SupportSkill.new()
+		support_cast.kind = "swing_prepare"
+		support_cast.finished.connect(_begin_attack)
+		heading = "강설아 / 크게 휘두르기"
+		delay = 0
+		pending = Callable()
+	elif target_action == "bind":
+		_pay_skill(skill)
+		phase = Phase.BIND
+		bind_stage = 0
+		bind_elapsed = 0
+		bind_targets.clear()
+		bind_trials.clear()
+		action_kind = "bind"
+		action_index = hero_index
+		heading = "장위성 / 바인드"
+		delay = 0
+		pending = Callable()
+	elif target_action in ["shield", "illuminate"]:
+		_begin_support(skill)
+	elif target_action == "thunder":
+		_begin_support(skill)
+	elif target_action == "heal":
+		phase = Phase.TARGET
+		target_index = hero_index
+		message = "회복할 아군을 선택하세요"
 
 func _back_to_commands() -> void:
 	phase = Phase.COMMAND
@@ -372,7 +499,7 @@ func _begin_timer() -> void:
 	delay = 0.0
 	pending = Callable()
 	timer_cast = TimerSkill.new()
-	timer_cast.setup(balance.timer, int(hero.attack), HERO_POS[hero_index], FOE_POS[target_index], timer_texture)
+	timer_cast.setup(balance.timer, int(hero.attack), HERO_POS[hero_index], foe_position(target_index), timer_texture)
 	timer_cast.motion_texture = timer_motion_texture
 	timer_cast.spear_hit.connect(_timer_spear_hit)
 	timer_cast.lightning_hit.connect(_timer_lightning_hit)
@@ -392,7 +519,8 @@ func _begin_assassin(skill: Dictionary) -> void:
 	delay = 0.0
 	pending = Callable()
 	assassin_cast = AssassinSkill.new()
-	assassin_cast.setup(balance.assassin, int(party[hero_index].attack), HERO_POS[hero_index], Rules.living(enemies), assassin_texture, eyes_texture)
+	assassin_cast.setup(balance.assassin, int(party[hero_index].attack), HERO_POS[hero_index], Rules.living(enemies), assassin_texture)
+	assassin_cast.target_resolver = remember_position_hit
 	assassin_cast.damage_hit.connect(_assassin_damage)
 	assassin_cast.finished.connect(_after_hero)
 	heading = "김연우  /  특수 · 어쌔신 스텝"
@@ -403,27 +531,79 @@ func _assassin_damage() -> void:
 	shake_time = 0.3
 
 func _timer_spear_hit() -> void:
-	enemies[target_index].hp = maxi(0, int(enemies[target_index].hp) - int(timer_cast.spear_damage))
-	hurt_enemy = target_index
-	_effect(str(timer_cast.spear_damage), FOE_POS[target_index], false)
+	# The planted spear is a conductor; the area lightning carries the damage.
+	shake_time = 0.12
 
 func _timer_lightning_hit() -> void:
 	for enemy in enemies:
 		enemy.hp = maxi(0, int(enemy.hp) - int(timer_cast.lightning_damage))
 	fx_time = 0.0
 	shake_time = 0.75
+	_boss_phase_check()
+	reveal(float(balance.timer.reveal_seconds))
+
+func _begin_support(skill: Dictionary) -> void:
+	if not can_use_skill(skill):
+		return
+	_pay_skill(skill)
+	phase = Phase.SUPPORT
+	action_kind = str(skill.id)
+	action_index = hero_index
+	special_actor = -1
+	delay = 0
+	pending = Callable()
+	support_cast = SupportSkill.new()
+	fx_time = 0.0
+	shake_time = 0.0
+	hurt_enemy = -1
+	hurt_hero = -1
+	support_cast.kind = action_kind
+	support_cast.target = target_index
+	support_cast.effect.connect(_support_effect)
+	support_cast.finished.connect(_after_hero)
+	heading = str(party[hero_index].name) + " / " + str(skill.name)
+
+func _support_effect() -> void:
+	if action_kind == "thunder":
+		var damage := roundi(int(party[hero_index].attack) * float(balance.thunder.damage_multiplier))
+		for enemy in enemies:
+			enemy.hp = maxi(0, int(enemy.hp) - damage)
+		_boss_phase_check()
+		reveal(float(balance.thunder.reveal_seconds))
+		shake_time = 0.3
+	elif action_kind == "shield":
+		party[hero_index].shield_turns = int(balance.shield.turns)
+		party[hero_index].guarding = true
+		shield_skip_round = round_number
+		shake_time = 0.3
+	elif action_kind == "illuminate":
+		reveal(float(balance.illuminate.reveal_seconds))
+	else:
+		var hero: Dictionary = party[target_index]
+		var before := int(hero.hp)
+		hero.hp = mini(int(hero.max_hp), before + ceili(int(hero.max_hp) * float(balance.heal.max_hp_fraction)))
+		_effect("+%d" % (int(hero.hp) - before), hero_position(target_index), false)
 
 func confirm_target() -> void:
-	if phase != Phase.TARGET or int(enemies[target_index].hp) <= 0:
+	if phase != Phase.TARGET:
 		return
-	if target_action == "timer":
-		_begin_timer()
+	if target_action == "heal":
+		if int(party[target_index].hp) >= int(party[target_index].max_hp):
+			message = "이미 체력이 가득 찼습니다"
+			return
+		_begin_support(skills()[skill_index])
 		return
+	_begin_attack()
+
+func _begin_attack() -> void:
+	target_index = Rules.living(enemies)[0]
+	if target_action == "shield_swing":
+		heading = str(party[hero_index].name) + " / 크게 휘두르기"
 	phase = Phase.ATTACK_QTE
 	qte_elapsed = 0.0
 	action_kind = "windup"
 	action_index = hero_index
-	message = "중앙에 닿는 순간 SPACE"
+	message = "적의 위치선에 SPACE · 왼쪽은 상단, 오른쪽은 하단"
 
 func _resolve_qte(pressed: bool) -> void:
 	if phase not in [Phase.ATTACK_QTE, Phase.GUARD_QTE]:
@@ -434,18 +614,44 @@ func _resolve_qte(pressed: bool) -> void:
 	last_grade = result
 	phase = Phase.RESOLVE
 	if was_attack:
-		party[hero_index].attack_stacks += 1
+		var cursor := Rules.cursor_at(qte_elapsed, float(balance.qte.duration), int(balance.qte.round_trips))
+		var hit := position_hit(cursor) if pressed and qte_elapsed < float(balance.qte.duration) else -1
+		if hit >= 0:
+			known_markers[hit] = true
+		result = "perfect" if hit >= 0 else "miss"
+		last_grade = result
+		target_index = hit if hit >= 0 else Rules.living(enemies)[0]
+		if target_action != "shield_swing":
+			_gain_stack(hero_index, "attack")
 		var damage := Rules.attack_damage(int(party[hero_index].attack), result)
-		enemies[target_index].hp = maxi(0, int(enemies[target_index].hp) - damage)
+		if target_action == "shield_swing":
+			damage = roundi(damage * float(balance.shield_swing.damage_multiplier))
+		if target_action != "shield_swing":
+			enemies[target_index].hp = maxi(0, int(enemies[target_index].hp) - damage)
 		action_kind = "attack"
 		action_index = hero_index
 		hurt_enemy = target_index if damage > 0 else -1
 		hurt_hero = -1
 		var label := "CRITICAL HIT!" if result == "perfect" else ("HIT" if damage > 0 else "MISS")
 		message = label + "  ·  " + str(damage)
-		_effect(str(damage) if damage > 0 else "?", FOE_POS[target_index] if damage > 0 else HERO_POS[hero_index], result == "perfect")
-		_schedule(0.8, _after_hero)
+		_effect(str(damage) if damage > 0 else "?", foe_position(target_index) if damage > 0 else HERO_POS[hero_index], result == "perfect")
+		if target_action == "shield_swing":
+			action_kind = "shield_swing_return"
+			swing_elapsed = 0
+			swing_damage = damage
+			fx_time = 0
+			shake_time = 0
+			hurt_enemy = -1
+			_schedule(2.5, _after_hero)
+		else:
+			_schedule(0.8, _after_hero)
 	else:
+		var cursor := Rules.cursor_at(qte_elapsed,float(balance.qte.duration),int(balance.qte.round_trips))
+		var hit := Rules.position_hit(cursor,enemy_positions,[enemy_index],float(balance.qte.position_half_width)) if pressed and qte_elapsed < float(balance.qte.duration) else -1
+		result = "perfect" if hit >= 0 else "normal" if pressed and qte_elapsed < float(balance.qte.duration) else "miss"
+		last_grade = result
+		if hit >= 0:
+			known_markers[hit] = true
 		var damage: Dictionary = Rules.defense_damage(int(enemies[enemy_index].attack), result)
 		party[defending_index].hp = maxi(0, int(party[defending_index].hp) - int(damage.received))
 		enemies[enemy_index].hp = maxi(0, int(enemies[enemy_index].hp) - int(damage.reflected))
@@ -455,21 +661,46 @@ func _resolve_qte(pressed: bool) -> void:
 		action_index = enemy_index
 		message = ("COUNTER HIT!" if result == "perfect" else ("GUARD" if result == "normal" else "방어 실패"))
 		message += "  ·  " + str(damage.reflected if result == "perfect" else damage.received)
-		_effect(str(damage.reflected if result == "perfect" else damage.received), FOE_POS[enemy_index] if result == "perfect" else HERO_POS[defending_index], result == "perfect")
+		_effect(str(damage.reflected if result == "perfect" else damage.received), foe_position(enemy_index) if result == "perfect" else hero_position(defending_index), result == "perfect")
 		_schedule(0.8, _after_enemy)
 
 func _after_hero() -> void:
+	_boss_phase_check()
 	hero_index += 1
 	_next_hero()
 
 func _enemy_action() -> void:
 	if _check_end():
 		return
+	if field_context.get("boss", false) and enemy_index == 0 and int(enemies[0].get("bind_turns",0)) == 0 and round_number % int(balance.boss_phase.reposition_every_rounds) == 0 and boss_last_move_round != round_number:
+		boss_last_move_round = round_number
+		var old_y := enemy_positions[0].y
+		enemy_positions[0] = Vector2(rng.randf_range(510, 660), 260 if old_y > 340 else 430)
+		message = "보스가 자리를 옮겼다 · 공격 타이밍 변경"
+		_schedule(0.65, _enemy_action)
+		return
 	while enemy_index < enemies.size() and int(enemies[enemy_index].hp) <= 0:
 		enemy_index += 1
 	if enemy_index >= enemies.size():
+		var shield_expired := false
+		for hero in party:
+			if int(hero.get("shield_turns", 0)) > 0 and round_number != shield_skip_round:
+				hero.shield_turns -= 1
+				if int(hero.shield_turns) == 0 and int(hero.hp) > 0:
+					shield_expired = true
 		round_number += 1
-		_start_party_turn()
+		if shield_expired:
+			_begin_shield_return()
+		else:
+			_start_party_turn()
+		return
+	if int(enemies[enemy_index].get("bind_turns",0)) > 0:
+		enemies[enemy_index].bind_turns -= 1
+		phase = Phase.ENEMY
+		action_kind = "bound"
+		action_index = enemy_index
+		message = str(enemies[enemy_index].name)+" · 바인드로 행동 봉쇄"
+		_schedule(0.7,_after_enemy)
 		return
 	var interval := int(enemies[enemy_index].get("action_interval", 1))
 	if round_number % interval != 0:
@@ -481,6 +712,10 @@ func _enemy_action() -> void:
 		return
 	var targets := Rules.living(party)
 	defending_index = targets[rng.randi_range(0, targets.size() - 1)]
+	for candidate in targets:
+		if int(party[candidate].get("shield_turns", 0)) > 0:
+			defending_index = candidate
+			break
 	heading = "상대 턴  /  " + str(enemies[enemy_index].name)
 	action_kind = "enemy_windup"
 	action_index = enemy_index
@@ -492,7 +727,7 @@ func _enemy_strike() -> void:
 	if bool(party[defending_index].guarding):
 		phase = Phase.GUARD_QTE
 		qte_elapsed = 0.0
-		message = "중앙에 맞춰 SPACE · 반격 기회"
+		message = "공격해 오는 적의 위치선에 SPACE · 반격 기회"
 		return
 	var damage := int(enemies[enemy_index].attack)
 	party[defending_index].hp = maxi(0, int(party[defending_index].hp) - damage)
@@ -501,12 +736,26 @@ func _enemy_strike() -> void:
 	hurt_hero = defending_index
 	hurt_enemy = -1
 	message = str(party[defending_index].name) + "  ·  " + str(damage) + " 피해"
-	_effect(str(damage), HERO_POS[defending_index], false)
+	_effect(str(damage), hero_position(defending_index), false)
 	_schedule(0.7, _after_enemy)
 
 func _after_enemy() -> void:
 	enemy_index += 1
 	_enemy_action()
+
+func _begin_shield_return() -> void:
+	hero_index = 2
+	party[2].guarding = false
+	phase = Phase.SUPPORT
+	action_kind = "shield_return"
+	action_index = 2
+	delay = 0
+	pending = Callable()
+	hurt_hero = -1
+	support_cast = SupportSkill.new()
+	support_cast.kind = "shield_return"
+	support_cast.finished.connect(_start_party_turn)
+	heading = "강설아 / 방패 해제"
 
 func _check_end() -> bool:
 	if not Rules.living(party).is_empty() and not Rules.living(enemies).is_empty():
@@ -518,6 +767,8 @@ func _check_end() -> bool:
 	delay = 0.0
 	heading = "전투 승리" if won else "전투 불능"
 	message = "모두 회복한 뒤, 원래 위치로 돌아갑니다"
+	if not field_context.is_empty():
+		message = "모두 회복한 뒤 골목으로 돌아갑니다" if won else "모두 회복한 뒤 골목 입구로 돌아갑니다"
 	return true
 
 func _effect(value: String, where: Vector2, strong: bool) -> void:
@@ -532,7 +783,10 @@ func _effect(value: String, where: Vector2, strong: bool) -> void:
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		var key: int = event.physical_keycode if event.physical_keycode != 0 else event.keycode
-		if phase == Phase.TIMER:
+		if phase == Phase.BIND:
+			if key == KEY_SPACE:
+				_press_bind()
+		elif phase == Phase.TIMER:
 			if key == KEY_SPACE:
 				timer_cast.press()
 		elif phase == Phase.ASSASSIN:
@@ -559,7 +813,7 @@ func _input(event: InputEvent) -> void:
 				select_command(command_index)
 		elif phase == Phase.TARGET:
 			if key in [KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN]:
-				var choices := Rules.living(enemies)
+				var choices: Array = range(party.size()) if target_action == "heal" else Rules.living(enemies)
 				var direction := -1 if key in [KEY_LEFT, KEY_UP] else 1
 				target_index = choices[posmod(choices.find(target_index) + direction, choices.size())]
 			elif key in [KEY_ENTER, KEY_Z]:
@@ -593,8 +847,15 @@ func _input(event: InputEvent) -> void:
 			if Rect2(635, 510, 98, 26).has_point(point):
 				_cancel_target()
 				return
+			if target_action == "heal":
+				for i in party.size():
+					if Rect2(hero_position(i) - Vector2(45,82),Vector2(90,86)).has_point(point) or _ally_rect(i).has_point(point):
+						target_index = i
+						confirm_target()
+						break
+				return
 			for i in enemies.size():
-				if int(enemies[i].hp) > 0 and Rect2(FOE_POS[i] - Vector2(65, 180) * ACTOR_SCALE, Vector2(130, 225) * ACTOR_SCALE).has_point(point):
+				if int(enemies[i].hp) > 0 and Rect2(foe_position(i) - Vector2(65, 180) * ACTOR_SCALE, Vector2(130, 225) * ACTOR_SCALE).has_point(point):
 					target_index = i
 					confirm_target()
 					break
@@ -627,11 +888,17 @@ func _draw() -> void:
 		draw_set_transform(Vector2(sin(clock * 137) * 5, cos(clock * 109) * 4) * strength)
 	draw_rect(Rect2(-8, -8, 784, 688), INK)
 	_draw_city()
+	if darkness_active():
+		draw_rect(Rect2(0,96,768,390), Color(0,0,0,1.0-visibility_strength()))
 	_label("CHRONO CHAIN", Vector2(28, 34), MUTED, 14)
 	_label("ROUND %02d" % round_number, Vector2(627, 34), MUTED, 14)
 	_label(heading, Vector2(28, 73), PAPER, 22)
+	if darkness_active():
+		_label("밝힘 %.1f초" % reveal_remaining if reveal_remaining > 0 else "바인드 · 전체 위치선" if phase == Phase.BIND else "어둠 · 기억한 위치선 유지" if not known_markers.is_empty() else "어둠 · 위치선 숨김", Vector2(520,72), BLUE, 13)
 	draw_line(Vector2(28, 88), Vector2(740, 88), Color("33455d"), 1)
-	for i in [1, 0]:
+	for i in [0, 1, 2, 3]:
+		if i >= party.size():
+			continue
 		if not (action_kind == "attack" and phase == Phase.RESOLVE and action_index == i):
 			_draw_hero(i)
 	for i in range(enemies.size() - 1, -1, -1):
@@ -642,6 +909,10 @@ func _draw() -> void:
 		timer_cast.draw(self)
 	elif phase == Phase.ASSASSIN:
 		assassin_cast.draw(self)
+	elif phase == Phase.SUPPORT:
+		support_cast.draw(self)
+	elif phase == Phase.BIND:
+		_draw_bind()
 	_draw_effects()
 	if phase == Phase.TIMER:
 		timer_cast.draw_qte(self)
@@ -649,6 +920,8 @@ func _draw() -> void:
 		assassin_cast.draw_qte(self)
 	elif phase in [Phase.ATTACK_QTE, Phase.GUARD_QTE]:
 		_draw_qte()
+	elif phase in [Phase.SUPPORT,Phase.BIND]:
+		pass
 	elif phase in [Phase.COMMAND, Phase.TARGET, Phase.SKILLS]:
 		_draw_commands()
 	else:
@@ -690,7 +963,7 @@ func _frame(texture: Texture2D, frame: int, cols: int, rows: int, rect: Rect2, t
 
 func _draw_hero(index: int) -> void:
 	var hero: Dictionary = party[index]
-	var base: Vector2 = HERO_POS[index]
+	var base: Vector2 = hero_position(index)
 	var alive := int(hero.hp) > 0
 	var selected := index == hero_index and phase in [Phase.COMMAND, Phase.TARGET, Phase.SKILLS, Phase.ATTACK_QTE]
 	if selected:
@@ -699,7 +972,7 @@ func _draw_hero(index: int) -> void:
 			var a := point * TAU / 32.0
 			ring.append(base + Vector2(cos(a) * 46, sin(a) * 8) * ACTOR_SCALE)
 		draw_polyline(ring, ORANGE, 2)
-		_label("▼", base + Vector2(-8, -184) * ACTOR_SCALE, ORANGE, 16)
+		_label("◀", base + Vector2(55, -40), ORANGE, 16)
 	var frame := 0
 	if bool(hero.guarding):
 		frame = 4
@@ -713,8 +986,12 @@ func _draw_hero(index: int) -> void:
 		tint = Color(1.5, 0.65, 0.65)
 	var sprite_rect := Rect2(base - Vector2(96, 192) * ACTOR_SCALE, Vector2(192, 200) * ACTOR_SCALE)
 	var focusing := action_index == index and action_kind == "focus" and phase == Phase.RESOLVE
-	if phase in [Phase.TIMER, Phase.ASSASSIN] and index == hero_index:
+	if phase in [Phase.TIMER, Phase.ASSASSIN, Phase.SUPPORT,Phase.BIND] and index == hero_index:
 		pass # The cast draws its airborne actor, but status stays in place.
+	elif phase == Phase.SUPPORT and action_kind == "heal" and index == target_index and index < 2 and support_cast.elapsed >= 1.1:
+		pass # The recipient holds and eats the sandwich in the support animation.
+	elif index >= 2:
+		_draw_new_hero(index, base, alive, winding, attacking, focusing, tint)
 	elif alive and focusing:
 		_draw_focus(index, base, tint)
 	elif alive and (winding or attacking):
@@ -734,12 +1011,18 @@ func _draw_hero(index: int) -> void:
 	if not alive:
 		_label("전투 불능", base + Vector2(-31, -12), MUTED, 13)
 	elif bool(hero.guarding):
-		_label("방어", base + Vector2(37, -25), BLUE, 13)
-	_hp(hero, HERO_POS[index] + Vector2(-51, 20), GREEN)
-	_label("공격 %d  수비 %d  집중 %d" % [hero.attack_stacks, hero.defense_stacks, hero.focus_stacks], HERO_POS[index] + Vector2(-62, 57), BLUE, 11)
+		_label("방패 %d턴" % hero.shield_turns if int(hero.get("shield_turns", 0)) > 0 else "방어", base + Vector2(37, -25), BLUE, 13)
+	var status: Vector2 = HERO_POS[index]+Vector2(-49,13)
+	_label("%s %d/%d" % [hero.name,hero.hp,hero.max_hp],status,PAPER,10)
+	draw_rect(Rect2(status+Vector2(0,5),Vector2(98,4)),INK)
+	draw_rect(Rect2(status+Vector2(0,5),Vector2(98*float(hero.hp)/hero.max_hp,4)),GREEN)
+	_label("공격 %d  수비 %d  집중 %d" % [hero.attack_stacks, hero.defense_stacks, hero.focus_stacks], status+Vector2(0,24), BLUE, 9)
+	if phase == Phase.TARGET and target_action == "heal" and target_index == index:
+		draw_arc(base + Vector2(0,-75),65,0,TAU,32,GREEN,2)
+		_label("회복 대상",base+Vector2(-30,-150),GREEN,15)
 
 func _draw_focus(index: int, base: Vector2, tint: Color) -> void:
-	var rect := Rect2(base - Vector2(77, 150), Vector2(154, 154))
+	var rect := Rect2(base - Vector2(77, 150)*ACTOR_SCALE, Vector2(154, 154)*ACTOR_SCALE)
 	var pose := mini(int(focus_elapsed / FOCUS_DURATION * 4), 3)
 	_frame(focus_texture, index * 4 + pose, 4, 2, rect, tint)
 	# Small blue motes rise toward the character as they gather energy.
@@ -820,8 +1103,11 @@ func _draw_chain_extension(points: PackedVector2Array, tint: Color, short_links:
 		distance += length
 
 func _draw_enemy(index: int) -> void:
+	var visibility := visibility_strength()
+	if visibility <= 0:
+		return
 	var enemy: Dictionary = enemies[index]
-	var base: Vector2 = FOE_POS[index]
+	var base: Vector2 = foe_position(index)
 	var alive := int(enemy.hp) > 0
 	# No idle animation: frames only change on an actual attack or hit.
 	var frame := 0
@@ -836,24 +1122,34 @@ func _draw_enemy(index: int) -> void:
 		frame = 2
 		base.x += sin(fx_time * 29.0) * 5
 	if alive or lightning_hit or assassin_hit or fx_time > 0 and hurt_enemy == index:
-		var tint := Color.WHITE
+		var tint := Color(1,1,1,visibility)
 		if taking_hit and fx_time > 0.5:
-			tint = Color(1.8, 1.5, 1.5)
+			tint = Color(1.8, 1.5, 1.5, visibility)
 		var tex: Texture2D = armored_texture if armored_encounter else monster_texture
 		var dimensions := Vector2(230, 214) if armored_encounter else Vector2(192, 176)
-		_frame(tex, frame, 3, 1, Rect2(base - Vector2(dimensions.x * 0.5, dimensions.y - 8) * ACTOR_SCALE, dimensions * ACTOR_SCALE), tint)
+		var foe_scale := ACTOR_SCALE if armored_encounter else 0.48
+		_frame(tex, frame, 3, 1, Rect2(base - Vector2(dimensions.x * 0.5, dimensions.y - 8) * foe_scale, dimensions * foe_scale), tint)
+		if int(enemy.get("bind_turns",0)) > 0 or (action_kind == "bound" and action_index == index):
+			for row in 3:
+				var y := base.y-25-row*15
+				_draw_chain_extension(PackedVector2Array([Vector2(base.x-23,y-6),Vector2(base.x+23,y+6)]),Color(0.6,0.85,1,visibility))
+			_label("봉쇄 %d턴" % int(enemy.get("bind_turns",0)),base+Vector2(32,-73),BLUE,11)
 	else:
 		_label("격파", base + Vector2(-17, -40), MUTED, 16)
-	if phase == Phase.TARGET and target_index == index:
+	if phase == Phase.TARGET and target_action != "heal" and target_index == index:
 		draw_arc(base + Vector2(0, -75) * ACTOR_SCALE, 79 * ACTOR_SCALE, 0, TAU, 32, ORANGE, 2)
 		_label("타이머 대상" if target_action == "timer" else "공격 대상", base + Vector2(-32, -163) * ACTOR_SCALE, ORANGE, 14)
-	_hp(enemy, FOE_POS[index] + Vector2(-51, 20), Color("f17d89"))
+	var status := foe_position(index) + Vector2(32,-55)
+	_label(str(enemy.name),status,Color(PAPER,visibility),11)
+	draw_rect(Rect2(status+Vector2(0,6),Vector2(78,5)),Color(0.03,0.05,0.1,visibility))
+	draw_rect(Rect2(status+Vector2(0,6),Vector2(78*float(enemy.hp)/enemy.max_hp,5)),Color(Color("f17d89"),visibility))
+	_label("%d/%d" % [enemy.hp,enemy.max_hp],status+Vector2(0,26),Color(MUTED,visibility),10)
 
-func _hp(unit: Dictionary, at: Vector2, color: Color) -> void:
-	_label(str(unit.name), at + Vector2(0, -4), PAPER, 14)
-	draw_rect(Rect2(at + Vector2(0, 4), Vector2(102, 7)), Color("080e19"))
-	draw_rect(Rect2(at + Vector2(0, 4), Vector2(102 * float(unit.hp) / float(unit.max_hp), 7)), color)
-	_label("%d / %d" % [unit.hp, unit.max_hp], at + Vector2(0, 27), MUTED, 12)
+func _hp(unit: Dictionary, at: Vector2, color: Color, opacity: float = 1.0) -> void:
+	_label(str(unit.name), at + Vector2(0, -4), Color(PAPER, opacity), 14)
+	draw_rect(Rect2(at + Vector2(0, 4), Vector2(102, 7)), Color(Color("080e19"),opacity))
+	draw_rect(Rect2(at + Vector2(0, 4), Vector2(102 * float(unit.hp) / float(unit.max_hp), 7)), Color(color,opacity))
+	_label("%d / %d" % [unit.hp, unit.max_hp], at + Vector2(0, 27), Color(MUTED,opacity), 12)
 
 func _draw_commands() -> void:
 	_panel(Rect2(24, 506, 367, 129))
@@ -887,6 +1183,12 @@ func _draw_commands() -> void:
 		if list.size() > 2:
 			_label("↑↓ 목록 %d/%d" % [int(start / 2) + 1, ceili(list.size() / 2.0)], Vector2(493, 528), MUTED, 11)
 		return
+	if phase == Phase.TARGET and target_action == "heal":
+		for i in party.size():
+			var rect := _ally_rect(i)
+			_panel(rect,Color("243348"),GREEN if i == target_index else MUTED)
+			_label("%s  HP %d / %d" % [party[i].name,party[i].hp,party[i].max_hp], rect.position+Vector2(6,23),PAPER,12)
+		return
 	var commands := ["공격", "수비", "집중", "특수"]
 	for i in 4:
 		var rect := _command_rect(i)
@@ -900,15 +1202,87 @@ func _draw_qte() -> void:
 	_panel(Rect2(24, 506, 720, 129))
 	_label(message, Vector2(48, 535), BLUE, 18)
 	var bar := Rect2(52, 562, 664, 36)
-	draw_rect(bar, Color("080e19"))
-	var half := float(balance.qte.perfect_half_width) * bar.size.x
-	draw_rect(Rect2(384 - half, 558, half * 2, 44), Color("284a62"))
-	draw_rect(Rect2(384 - half, 558, half * 2, 44), BLUE, false, 1)
 	var cursor := Rules.cursor_at(qte_elapsed, float(balance.qte.duration), int(balance.qte.round_trips))
-	draw_rect(Rect2(bar.position.x + cursor * bar.size.x - 2, 553, 4, 54), BLUE)
-	_label("SPACE", Vector2(354, 587), PAPER, 17)
-	_label("중앙: " + ("치명타 ×2" if phase == Phase.ATTACK_QTE else "피해 반사") + "    그 외: " + ("공격 ×1" if phase == Phase.ATTACK_QTE else "피해 절반"), Vector2(49, 622), MUTED, 13)
+	if phase == Phase.ATTACK_QTE:
+		draw_position_bar(cursor,bar)
+		_label("SPACE · 위치선에 맞추면 해당 적 타격 · 빗나가면 MISS",Vector2(49,622),MUTED,13)
+		return
+	draw_position_bar(cursor,bar,false,[enemy_index])
+	_label("공격한 적의 위치: 피해 반사 · 그 외: 피해 절반 · 시간 초과: 방어 실패",Vector2(49,622),MUTED,13)
 	_label("%.1f초" % maxf(0, float(balance.qte.duration) - qte_elapsed), Vector2(657, 535), MUTED, 14)
+
+func draw_position_bar(cursor: float, bar: Rect2, force: bool = false, candidates: Array = []) -> void:
+	draw_rect(bar, Color("143749"))
+	for i in (Rules.living(enemies) if candidates.is_empty() else candidates):
+		var opacity := marker_opacity(i,force)
+		var at := bar.position.x + Rules.position_marker(foe_position(i).y) * bar.size.x
+		var half := float(balance.qte.position_half_width) * bar.size.x
+		draw_rect(Rect2(at-half,bar.position.y-4,half*2,bar.size.y+8),Color(0.2,0.5,0.6,opacity*0.3))
+		draw_rect(Rect2(at-3,bar.position.y-8,6,bar.size.y+16),Color(0.8,0.9,1,opacity))
+		_label(str(i+1),Vector2(at-4,bar.position.y-12),Color(PAPER,opacity),12)
+	draw_rect(Rect2(bar.position.x + cursor * bar.size.x - 2,bar.position.y-9,4,bar.size.y+18),GREEN)
+
+func _bind_duration() -> float:
+	return float(balance.bind.boss_trip_duration)*3 if field_context.get("boss",false) else float(balance.bind.normal_duration)
+
+func _bind_cursor() -> float:
+	return Rules.cursor_at(bind_elapsed,_bind_duration(),3 if field_context.get("boss",false) else 2)
+
+func _press_bind() -> void:
+	if phase != Phase.BIND or bind_stage != 1 or bind_elapsed >= _bind_duration():
+		return
+	var hit := position_hit(_bind_cursor())
+	if field_context.get("boss",false):
+		var trip := mini(2,int(bind_elapsed/float(balance.bind.boss_trip_duration)))
+		if bind_trials.has(trip):
+			return
+		bind_trials[trip] = hit == 0
+		if bind_trials.size() == 3 and bind_trials.values().count(true) == 3:
+			bind_targets.assign([0])
+	elif hit >= 0 and hit not in bind_targets:
+		bind_targets.append(hit)
+	if hit >= 0:
+		known_markers[hit] = true
+
+func _advance_bind(delta: float) -> void:
+	clock += delta
+	shake_time = maxf(0,shake_time-delta)
+	fx_time = maxf(0,fx_time-delta)
+	reveal_remaining = maxf(0,reveal_remaining-delta)
+	bind_elapsed += delta
+	if bind_stage == 0 and bind_elapsed >= 1.0:
+		bind_stage = 1
+		bind_elapsed = 0
+	elif bind_stage == 1 and bind_elapsed >= _bind_duration():
+		bind_stage = 2
+		bind_elapsed = 0
+	elif bind_stage == 2 and bind_elapsed >= 0.8:
+		for index in bind_targets:
+			if int(enemies[index].hp) > 0:
+				enemies[index].bind_turns = int(balance.bind.turns)
+		bind_stage = 3
+		bind_elapsed = 0
+		shake_time = 0.2
+	elif bind_stage == 3 and bind_elapsed >= 0.8:
+		_after_hero()
+
+func _draw_bind() -> void:
+	var at: Vector2 = HERO_POS[hero_index]
+	draw_new_pose(hero_index,6 if bind_stage < 2 or bind_stage == 3 else 7,at+Vector2(0,-sin(clampf(bind_elapsed/0.8,0,1)*PI)*5 if bind_stage == 2 else 0))
+	if bind_stage >= 2:
+		for index in bind_targets:
+			var center := foe_position(index)+Vector2(0,-38)
+			_draw_chain_extension(PackedVector2Array([at+Vector2(35,-85),center]),Color(0.5,0.8,1))
+	if bind_stage == 3 and bind_elapsed < 0.4:
+		draw_arc(at+Vector2(35,0),8+bind_elapsed*80,PI,TAU,24,Color(0.4,0.8,1,1-bind_elapsed/0.4),3)
+	_panel(Rect2(24,506,720,129))
+	if bind_stage == 1:
+		var boss: bool = field_context.get("boss",false)
+		_label("바인드 · 보스 왕복 %d/3 · 성공 %d/3" % [mini(3,int(bind_elapsed/float(balance.bind.boss_trip_duration))+1),bind_trials.values().count(true)] if boss else "바인드 · 적의 위치선마다 SPACE · 여러 적 봉쇄 가능",Vector2(48,535),BLUE,17)
+		draw_position_bar(_bind_cursor(),Rect2(52,562,664,36),true)
+		_label("왕복마다 한 번, 총 3번 모두 성공해야 봉쇄" if boss else "성공한 적 %d명 · 다음 2턴 행동 봉쇄" % bind_targets.size(),Vector2(49,622),MUTED,13)
+	else:
+		_label("바인드 · 지팡이에 정신 집중" if bind_stage == 0 else "크로노 체인 · %d명 봉쇄" % bind_targets.size(),Vector2(48,550),BLUE,21)
 
 func _draw_effects() -> void:
 	if fx_time <= 0:
@@ -921,3 +1295,78 @@ func _draw_effects() -> void:
 			var direction := Vector2.from_angle(ray * TAU / 8.0)
 			draw_line(center + direction * 12, center + direction * (32 + (0.8 - fx_time) * 50), ORANGE, 3)
 	_label(float_text, float_position + Vector2(-12, -(0.8 - fx_time) * 25), ORANGE, 30)
+
+func _gain_stack(index: int, kind: String) -> void:
+	if int(party[index].get("shield_turns", 0)) > 0:
+		return
+	var key := kind + "_stacks"
+	party[index][key] = mini(int(balance.stack_cap), int(party[index][key]) + 1)
+
+func _ally_rect(index: int) -> Rect2:
+	return Rect2(410+(index%2)*162,541+(index/2)*42,158,39)
+
+func draw_new_pose(index: int, pose: int, base: Vector2, tint: Color = Color.WHITE) -> void:
+	var scale := ACTOR_SCALE * (0.88 if index == 2 else 1.0)
+	_frame(textures[index], pose, 4, 2, Rect2(base-Vector2(96,192)*scale,Vector2(192,200)*scale),tint)
+
+func draw_shield_pose(pose: int, base: Vector2, tint: Color = Color.WHITE) -> void:
+	var scale := ACTOR_SCALE * 0.88
+	_frame(seola_shield_texture, pose, 3, 3, Rect2(base-Vector2(112,216)*scale,Vector2(224,224)*scale),tint)
+
+func draw_overhead_pose(pose: int, base: Vector2) -> void:
+	var scale := ACTOR_SCALE * 0.88
+	_frame(seola_overhead_texture,pose,3,1,Rect2(base-Vector2(128,248)*scale,Vector2(256,256)*scale))
+
+func _draw_new_hero(index: int, base: Vector2, alive: bool, winding: bool, attacking: bool, focusing: bool, tint: Color) -> void:
+	var pose := 0
+	if index == 2 and action_index == 2 and action_kind == "shield_swing_return" and phase == Phase.RESOLVE:
+		var destination := foe_position(target_index)-Vector2(72,0)
+		if swing_elapsed < 0.7:
+			var progress := clampf(swing_elapsed/0.7,0,1)
+			draw_new_pose(2,6 if progress < 0.6 else 7,base.lerp(destination,progress)+Vector2(0,-sin(progress*PI)*65),tint)
+		elif swing_elapsed < 1.4:
+			draw_shield_pose(2 if swing_elapsed < 1.05 else 6,destination+Vector2(sin(clock*20)*1.5,0),tint)
+		else:
+			var progress := clampf((swing_elapsed-1.4)/1.1,0,1)
+			draw_shield_pose(7+int(clock*12)%2,destination.lerp(base,progress)+Vector2(0,-absf(sin(progress*PI*5))*4),tint)
+		return
+	if not alive:
+		pose = 5
+	elif index == 2 and int(party[index].get("shield_turns",0)) > 0:
+		draw_shield_pose(5,base+Vector2(sin(clock*34)*1.2,0),tint)
+		return
+	elif bool(party[index].guarding):
+		if index == 2:
+			draw_shield_pose(0,base,tint)
+			return
+		pose = 4
+	elif hurt_hero == index and fx_time > 0:
+		pose = 5
+	elif winding:
+		pose = 6 if target_action == "shield_swing" else 2
+		base.x += sin(clock*22)*0.8
+	elif attacking:
+		pose = (6 if fx_time > 0.6 else 7) if target_action == "shield_swing" else (2 if fx_time > 0.6 else 3)
+		var swing_progress := sin(clampf((0.8-fx_time)/0.8,0,1)*PI)
+		if target_action == "shield_swing":
+			base = base.lerp(foe_position(target_index)-Vector2(65,0),swing_progress)
+		else:
+			base.x += swing_progress*22
+		if fx_time <= 0.6 and fx_time > 0.25:
+			var endpoint := foe_position(target_index)+Vector2(-12,-60)
+			if target_action == "shield_swing":
+				draw_arc(endpoint,34,-1.5,1.5,18,BLUE,5)
+			else:
+				_draw_chain_extension(PackedVector2Array([base+Vector2(30,-60),endpoint]),tint)
+	elif focusing:
+		pose = 1
+		for i in 6:
+			var t := fposmod(focus_elapsed+i/6.0,1.0)
+			draw_circle(base+Vector2(sin(i*2.1)*25,-25-t*90),2,BLUE)
+	else:
+		pose = int(fposmod(clock,1.6)/0.8)
+		if index == 2:
+			base.x += sin(clock*25)*0.6
+		else:
+			base.y += sin(clock*3)*0.8
+	draw_new_pose(index,pose,base,tint)

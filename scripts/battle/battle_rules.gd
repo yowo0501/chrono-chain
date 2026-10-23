@@ -26,3 +26,16 @@ static func living(units: Array) -> Array[int]:
 		if int(units[i].hp) > 0:
 			indices.append(i)
 	return indices
+
+static func position_marker(y: float) -> float:
+	return clampf(inverse_lerp(220.0, 460.0, y), 0.06, 0.94)
+
+static func position_hit(cursor: float, positions: Array, candidates: Array, half_width: float) -> int:
+	var target := -1
+	var nearest := half_width + 0.000001
+	for index in candidates:
+		var distance := absf(cursor - position_marker(positions[index].y))
+		if distance < nearest:
+			nearest = distance
+			target = int(index)
+	return target

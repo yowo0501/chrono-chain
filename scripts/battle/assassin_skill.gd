@@ -1,12 +1,12 @@
 extends RefCounted
-## The cast snapshots living foes; marks never deal damage before the return/yawn.
+## Four positional attempts; the pressed timing selects the marked foe.
+## Successful marks deal damage together after the return/yawn.
 signal damage_hit
 signal finished
-enum Stage { MORPH, CUTIN, VANISH, QTE, MARK, RETURN, YAWN, SLASHES, EMBARRASSED, RECOVER, DONE }
+enum Stage { MORPH, VANISH, QTE, MARK, RETURN, YAWN, SLASHES, EMBARRASSED, RECOVER, DONE }
 const BLUE := Color("61cfff")
 const WHITE := Color("e9faff")
-const CUTIN_WIDTH := 192.0
-const CUTIN_MAX_HEIGHT := 64.0 # Bounding box is 2.38% of the 768 x 672 canvas.
+const STRIKES := 4
 var stage := Stage.MORPH
 var elapsed := 0.0
 var settings: Dictionary
@@ -17,27 +17,39 @@ var results: Array[bool] = []
 var target_cursor := 0
 var damage := 0
 var texture: Texture2D
-var eyes: Texture2D
-var eyes_region := Rect2()
+var target_resolver := Callable()
 
-func setup(config: Dictionary, power: int, from: Vector2, living: Array, atlas: Texture2D, cutin: Texture2D) -> void:
+func setup(config: Dictionary, power: int, from: Vector2, living: Array, atlas: Texture2D) -> void:
 	settings = config
 	origin = from
-	targets = living.duplicate()
+	targets.clear()
+	if not living.is_empty():
+		for hit in STRIKES:
+			targets.append(living[hit % living.size()])
 	texture = atlas
-	eyes = cutin
-	eyes_region = Rect2(eyes.get_image().get_used_rect())
 	damage = roundi(power * float(config.damage_multiplier))
 
 func is_qte() -> bool:
 	return stage == Stage.QTE
+
+func hit_counts() -> Dictionary:
+	var counts := {}
+	for index in marked:
+		counts[index] = int(counts.get(index, 0)) + 1
+	return counts
 
 func cursor() -> float:
 	return clampf(elapsed / float(settings.qte_duration), 0.0, 1.0)
 
 func press() -> void:
 	if is_qte():
-		_resolve(absf(cursor() - 0.5) <= float(settings.qte_half_width))
+		if target_resolver.is_valid():
+			var target: int = target_resolver.call(cursor())
+			if target >= 0:
+				targets[target_cursor] = target
+			_resolve(target >= 0)
+		else:
+			_resolve(absf(cursor() - 0.5) <= float(settings.qte_half_width))
 
 func _resolve(success: bool) -> void:
 	results.append(success)
@@ -58,13 +70,12 @@ func advance(delta: float) -> void:
 		return
 	elapsed += delta
 	if is_qte():
-		if cursor() > 0.5 + float(settings.qte_half_width):
+		if cursor() >= 1.0:
 			_resolve(false)
 		return
 	var duration := 0.0
 	match stage:
 		Stage.MORPH: duration = 0.65
-		Stage.CUTIN: duration = 0.65
 		Stage.VANISH: duration = 0.24
 		Stage.MARK: duration = 0.28
 		Stage.RETURN: duration = 0.28
@@ -75,8 +86,7 @@ func advance(delta: float) -> void:
 	if elapsed < duration:
 		return
 	match stage:
-		Stage.MORPH: _enter(Stage.CUTIN)
-		Stage.CUTIN: _enter(Stage.VANISH)
+		Stage.MORPH: _enter(Stage.VANISH)
 		Stage.VANISH: _enter(Stage.QTE if not targets.is_empty() else Stage.RETURN)
 		Stage.MARK:
 			target_cursor += 1
@@ -86,17 +96,31 @@ func advance(delta: float) -> void:
 		Stage.SLASHES, Stage.EMBARRASSED: _enter(Stage.RECOVER)
 		Stage.RECOVER: _enter(Stage.DONE)
 
+func actor_region(frame: int) -> Rect2:
+	var tops := [0.0,278.0,510.0,755.0]
+	var heights := [278.0,232.0,245.0,237.0]
+	# The dash extends beyond its nominal cell; the return starts after it.
+	if frame == 6:
+		return Rect2(793,278,477,232)
+	if frame == 7:
+		return Rect2(1270,278,316,232)
+	return Rect2((frame%4)*396.5,tops[frame/4],396.5,heights[frame/4])
+
+func actor_rect(frame: int, at: Vector2, battle_scale: float) -> Rect2:
+	# 236px standing figure -> the ordinary Yeonwoo sprite's 162px figure.
+	# One scale for every pose; crouching/yawning never changes body scale.
+	var scale := (162.0/236.0)*battle_scale
+	var feet := [Vector2(199,262),Vector2(208,262),Vector2(262,259),Vector2(240,260),
+		Vector2(187,219),Vector2(205,219),Vector2(250,219),Vector2(173,226),
+		Vector2(194,239),Vector2(208,239),Vector2(221,239),Vector2(250,239),
+		Vector2(176,226),Vector2(220,226),Vector2(225,226),Vector2(223,226)]
+	return Rect2(at-feet[frame]*scale,actor_region(frame).size*scale)
+
 func _actor(screen, frame: int, at: Vector2, alpha: float = 1.0) -> void:
-	# Source rows use their actual gutters, preserving long hair and boot pixels.
-	var tops := [0.0, 278.0, 510.0, 755.0]
-	var heights := [278.0, 232.0, 245.0, 237.0]
-	var row := int(frame / 4)
-	var region := Rect2((frame % 4) * 396.5, tops[row], 396.5, heights[row])
-	var dimensions := region.size * 0.57
-	screen.draw_texture_rect_region(texture, Rect2(at - Vector2(dimensions.x * 0.5, dimensions.y * 0.98), dimensions), region, Color(1, 1, 1, alpha))
+	screen.draw_texture_rect_region(texture,actor_rect(frame,at,screen.ACTOR_SCALE),actor_region(frame),Color(1,1,1,alpha))
 
 func _slash(screen, index: int, time: float, multiple: bool) -> void:
-	var center: Vector2 = screen.FOE_POS[index] + Vector2(0, -58)
+	var center: Vector2 = screen.foe_position(index) + Vector2(0, -58)
 	var count := 5 if multiple else 1
 	for i in count:
 		var t := clampf((time - i * 0.105) / 0.24, 0, 1)
@@ -116,13 +140,6 @@ func draw(screen) -> void:
 	match stage:
 		Stage.MORPH:
 			_actor(screen, mini(int(elapsed / 0.65 * 4), 3), origin)
-		Stage.CUTIN:
-			_actor(screen, 4, origin)
-			var appear := smoothstep(0.0, 0.13, elapsed)
-			var disappear := smoothstep(0.51, 0.65, elapsed)
-			var height := minf(CUTIN_MAX_HEIGHT, CUTIN_WIDTH * eyes_region.size.y / maxf(1.0, eyes_region.size.x))
-			var at := origin + Vector2(24 - (1.0 - appear) * 16 + disappear * 16, -172)
-			screen.draw_texture_rect_region(eyes, Rect2(at, Vector2(CUTIN_WIDTH, height)), eyes_region, Color(1, 1, 1, appear * (1.0 - disappear)))
 		Stage.VANISH:
 			var p := clampf(elapsed / 0.24, 0, 1)
 			for i in 3:
@@ -137,10 +154,11 @@ func draw(screen) -> void:
 			_actor(screen, 8 + mini(int(elapsed * 4), 3), origin)
 		Stage.SLASHES:
 			_actor(screen, 11, origin)
-			for index in marked:
+			var counts := hit_counts()
+			for index in counts:
 				_slash(screen, index, elapsed, true)
 				if elapsed > 0.3:
-					screen._label(str(damage), screen.FOE_POS[index] + Vector2(-20, -135 - elapsed * 16), WHITE, 24)
+					screen._label("%d  (%d회)" % [damage * counts[index], counts[index]], screen.foe_position(index) + Vector2(-44, -118 - elapsed * 16), WHITE, 20)
 		Stage.EMBARRASSED:
 			var frames := [12, 13, 14, 13, 14, 15]
 			_actor(screen, int(frames[mini(int(elapsed / 1.6 * frames.size()), frames.size() - 1)]), origin)
@@ -153,23 +171,8 @@ func draw_qte(screen) -> void:
 	screen._label("어쌔신 스텝", Vector2(48, 534), BLUE, 19)
 	screen._label("성공 %d / %d" % [marked.size(), targets.size()], Vector2(610, 534), WHITE, 16)
 	if is_qte():
-		var enemy_name: String = str(screen.enemies[targets[target_cursor]].name)
-		screen._label("%d / %d  ·  %s" % [target_cursor + 1, targets.size(), enemy_name], Vector2(285, 533), WHITE, 14)
-		var half := float(settings.qte_half_width) * 664
-		screen.draw_rect(Rect2(52, 558, 664, 35), Color("080e19"))
-		screen.draw_rect(Rect2(384 - half, 554, half * 2, 43), Color("284a62"))
-		screen.draw_rect(Rect2(384 - half, 554, half * 2, 43), BLUE, false, 1)
-		screen.draw_rect(Rect2(52 + cursor() * 664 - 2, 552, 4, 47), WHITE)
-		screen._label("SPACE", Vector2(354, 584), WHITE, 17)
-		screen._label("중앙에 한 번!  ·  성공한 적에게만 귀환 후 연속 베기", Vector2(48, 620), BLUE, 13)
-	else:
-		var text := "크로노 체인을 단검으로"
-		match stage:
-			Stage.CUTIN, Stage.VANISH: text = "눈 깜짝할 사이에 사라졌다"
-			Stage.MARK: text = "표식 성공!" if results.back() else "MISS"
-			Stage.RETURN: text = "연우가 제자리로 돌아왔다"
-			Stage.YAWN: text = "하아암…"
-			Stage.SLASHES: text = "성공한 적에게 연속 베기!"
-			Stage.EMBARRASSED: text = "…못 본 걸로 해."
-			Stage.RECOVER: text = "어쌔신 스텝 종료"
-		screen._label(text, Vector2(48, 583), WHITE, 20)
+		screen._label("%d / 4 · 위치에 맞춰 SPACE" % (target_cursor + 1), Vector2(285, 533), WHITE, 14)
+		screen.draw_position_bar(cursor(), Rect2(52, 558, 664, 35))
+		screen._label("선택한 위치에 표식 · 네 번 입력 후 귀환하여 일제 타격", Vector2(48, 620), BLUE, 13)
+	elif stage == Stage.MARK:
+		screen._label("SUCCESS" if results.back() else "MISS",Vector2(48,583),WHITE,20)

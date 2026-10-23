@@ -1,5 +1,5 @@
 extends Node
-## All field players report completed, walkable steps here. No per-map exclusions.
+## Field symbols and completed steps in dark districts initiate encounters.
 const BattleScreen = preload("res://scripts/battle/battle_screen.gd")
 const Transition = preload("res://scripts/battle/encounter_transition.gd")
 var balance: Dictionary
@@ -13,6 +13,10 @@ var screen: Control
 var overlay: CanvasLayer
 var transition: Control
 var armored_encounter := false
+var encounter_context: Dictionary = {}
+var encounter_symbol: Node2D
+var encounter_field: Node2D
+var encounter_balance: Dictionary
 
 func choose_armored(roll: float) -> bool:
 	return roll < 1.0 / 3.0
@@ -27,6 +31,7 @@ func reset_party() -> void:
 	for hero in party:
 		hero.hp = hero.max_hp
 		hero.guarding = false
+		hero.shield_turns = 0
 		hero.attack_stacks = 0
 		hero.defense_stacks = 0
 		hero.focus_stacks = 0
@@ -41,10 +46,32 @@ func step_completed(walker: Node2D) -> void:
 	if active:
 		return
 	steps += 1
-	if should_encounter(steps, rng.randf()):
-		start_battle(walker)
+	if walker.field != null:
+		walker.field.player_step_completed(walker)
 
-func start_battle(walker: Node2D) -> void:
+func start_symbol_battle(walker: Node2D, symbol: Node2D, source_field: Node2D, context: Dictionary) -> void:
+	start_battle(walker, context, symbol, source_field)
+
+func balance_for_context(context: Dictionary, map_settings: Dictionary) -> Dictionary:
+	var result := balance.duplicate(true)
+	if context.is_empty():
+		result.monster_count = rng.randi_range(3, 5)
+		return result
+	result.monster_count = 1
+	if context.get("boss", false):
+		var factor := maxf(0.2, 1.0 - int(context.dark_lamps) * float(map_settings.boss_reduction_per_dark_lamp))
+		result.armored_monster.name = "골목의 주인"
+		result.armored_monster.max_hp = roundi(float(map_settings.boss_hp) * factor)
+		result.armored_monster.attack = roundi(float(map_settings.boss_attack) * factor)
+		result.armored_monster.action_interval = 1
+	else:
+		result.monster_count = clampi(int(context.get("enemy_count", 3)), 3, 5)
+		var prefix := "light" if context.get("light", false) else "dark"
+		result.monster.max_hp = roundi(float(balance.monster.max_hp) * float(map_settings[prefix + "_hp_multiplier"]))
+		result.monster.attack = roundi(float(balance.monster.attack) * float(map_settings[prefix + "_attack_multiplier"]))
+	return result
+
+func start_battle(walker: Node2D, context: Dictionary = {}, symbol: Node2D = null, source_field: Node2D = null) -> void:
 	if active:
 		return
 	active = true
@@ -52,7 +79,13 @@ func start_battle(walker: Node2D) -> void:
 	player.input_locked = true
 	steps = 0
 	encounters += 1
-	armored_encounter = choose_armored(rng.randf())
+	encounter_context = context.duplicate(true)
+	if not encounter_context.is_empty() and not encounter_context.get("boss", false):
+		encounter_context.enemy_count = rng.randi_range(3, 5)
+	encounter_symbol = symbol
+	encounter_field = source_field
+	armored_encounter = bool(context.get("boss", false)) if not context.is_empty() else choose_armored(rng.randf())
+	encounter_balance = balance_for_context(encounter_context, source_field.settings if source_field != null else {})
 	overlay = CanvasLayer.new()
 	overlay.layer = 50
 	add_child(overlay)
@@ -66,7 +99,15 @@ func _on_transition_covered() -> void:
 	if not active or not is_instance_valid(overlay):
 		return
 	screen = BattleScreen.new()
-	screen.setup(party, balance, rng, armored_encounter)
+	screen.setup(party, encounter_balance, rng, armored_encounter)
+	if not encounter_context.is_empty():
+		screen.field_context = encounter_context
+		if encounter_context.get("boss", false):
+			screen.heading = "골목의 주인"
+			screen.message = "도시의 모든 가로등이 밝혀졌다"
+		else:
+			screen.heading = "빛 속의 그림자" if encounter_context.light else "어둠 속의 습격"
+			screen.message = "%s · %d마리 출현" % ["적 위치를 보고 타이밍을 맞추세요" if encounter_context.light else "적과 판정선이 어둠에 가려졌다", screen.enemies.size()]
 	screen.battle_finished.connect(_finish_battle)
 	screen.process_mode = Node.PROCESS_MODE_DISABLED
 	overlay.add_child(screen)
@@ -79,17 +120,13 @@ func _on_transition_finished() -> void:
 	transition = null
 
 func _finish_battle(won: bool) -> void:
-	# Prototype recovery: both outcomes restore the party at the same field tile.
-	# Explicit result text explains this; a future save/checkpoint system can replace it.
-	if not won:
-		reset_party()
-	else:
-		for hero in party:
-			hero.hp = hero.max_hp
-			hero.guarding = false
-			hero.attack_stacks = 0
-			hero.defense_stacks = 0
-			hero.focus_stacks = 0
+	if not active:
+		return
+	# Recover HP and clear the temporary guard stance; unspent stacks carry over.
+	for hero in party:
+		hero.hp = hero.max_hp
+		hero.guarding = false
+		hero.shield_turns = 0
 	if is_instance_valid(overlay):
 		overlay.queue_free()
 	screen = null
@@ -97,4 +134,9 @@ func _finish_battle(won: bool) -> void:
 	active = false
 	if is_instance_valid(player):
 		player.input_locked = false
+	if is_instance_valid(encounter_field):
+		encounter_field.battle_resolved(encounter_symbol, won)
+	encounter_symbol = null
+	encounter_field = null
+	encounter_context = {}
 

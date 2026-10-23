@@ -1,15 +1,14 @@
 extends RefCounted
-## One cast owns its QTE and damage timeline; the battle owns targets and HP.
+## Automatic area attack. No QTE: spear impact, one-second delay, then lightning.
 signal spear_hit
 signal lightning_hit
 signal finished
-enum Stage { PREP, JUMP, CHAIN, MORPH, AIM, THROW, FLIGHT, WAIT, LIGHTNING, LAND, CONFUSED, FALL, FLAT, RECOVER, DONE }
+enum Stage { PREP, JUMP, CHAIN, MORPH, AIM, THROW, FLIGHT, WAIT, LIGHTNING, LAND, DONE }
 const BLUE := Color("61cfff")
 const WHITE := Color("e9faff")
 # The generated special atlas has larger anatomy than the regular 384x240 cells.
 # Normalize its source pixels, then use the same world scale as regular actors.
 const ATLAS_TO_ACTOR := 0.60
-const LABELS := ["도약", "체인 변환", "조준 · 투척"]
 # Explicit atlas regions follow the generated gutters (the source is not a
 # mathematically uniform grid). This prevents neighboring feet/chain fragments.
 const REGIONS := [
@@ -20,15 +19,11 @@ const REGIONS := [
 var stage: int = Stage.PREP
 var elapsed := 0.0
 var total_time := 0.0
-var successes := 0
-var results: Array[bool] = []
 var settings: Dictionary
 var target_position := Vector2.ZERO
 var origin := Vector2.ZERO
 var texture: Texture2D
 var motion_texture: Texture2D
-var feedback := ""
-var feedback_time := 0.0
 var spear_damage := 0
 var lightning_damage := 0
 
@@ -37,51 +32,25 @@ func setup(config: Dictionary, power: int, from: Vector2, target: Vector2, atlas
 	origin = from
 	target_position = target + Vector2(0, -52)
 	texture = atlas
-	spear_damage = power
+	spear_damage = 0
+	lightning_damage = roundi(power * float(config.damage_multiplier))
 
 func is_qte() -> bool:
-	return stage in [Stage.PREP, Stage.CHAIN, Stage.AIM]
-
-func qte_index() -> int:
-	return [Stage.PREP, Stage.CHAIN, Stage.AIM].find(stage)
-
-func cursor() -> float:
-	return clampf(elapsed / float(settings.qte_duration), 0.0, 1.0)
+	return false
 
 func press() -> void:
-	if not is_qte():
-		return
-	_resolve(absf(cursor() - 0.5) <= float(settings.qte_half_width))
-
-func _resolve(success: bool) -> void:
-	results.append(success)
-	if success:
-		successes += 1
-	feedback = "SUCCESS" if success else "MISS"
-	feedback_time = 0.45
-	if stage == Stage.PREP:
-		_enter(Stage.JUMP)
-	elif stage == Stage.CHAIN:
-		_enter(Stage.MORPH)
-	else:
-		var power: int = spear_damage
-		spear_damage = roundi(power * float(settings.spear_multipliers[successes]))
-		lightning_damage = roundi(power * float(settings.lightning_multipliers[successes]))
-		_enter(Stage.CONFUSED if successes == 0 else Stage.THROW)
+	pass # This skill has no timed input.
 
 func advance(delta: float) -> void:
 	if stage == Stage.DONE:
 		return
 	elapsed += delta
 	total_time += delta
-	feedback_time = maxf(0.0, feedback_time - delta)
-	if is_qte():
-		# Once the window passes, there is no return trip and no further chance.
-		if cursor() > 0.5 + float(settings.qte_half_width):
-			_resolve(false)
-		return
 	var duration := 0.0
 	match stage:
+		Stage.PREP: duration = 0.20
+		Stage.CHAIN: duration = 0.16
+		Stage.AIM: duration = 0.22
 		Stage.JUMP: duration = 0.48
 		Stage.MORPH: duration = 0.88
 		Stage.THROW: duration = 0.22
@@ -89,23 +58,19 @@ func advance(delta: float) -> void:
 		Stage.WAIT: duration = 1.0
 		Stage.LIGHTNING: duration = 0.8
 		Stage.LAND: duration = 0.65
-		Stage.CONFUSED: duration = 0.55
-		Stage.FALL: duration = 0.55
-		Stage.FLAT: duration = 0.6
-		Stage.RECOVER: duration = 0.45
 	if elapsed < duration:
 		return
 	match stage:
+		Stage.PREP: _enter(Stage.JUMP)
+		Stage.CHAIN: _enter(Stage.MORPH)
+		Stage.AIM: _enter(Stage.THROW)
 		Stage.JUMP: _enter(Stage.CHAIN)
 		Stage.MORPH: _enter(Stage.AIM)
 		Stage.THROW: _enter(Stage.FLIGHT)
 		Stage.FLIGHT: _enter(Stage.WAIT)
 		Stage.WAIT: _enter(Stage.LIGHTNING)
 		Stage.LIGHTNING: _enter(Stage.LAND)
-		Stage.LAND, Stage.RECOVER: _enter(Stage.DONE)
-		Stage.CONFUSED: _enter(Stage.FALL)
-		Stage.FALL: _enter(Stage.FLAT)
-		Stage.FLAT: _enter(Stage.RECOVER)
+		Stage.LAND: _enter(Stage.DONE)
 
 func _enter(next: int) -> void:
 	stage = next
@@ -165,19 +130,6 @@ func draw(screen) -> void:
 		Stage.LAND:
 			actor = origin
 			frame = 10 if elapsed < 0.4 else 11
-		Stage.CONFUSED:
-			frame = 12
-			screen._label("?", sky + Vector2(15, -165) * relative_scale, WHITE, 30)
-		Stage.FALL:
-			frame = 13
-			actor = sky.lerp(origin, pow(clampf(elapsed / 0.55, 0, 1), 2))
-		Stage.FLAT:
-			frame = 14
-			actor = origin
-			screen._label("MISS", origin + Vector2(-25, -75), BLUE, 24)
-		Stage.RECOVER:
-			frame = 10 if elapsed < 0.25 else 11
-			actor = origin
 	var region: Rect2 = REGIONS[frame]
 	var active_texture: Texture2D = texture
 	if motion_frame >= 0 and motion_texture != null:
@@ -192,8 +144,6 @@ func draw(screen) -> void:
 		screen._frame(screen.calm_idle_texture, 0, 3, 2, Rect2(actor - screen.FOOT_ANCHOR * screen.ACTOR_SCALE, screen.ANIMATION_CELL * screen.ACTOR_SCALE))
 	else:
 		screen.draw_texture_rect_region(active_texture, Rect2(actor - Vector2(dimensions.x * 0.5, dimensions.y * 0.98), dimensions), region)
-	if feedback_time > 0:
-		screen._label(feedback, Vector2(335, 158), BLUE if feedback == "SUCCESS" else Color("ffb35a"), 21)
 
 func _draw_spear(screen, center: Vector2, angle: float) -> void:
 	var points := PackedVector2Array()
@@ -211,7 +161,7 @@ func _draw_lightning(screen) -> void:
 	var fade := 1.0 - clampf(elapsed / 0.8, 0, 1)
 	# Branches reach every enemy; the planted spear remains the main conductor.
 	for foe in screen.enemies.size():
-		var bottom: Vector2 = screen.FOE_POS[foe] + Vector2(0, -32)
+		var bottom: Vector2 = screen.foe_position(foe) + Vector2(0, -32)
 		var points := PackedVector2Array([Vector2(target_position.x, 98)])
 		for i in range(1, 9):
 			var t := i / 8.0
@@ -227,31 +177,5 @@ func _draw_lightning(screen) -> void:
 
 func draw_qte(screen) -> void:
 	screen._panel(Rect2(24, 506, 720, 129))
-	var subtitle: String = LABELS[qte_index()] if is_qte() else ("점프" if stage == Stage.JUMP else ("체인 → 창" if stage == Stage.MORPH else ("실패" if successes == 0 else "투척 · 낙뢰")))
-	screen._label("타이머  ·  " + subtitle, Vector2(48, 534), BLUE, 19)
-	screen._label("성공 %d / 3" % successes, Vector2(610, 534), WHITE, 16)
-	for i in 3:
-		var color := Color("344961")
-		if i < results.size():
-			color = BLUE if results[i] else Color("bc6679")
-		screen.draw_circle(Vector2(326 + i * 32, 528), 7, color)
-	if is_qte():
-		var bar := Rect2(52, 558, 664, 35)
-		screen.draw_rect(bar, Color("080e19"))
-		var half := float(settings.qte_half_width) * bar.size.x
-		screen.draw_rect(Rect2(384 - half, 554, half * 2, 43), Color("284a62"))
-		screen.draw_rect(Rect2(384 - half, 554, half * 2, 43), BLUE, false, 1)
-		screen.draw_rect(Rect2(52 + cursor() * 664 - 2, 552, 4, 47), WHITE)
-		screen._label("SPACE", Vector2(354, 584), WHITE, 17)
-		screen._label("중앙에 한 번!  ·  왕복 없음  ·  성공 횟수에 따라 위력 증가", Vector2(48, 620), BLUE, 13)
-	else:
-		var text := "다음 자세를 준비합니다"
-		if stage == Stage.MORPH:
-			text = "푸른 빛 속에서 체인이 창으로 변화한다"
-		elif stage >= Stage.CONFUSED:
-			text = "어라…?  체인이 말을 안 듣는다!"
-		elif stage == Stage.WAIT:
-			text = "창 적중!  1초 뒤 낙뢰"
-		elif stage == Stage.LIGHTNING:
-			text = "푸른 번개가 적 전체를 덮친다"
-		screen._label(text, Vector2(48, 582), WHITE, 20)
+	screen._label("타이머 · 전체 공격", Vector2(48, 540), BLUE, 21)
+	screen._label("전체 공격 · %d초 밝힘" % int(screen.balance.timer.reveal_seconds),Vector2(48,583),WHITE,18)

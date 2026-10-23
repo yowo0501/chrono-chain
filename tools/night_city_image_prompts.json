@@ -1,0 +1,16 @@
+{
+  "mode": "built-in imagegen",
+  "chuheun": {
+    "intent": "identity-preserve edit",
+    "prompt": "Edit target: the supplied Chuheun 3-column 4-row transparent field sprite sheet. Preserve character identity, black spiky hair, black Korean wrap outfit with blue trim, grey waist sash and chain, SD proportions. Refine as crisp detailed 64px native-style pixel sprites, not blurry painted art. Most important change: every visible face has a tiny CLOSED-MOUTH relaxed smile, a thin curved line, NO mouth opening, NO teeth, NO red mouth cavity. 12 equally spaced sprites on transparent background; rows down, left, right, back; columns idle, left-foot stride, right-foot stride. Identical head size and body height across every pose, fixed feet baseline within each cell. Entire bodies visible with generous padding, no labels, no ground shadow. Small controlled pixel clusters, nuanced hair highlights, readable fabric folds and chain links. Flat orthogonal DS-era RPG sprites refined with more detail.",
+    "source": "assets/sprites/field/chuheun_night_source.png",
+    "atlas": "assets/sprites/field/chuheun_night.png"
+  },
+  "town": {
+    "intent": "generate",
+    "prompt": "Game asset spritesheet: nine isolated detailed PIXEL ART town objects on genuinely transparent background, equal square cells in exact 3 columns x 3 rows. Pure orthogonal top-down RPG view with front walls and visible roofs, straight horizontal roof edges, no isometric slant. Refined Nintendo DS era 2D pixel art, crisp fine pixel clusters and sophisticated night palette, cool slate indigo roofs, dark brick and stone, warmly lit gold windows. Row1: quaint BAKERY with bread-shaped sign, lit display and burgundy awning; small SHOP with teal striped awning and amber display; residential townhouse with slate roof and brick chimney. Row2: old WAREHOUSE with loading doors and weathered blue roof; round stone FOUNTAIN with turquoise moonlit water viewed from above, no base lawn; stone city ARCH gateway with side lanterns. Row3: small stack of wooden CRATES; elegant narrow iron STREETLAMP with single golden glass lantern; wooden street BENCH. Each object centered and entirely contained within its own cell with generous transparent margin. Buildings front-on aligned with square tile grid. Detailed individual roof tiles, brickwork, wood, small light reflections. No lettering, no text, no flowerbeds, no flowers, no characters, no scenery background, no ground patches, no cast shadows crossing cells. Not a full scene. Square 1536px sheet.",
+    "source": "assets/tilesets/night_town_source.png",
+    "outputs": "assets/tilesets/night_*.png"
+  },
+  "other_actors": "Rebaked 64px frames from existing high-resolution *_hg_source.png originals, not upscaled 32px atlases."
+}

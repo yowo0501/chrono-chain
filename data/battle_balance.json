@@ -1,17 +1,167 @@
 {
   "heroes": [
-    {"id": "chuheun", "name": "강추흔", "max_hp": 120, "attack": 24},
-    {"id": "yeonwoo", "name": "김연우", "max_hp": 100, "attack": 28}
+    {
+      "id": "chuheun",
+      "name": "강추흔",
+      "max_hp": 120,
+      "attack": 24
+    },
+    {
+      "id": "yeonwoo",
+      "name": "김연우",
+      "max_hp": 100,
+      "attack": 28
+    },
+    {
+      "id": "seola",
+      "name": "강설아",
+      "max_hp": 180,
+      "attack": 22
+    },
+    {
+      "id": "wiseong",
+      "name": "장위성",
+      "max_hp": 95,
+      "attack": 26
+    }
   ],
-  "monster": {"id": "shadow", "name": "그림자", "max_hp": 90, "attack": 16},
-  "monster_count": 3,
-  "armored_monster": {"id": "armored_shadow", "name": "중장 그림자", "max_hp": 480, "attack": 20, "action_interval": 2},
-  "timer": {"attack_cost": 2, "focus_cost": 2, "qte_duration": 1.8, "qte_half_width": 0.10, "spear_multipliers": [0, 3, 5, 7], "lightning_multipliers": [0, 2, 3, 5]},
-  "special_skills": {
-    "chuheun": [{"id": "timer", "name": "타이머", "cost": {"attack": 2, "defense": 0, "focus": 2}, "target": "single"}],
-    "yeonwoo": [{"id": "assassin", "name": "어쌔신 스텝", "cost": {"attack": 1, "defense": 2, "focus": 1}, "target": "all"}]
+  "monster": {
+    "id": "shadow",
+    "name": "그림자",
+    "max_hp": 90,
+    "attack": 16
   },
-  "assassin": {"qte_duration": 1.8, "qte_half_width": 0.10, "damage_multiplier": 6},
-  "encounter": {"safe_steps": 8, "chance_per_step": 0.12, "maximum_steps": 28},
-  "qte": {"duration": 3.2, "round_trips": 2, "perfect_half_width": 0.065}
+  "monster_count": 3,
+  "armored_monster": {
+    "id": "armored_shadow",
+    "name": "중장 그림자",
+    "max_hp": 480,
+    "attack": 20,
+    "action_interval": 2
+  },
+  "timer": {
+    "attack_cost": 2,
+    "focus_cost": 2,
+    "damage_multiplier": 5,
+    "reveal_seconds": 20.0
+  },
+  "special_skills": {
+    "chuheun": [
+      {
+        "id": "timer",
+        "name": "타이머",
+        "cost": {
+          "attack": 2,
+          "defense": 0,
+          "focus": 2
+        },
+        "target": "all"
+      },
+      {
+        "id": "thunder",
+        "name": "벼락",
+        "cost": {
+          "focus": 1
+        },
+        "target": "all"
+      }
+    ],
+    "yeonwoo": [
+      {
+        "id": "assassin",
+        "name": "어쌔신 스텝",
+        "cost": {
+          "attack": 3
+        },
+        "target": "all"
+      },
+      {
+        "id": "heal",
+        "name": "회복",
+        "cost": {
+          "defense": 1
+        },
+        "target": "ally"
+      }
+    ],
+    "seola": [
+      {
+        "id": "shield",
+        "name": "방패 전개",
+        "cost": {
+          "defense": 2
+        },
+        "target": "self"
+      },
+      {
+        "id": "shield_swing",
+        "name": "크게 휘두르기",
+        "cost": {
+          "focus": 1
+        },
+        "target": "position"
+      }
+    ],
+    "wiseong": [
+      {
+        "id": "illuminate",
+        "name": "맵 밝히기",
+        "cost": {
+          "focus": 1
+        },
+        "target": "all"
+      },
+      {
+        "id": "bind",
+        "name": "바인드",
+        "cost": {
+          "attack": 1,
+          "focus": 1
+        },
+        "target": "all"
+      }
+    ]
+  },
+  "assassin": {
+    "qte_duration": 2.2,
+    "qte_half_width": 0.045,
+    "damage_multiplier": 6
+  },
+  "encounter": {
+    "safe_steps": 8,
+    "chance_per_step": 0.12,
+    "maximum_steps": 28
+  },
+  "qte": {
+    "duration": 3.2,
+    "round_trips": 2,
+    "perfect_half_width": 0.065,
+    "position_half_width": 0.045
+  },
+  "thunder": {
+    "damage_multiplier": 1.5,
+    "reveal_seconds": 10.0
+  },
+  "heal": {
+    "max_hp_fraction": 0.4
+  },
+  "boss_phase": {
+    "dark_hp_fraction": 0.5,
+    "reposition_every_rounds": 2
+  },
+  "stack_cap": 3,
+  "shield": {
+    "turns": 1
+  },
+  "shield_swing": {
+    "damage_multiplier": 3.0
+  },
+  "illuminate": {
+    "reveal_seconds": 20.0
+  },
+  "bind": {
+    "turns": 2,
+    "normal_duration": 4.8,
+    "boss_trip_duration": 2.4
+  }
 }

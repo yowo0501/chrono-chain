@@ -26,45 +26,14 @@ func run() -> void:
 	await capture("command")
 	screen.select_command(3)
 	screen.select_skill(0)
-	screen.target_index = 1
-	screen.confirm_target()
-	for stage in 3:
-		screen.advance(0.9)
-		await capture(["jump", "morph", "aim"][stage])
-		screen.timer_cast.press()
-		if stage == 0:
-			screen.advance(0.48)
-		elif stage == 1:
-			screen.advance(0.88)
-	screen.advance(0.22)
-	screen.advance(0.15)
-	await capture("throw")
-	screen.advance(0.24)
-	screen.advance(0.5)
-	await capture("planted")
-	screen.advance(0.51)
-	screen.advance(0.10)
-	await capture("lightning")
-	screen.advance(0.8)
-	screen.advance(0.66)
-	screen.hero_index = 0
-	screen._next_hero()
-	screen.party[0].attack_stacks = 2
-	screen.party[0].focus_stacks = 2
-	screen.select_command(3)
-	screen.select_skill(0)
-	screen.confirm_target()
-	for i in 3:
-		screen.timer_cast.press()
-		if i == 0:
-			screen.advance(0.48)
-		elif i == 1:
-			screen.advance(0.88)
-	await capture("confused")
-	screen.advance(0.56)
-	screen.advance(0.25)
-	await capture("fall")
-	screen.advance(0.31)
-	await capture("flat")
-	print("TIMER PREVIEWS saved: ", ProjectSettings.globalize_path(folder))
+	var captured := {}
+	for frame in 700:
+		if screen.phase != Screen.Phase.TIMER:
+			break
+		var stage: int = screen.timer_cast.stage
+		if not captured.has(stage) and screen.timer_cast.elapsed >= 0.10:
+			await capture("automatic-stage-%02d" % stage)
+			captured[stage] = true
+		screen.advance(0.01)
+	print("AUTOMATIC TIMER PREVIEWS saved: ", ProjectSettings.globalize_path(folder))
 	quit()
