@@ -166,7 +166,7 @@ data=dict(
     name="밤의 도시",tiles=["".join(row) for row in grid],
     area_tiles=["".join("0123456789ABCDEF"[a] for a in row) for row in owner],
     areas=areas,decor=decor,start=[21,44],boss_tile=[21,43-1],
-    initial_dark_areas=[i for i,z in enumerate(zones) if not z[-1]],
+    initial_dark_areas=[5,6,7,8],  # Prototype: only four lamps need relighting.
     enemy_spawns=[areas[i]["spawn"] for i in [5,6,7,9,10]],
     enemy_step_seconds=.30,enemy_idle_seconds=.10,
     dark_spawn_seconds=35.0,max_active_symbols=12,lamp_break_seconds=9.0,

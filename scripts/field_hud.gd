@@ -62,6 +62,11 @@ func _draw() -> void:
 	label_at("밤의 도시", Vector2(22,27), GOLD, 21)
 	label_at("%s  ·  %s" % [field.area_name(area), "빛" if field.lit[area] else "어둠"],Vector2(22,51),MUTED,15)
 	var objective := "모든 가로등을 밝히세요"
+	var tutorial := get_node("/root/Tutorial")
+	if tutorial.enabled and not tutorial.first_battle_done:
+		objective = "빛 에어리어의 적과 전투하세요"
+	elif tutorial.enabled and not tutorial.night_battle_done:
+		objective = "어둠 에어리어를 탐험하세요"
 	if field.boss_defeated:
 		objective = "골목 정화 완료"
 	elif field.boss_spawned:

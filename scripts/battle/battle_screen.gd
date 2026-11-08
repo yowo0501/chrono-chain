@@ -369,6 +369,8 @@ func _next_hero() -> void:
 func select_command(index: int) -> void:
 	if phase != Phase.COMMAND:
 		return
+	if get_node("/root/Tutorial").explain_command(self, index):
+		return
 	if index == 0:
 		target_action = "attack"
 		_begin_attack()
@@ -603,7 +605,7 @@ func _begin_attack() -> void:
 	qte_elapsed = 0.0
 	action_kind = "windup"
 	action_index = hero_index
-	message = "적의 위치선에 SPACE · 왼쪽은 상단, 오른쪽은 하단"
+	message = "적의 위치선에 Space/Enter · 왼쪽은 상단, 오른쪽은 하단"
 
 func _resolve_qte(pressed: bool) -> void:
 	if phase not in [Phase.ATTACK_QTE, Phase.GUARD_QTE]:
@@ -727,7 +729,7 @@ func _enemy_strike() -> void:
 	if bool(party[defending_index].guarding):
 		phase = Phase.GUARD_QTE
 		qte_elapsed = 0.0
-		message = "공격해 오는 적의 위치선에 SPACE · 반격 기회"
+		message = "공격해 오는 적의 위치선에 Space/Enter · 반격 기회"
 		return
 	var damage := int(enemies[enemy_index].attack)
 	party[defending_index].hp = maxi(0, int(party[defending_index].hp) - damage)
@@ -758,6 +760,8 @@ func _begin_shield_return() -> void:
 	heading = "강설아 / 방패 해제"
 
 func _check_end() -> bool:
+	if phase == Phase.RESULT:
+		return true
 	if not Rules.living(party).is_empty() and not Rules.living(enemies).is_empty():
 		return false
 	won = Rules.living(enemies).is_empty() and not Rules.living(party).is_empty()
@@ -769,6 +773,8 @@ func _check_end() -> bool:
 	message = "모두 회복한 뒤, 원래 위치로 돌아갑니다"
 	if not field_context.is_empty():
 		message = "모두 회복한 뒤 골목으로 돌아갑니다" if won else "모두 회복한 뒤 골목 입구로 돌아갑니다"
+	if won and field_context.get("boss", false):
+		battle_finished.emit.call_deferred(true)
 	return true
 
 func _effect(value: String, where: Vector2, strong: bool) -> void:
@@ -784,43 +790,43 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		var key: int = event.physical_keycode if event.physical_keycode != 0 else event.keycode
 		if phase == Phase.BIND:
-			if key == KEY_SPACE:
+			if key in [KEY_SPACE, KEY_ENTER, KEY_KP_ENTER]:
 				_press_bind()
 		elif phase == Phase.TIMER:
-			if key == KEY_SPACE:
+			if key in [KEY_SPACE, KEY_ENTER, KEY_KP_ENTER]:
 				timer_cast.press()
 		elif phase == Phase.ASSASSIN:
-			if key == KEY_SPACE:
+			if key in [KEY_SPACE, KEY_ENTER, KEY_KP_ENTER]:
 				assassin_cast.press()
 		elif phase == Phase.SKILLS:
 			if key in [KEY_UP, KEY_LEFT]:
 				skill_index = posmod(skill_index - 1, skills().size() + 1)
 			elif key in [KEY_DOWN, KEY_RIGHT]:
 				skill_index = (skill_index + 1) % (skills().size() + 1)
-			elif key in [KEY_ENTER, KEY_Z]:
+			elif key in [KEY_SPACE, KEY_ENTER, KEY_KP_ENTER, KEY_Z]:
 				select_skill(skill_index)
 			elif key in [KEY_ESCAPE, KEY_X]:
 				_back_to_commands()
 		elif phase in [Phase.ATTACK_QTE, Phase.GUARD_QTE]:
-			if key == KEY_SPACE:
+			if key in [KEY_SPACE, KEY_ENTER, KEY_KP_ENTER]:
 				_resolve_qte(true)
 		elif phase == Phase.COMMAND:
 			if key in [KEY_LEFT, KEY_RIGHT]:
 				command_index = command_index ^ 1
 			elif key in [KEY_UP, KEY_DOWN]:
 				command_index = (command_index + 2) % 4
-			elif key in [KEY_ENTER, KEY_Z]:
+			elif key in [KEY_SPACE, KEY_ENTER, KEY_KP_ENTER, KEY_Z]:
 				select_command(command_index)
 		elif phase == Phase.TARGET:
 			if key in [KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN]:
 				var choices: Array = range(party.size()) if target_action == "heal" else Rules.living(enemies)
 				var direction := -1 if key in [KEY_LEFT, KEY_UP] else 1
 				target_index = choices[posmod(choices.find(target_index) + direction, choices.size())]
-			elif key in [KEY_ENTER, KEY_Z]:
+			elif key in [KEY_SPACE, KEY_ENTER, KEY_KP_ENTER, KEY_Z]:
 				confirm_target()
 			elif key in [KEY_ESCAPE, KEY_X]:
 				_cancel_target()
-		elif phase == Phase.RESULT and key == KEY_ENTER:
+		elif phase == Phase.RESULT and key in [KEY_SPACE, KEY_ENTER, KEY_KP_ENTER]:
 			battle_finished.emit(won)
 		get_viewport().set_input_as_handled()
 	elif event is InputEventMouseButton and event.pressed and phase == Phase.SKILLS and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
@@ -931,7 +937,7 @@ func _draw() -> void:
 		if phase == Phase.RESULT:
 			_label("프로토타입: 전투 종료 시 체력 전체 회복", Vector2(48, 585), MUTED, 14)
 		_label(hint, Vector2(48, 613), MUTED, 16)
-	_label("방향키 선택   ENTER / Z 확인   ESC / X 취소   SPACE 타이밍", Vector2(28, 657), MUTED, 13)
+	_label("방향키 선택   Space / Enter 확인·타이밍   Z 확인   Esc / X 취소", Vector2(28, 657), MUTED, 13)
 
 func _draw_city() -> void:
 	# Pixel geometry echoes the existing night-city field without introducing a new map.
@@ -1205,7 +1211,7 @@ func _draw_qte() -> void:
 	var cursor := Rules.cursor_at(qte_elapsed, float(balance.qte.duration), int(balance.qte.round_trips))
 	if phase == Phase.ATTACK_QTE:
 		draw_position_bar(cursor,bar)
-		_label("SPACE · 위치선에 맞추면 해당 적 타격 · 빗나가면 MISS",Vector2(49,622),MUTED,13)
+		_label("Space/Enter · 위치선에 맞추면 해당 적 타격 · 빗나가면 MISS",Vector2(49,622),MUTED,13)
 		return
 	draw_position_bar(cursor,bar,false,[enemy_index])
 	_label("공격한 적의 위치: 피해 반사 · 그 외: 피해 절반 · 시간 초과: 방어 실패",Vector2(49,622),MUTED,13)
@@ -1278,7 +1284,7 @@ func _draw_bind() -> void:
 	_panel(Rect2(24,506,720,129))
 	if bind_stage == 1:
 		var boss: bool = field_context.get("boss",false)
-		_label("바인드 · 보스 왕복 %d/3 · 성공 %d/3" % [mini(3,int(bind_elapsed/float(balance.bind.boss_trip_duration))+1),bind_trials.values().count(true)] if boss else "바인드 · 적의 위치선마다 SPACE · 여러 적 봉쇄 가능",Vector2(48,535),BLUE,17)
+		_label("바인드 · 보스 왕복 %d/3 · 성공 %d/3" % [mini(3,int(bind_elapsed/float(balance.bind.boss_trip_duration))+1),bind_trials.values().count(true)] if boss else "바인드 · 적의 위치선마다 Space/Enter · 여러 적 봉쇄 가능",Vector2(48,535),BLUE,17)
 		draw_position_bar(_bind_cursor(),Rect2(52,562,664,36),true)
 		_label("왕복마다 한 번, 총 3번 모두 성공해야 봉쇄" if boss else "성공한 적 %d명 · 다음 2턴 행동 봉쇄" % bind_targets.size(),Vector2(49,622),MUTED,13)
 	else:

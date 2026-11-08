@@ -41,9 +41,9 @@ func battle_fixture(count: int) -> Control:
 
 func begin_assassin(screen: Control) -> void:
 	screen.hero_index = 1
-	screen.party[1].attack_stacks = 1
-	screen.party[1].defense_stacks = 2
-	screen.party[1].focus_stacks = 1
+	var cost: Dictionary = screen.balance.special_skills.yeonwoo[0].cost
+	for stack in ["attack", "defense", "focus"]:
+		screen.party[1][stack + "_stacks"] = int(cost.get(stack, 0))
 	screen._begin_assassin(screen.balance.special_skills.yeonwoo[0])
 	screen.advance(0.65)
 	screen.advance(0.24)
@@ -88,17 +88,27 @@ func run() -> void:
 		if cycle == 0:
 			field.grace = 0
 	check(player.grid_pos == field.start_tile(),"Ambient defeat safely returns to entrance")
-	# Seeded real encounter starts exercise the inclusive 2..3 roll.
-	var seen := {}
+	# The actual remaining lamps control both light and dark encounters.
 	manager.rng.seed = 101
-	for trial in 40:
-		manager.start_symbol_battle(player,null,field,{"boss":false,"light":true,"dark_lamps":0})
-		var rolled: int = manager.encounter_balance.monster_count
-		check(rolled >= 3 and rolled <= 5, "Random count remains in range")
-		seen[rolled] = true
-		manager._finish_battle(true)
-		await process_frame
-	check(seen.size() == 3, "Roll produces groups of 3, 4 and 5")
+	for remaining in [4,3,2,1,0]:
+		field.lit.fill(true)
+		for area in remaining:
+			field.lit[area+5] = false
+		var lower := 3 if remaining <= 2 else 2
+		for light in [true,false]:
+			var seen := {}
+			for trial in 40:
+				manager.start_symbol_battle(player,null,field,{"boss":false,"light":light,"dark_lamps":99})
+				var rolled: int = manager.encounter_balance.monster_count
+				check(manager.encounter_context.dark_lamps == remaining,"Count uses live field progress")
+				check(rolled >= lower and rolled <= lower+2, "Enemy count follows remaining lamps")
+				seen[rolled] = true
+				manager._finish_battle(true)
+				await process_frame
+			check(seen.size() == 3, "All three allowed group sizes occur")
+		for requested in [-1,99]:
+			var config: Dictionary = manager.balance_for_context({"boss":false,"light":true,"dark_lamps":remaining,"enemy_count":requested},field.settings)
+			check(config.monster_count == (lower if requested < 0 else lower+2),"Explicit counts obey progress limits")
 	manager.start_symbol_battle(player,null,field,{"boss":true,"light":false,"dark_lamps":3})
 	check(manager.encounter_balance.monster_count == 1, "Boss remains a single enemy")
 	manager._finish_battle(true)

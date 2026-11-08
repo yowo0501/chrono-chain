@@ -77,7 +77,7 @@ func run() -> void:
 			check(not manager.active,"Dark entry itself does not guarantee a battle")
 		field.player_step_completed(player)
 		check(manager.active and manager.encounter_symbol == null,"Dark step cap triggers a repeatable ambient battle")
-		check(int(manager.encounter_context.enemy_count) in [3,4,5],"Random dark encounter has three to five enemies")
+		check(int(manager.encounter_context.enemy_count) in [2,3,4],"Early random dark encounter has two to four enemies")
 		manager._finish_battle(true)
 		field.grace = 0
 		check(field.defeated_count == 0,"Ambient victory never consumes symbol progress")

@@ -1,0 +1,7 @@
+{
+  "mode": "built-in image_gen",
+  "output": "assets/prologue/logo-minimal-blue.png",
+  "reference": "assets/prologue/logo-minimal.png",
+  "transparent_background": false,
+  "prompt": "Use case: lighting-weather. Edit this exact existing minimalist logo with one small change ONLY: add a very faint, delicate cool blue emitted light to the chain links that form the English words \"Chrono\" and \"Chain\". Keep the core of each chain outline nearly white, subtly icy blue, surrounded by a very narrow dim soft blue halo. The glow must be restrained and barely luminous, not neon, not a large bloom. Preserve every letter shape, link size, link spacing, alignment, word position, canvas dimensions, and margins of the reference. Preserve the small Korean \"크로노 체인\" EXACTLY as neutral white with NO glow and NO color change. Preserve the pure opaque black background and all empty space. No new objects, stars, particles, flare, gradient background, clock, metallic shading, bevels, shadows, texture or ornament. The overall visual must remain minimalist and crisp. Only the English chain links emit a faint blue light."
+}

@@ -171,7 +171,7 @@ func draw_qte(screen) -> void:
 	screen._label("어쌔신 스텝", Vector2(48, 534), BLUE, 19)
 	screen._label("성공 %d / %d" % [marked.size(), targets.size()], Vector2(610, 534), WHITE, 16)
 	if is_qte():
-		screen._label("%d / 4 · 위치에 맞춰 SPACE" % (target_cursor + 1), Vector2(285, 533), WHITE, 14)
+		screen._label("%d / 4 · 위치에 맞춰 Space/Enter" % (target_cursor + 1), Vector2(285, 533), WHITE, 14)
 		screen.draw_position_bar(cursor(), Rect2(52, 558, 664, 35))
 		screen._label("선택한 위치에 표식 · 네 번 입력 후 귀환하여 일제 타격", Vector2(48, 620), BLUE, 13)
 	elif stage == Stage.MARK:

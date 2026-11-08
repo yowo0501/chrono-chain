@@ -1,0 +1,20 @@
+{
+  "mode": "built-in image_gen",
+  "assets": [
+    {
+      "key": "logo",
+      "transparent_background": true,
+      "prompt": "Use case: logo-brand. Asset type: transparent PNG title logo for Korean JRPG Chrono Chain. Create one beautifully finished centered horizontal game logo with exact Korean title \"크로노 체인\", and smaller English subtitle \"CHRONO CHAIN\". Elegant sharp fantasy lettering, silver metal with restrained pale icy blue edge light, a fine broken circular clock face behind the type and a loose silver chain curling around its lower edge. Nighttime mystery, refined late-90s JRPG title aesthetic, very legible Korean. No characters, no additional text. Isolated on genuine transparent background. Logo entirely inside canvas with generous clear margin, landscape 3:2 composition."
+    },
+    {
+      "key": "alley",
+      "transparent_background": false,
+      "prompt": "Use case: stylized-concept. Asset type: JRPG overhead field background, one single complete map image. A quiet dark cobblestone alley in a small old nighttime town, orthographic top-down 3/4 RPG view (no horizon, no vanishing point), detailed crisp pixel art in Nintendo DS / classic 32-bit JRPG style. Indigo slate roofs and brick facades along left/right outer edges, sparse warm amber lit windows and two old street lamps around edges, dark navy and desaturated violet stone paving, faint moonlight. Large clear walkable rectangular central cobblestone space, spanning central 65% width and 70% height, where separate character sprites will be placed. The floor must be evenly readable, subtle midnight ambiance. No characters, no monsters, no text, no UI, no logo, no chains. Landscape composition 8:7, camera looking down at ground. Game field art not cinematic perspective illustration."
+    },
+    {
+      "key": "monster",
+      "transparent_background": true,
+      "prompt": "Use case: stylized-concept. Asset type: one isolated field monster sprite for a top-down classic 32-bit pixel art JRPG. A large writhing formless black liquid monster, glossy inky tar mass slumping and rippling into a shallow puddle, irregular soft tentacle-like liquid lobes. Black and deep violet body, small cold blue-gray specular highlights so silhouette reads against navy street. No face, no eyes, no mouth, no armor, no limbs like a human, no scenery. Three-quarter overhead RPG camera. Detailed crisp pixel clusters with clear readable silhouette, entirely inside square canvas with 15 percent transparent padding. Genuine transparent background. Single pose only. This creature occupies a 3 by 3 tile footprint compared to small human field sprites."
+    }
+  ]
+}

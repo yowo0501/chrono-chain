@@ -36,11 +36,11 @@ func run() -> void:
 	player.set_process(false)
 	field.grace = 10000
 	check(field.width() == 128 and field.height() == 64,"128 by 64 field")
-	check(field.lamps.size() == 16 and field.dark_count() == 8,"Sixteen districts, eight begin dark")
+	check(field.lamps.size() == 16 and field.dark_count() == 4,"Sixteen districts, four begin dark")
 	check(field.symbols.size() == 5,"Five initial symbols")
 	check(field.is_lit(field.start_tile()),"Entrance is lit")
 	check(field.lit[0] and field.lit[1] and field.lit[2],"Plaza, bakery, shopping street begin lit")
-	check(not field.lit[5] and not field.lit[9],"Alleys and vacant lot begin dark")
+	check(not field.lit[5] and not field.lit[8] and field.lit[9],"Four alleys begin dark; vacant lot begins lit")
 	for actor in [player.sprite,player.follower]+field.symbols:
 		check(actor.texture.get_size() == Vector2(192,256),"64px fixed actor frames")
 		check(actor.frame_rect(Rect2()).size == Vector2(16,16),"Actors fit one logical tile")
@@ -190,7 +190,7 @@ func run() -> void:
 		manager._finish_battle(true)
 		await process_frame
 	check(rolls.size()==3,"All three group sizes occur")
-	check(manager.balance_for_context({"boss":false,"light":true,"enemy_count":99},field.settings).monster_count==5,"Explicit context cannot exceed cap")
+	check(manager.balance_for_context({"boss":false,"light":true,"dark_lamps":0,"enemy_count":99},field.settings).monster_count==5,"Explicit context cannot exceed late-game cap")
 	# Contact during movement commits the tile before opening the battle.
 	field.grace = 0
 	var crossing: Node2D = field._spawn_symbol(Vector2i(23,44))

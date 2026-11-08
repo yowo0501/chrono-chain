@@ -88,7 +88,7 @@ func _process(delta: float) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		var key: int = event.physical_keycode if event.physical_keycode != 0 else event.keycode
-		if key in [KEY_E, KEY_Z, KEY_ENTER] and field != null:
+		if key in [KEY_E, KEY_Z, KEY_SPACE, KEY_ENTER, KEY_KP_ENTER] and field != null:
 			field.interact(self)
 			get_viewport().set_input_as_handled()
 

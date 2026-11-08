@@ -147,7 +147,7 @@ func track_player_tile(player: Node2D) -> void:
 	last_player_lit = is_lit(player.grid_pos)
 
 func player_step_completed(player: Node2D) -> void:
-	if test_grid:
+	if test_grid or boss_defeated:
 		return
 	var area := area_at(player.grid_pos)
 	track_player_tile(player)
@@ -208,6 +208,8 @@ func _ready() -> void:
 	hud = load("res://scripts/field_hud.gd").new()
 	hud.field = self
 	layer.add_child(hud)
+	if get_parent().name == "Main":
+		get_node("/root/Tutorial").start.call_deferred(self)
 	queue_redraw()
 
 func _create_symbol(is_boss: bool) -> Node2D:
@@ -459,7 +461,7 @@ func repair_lamp(area: int, _player: Node2D) -> bool:
 	return true
 
 func check_contact(player: Node2D) -> bool:
-	if test_grid or EncounterManager.active or grace > 0.0:
+	if test_grid or boss_defeated or EncounterManager.active or grace > 0.0:
 		return false
 	if is_instance_valid(pending_contact):
 		if player._moving:
@@ -486,7 +488,7 @@ func check_contact(player: Node2D) -> bool:
 	return false
 
 func _engage(symbol: Node2D, player: Node2D) -> void:
-	if EncounterManager.active:
+	if boss_defeated or EncounterManager.active or not is_instance_valid(symbol) or symbol.defeated:
 		return
 	EncounterManager.start_symbol_battle(player, symbol, self, {
 		"boss": symbol.is_boss, "light": true if symbol.is_boss else is_lit(symbol.grid_pos),
@@ -498,10 +500,7 @@ func battle_resolved(symbol: Node2D, won: bool) -> void:
 		if not is_instance_valid(symbol):
 			say("어둠 속 습격을 물리쳤습니다")
 		elif symbol.is_boss:
-			symbol.defeated = true
-			symbol.visible = false
-			boss_defeated = true
-			say("골목의 그림자를 모두 물리쳤습니다")
+			complete_boss()
 		elif not symbol.defeated:
 			symbol.defeated = true
 			symbol.visible = false
@@ -515,6 +514,17 @@ func battle_resolved(symbol: Node2D, won: bool) -> void:
 	grace = 1.2
 	dark_steps = 0
 	queue_redraw()
+
+func complete_boss() -> void:
+	boss_defeated = true
+	pending_contact = null
+	dark_steps = 0
+	if is_instance_valid(boss):
+		boss.defeated = true
+		boss.visible = false
+	if is_instance_valid(walker()):
+		walker().input_locked = true
+	say("튜토리얼 클리어")
 
 func _spawn_boss() -> void:
 	if boss_spawned or dark_count() != 0:

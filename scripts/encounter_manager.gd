@@ -54,8 +54,9 @@ func start_symbol_battle(walker: Node2D, symbol: Node2D, source_field: Node2D, c
 
 func balance_for_context(context: Dictionary, map_settings: Dictionary) -> Dictionary:
 	var result := balance.duplicate(true)
+	var limits := enemy_count_limits(context)
 	if context.is_empty():
-		result.monster_count = rng.randi_range(3, 5)
+		result.monster_count = rng.randi_range(limits.x, limits.y)
 		return result
 	result.monster_count = 1
 	if context.get("boss", false):
@@ -65,14 +66,18 @@ func balance_for_context(context: Dictionary, map_settings: Dictionary) -> Dicti
 		result.armored_monster.attack = roundi(float(map_settings.boss_attack) * factor)
 		result.armored_monster.action_interval = 1
 	else:
-		result.monster_count = clampi(int(context.get("enemy_count", 3)), 3, 5)
+		result.monster_count = clampi(int(context.get("enemy_count", limits.x)), limits.x, limits.y)
 		var prefix := "light" if context.get("light", false) else "dark"
 		result.monster.max_hp = roundi(float(balance.monster.max_hp) * float(map_settings[prefix + "_hp_multiplier"]))
 		result.monster.attack = roundi(float(balance.monster.attack) * float(map_settings[prefix + "_attack_multiplier"]))
 	return result
 
+func enemy_count_limits(context: Dictionary) -> Vector2i:
+	# Missing field progress uses the early-game limit, not the final stretch.
+	return Vector2i(3, 5) if int(context.get("dark_lamps", 4)) <= 2 else Vector2i(2, 4)
+
 func start_battle(walker: Node2D, context: Dictionary = {}, symbol: Node2D = null, source_field: Node2D = null) -> void:
-	if active:
+	if active or (is_instance_valid(source_field) and source_field.boss_defeated):
 		return
 	active = true
 	player = walker
@@ -80,8 +85,11 @@ func start_battle(walker: Node2D, context: Dictionary = {}, symbol: Node2D = nul
 	steps = 0
 	encounters += 1
 	encounter_context = context.duplicate(true)
+	if source_field != null:
+		encounter_context.dark_lamps = source_field.dark_count()
 	if not encounter_context.is_empty() and not encounter_context.get("boss", false):
-		encounter_context.enemy_count = rng.randi_range(3, 5)
+		var limits := enemy_count_limits(encounter_context)
+		encounter_context.enemy_count = rng.randi_range(limits.x, limits.y)
 	encounter_symbol = symbol
 	encounter_field = source_field
 	armored_encounter = bool(context.get("boss", false)) if not context.is_empty() else choose_armored(rng.randf())
@@ -128,6 +136,7 @@ func _finish_battle(won: bool) -> void:
 		hero.guarding = false
 		hero.shield_turns = 0
 	if is_instance_valid(overlay):
+		overlay.process_mode = Node.PROCESS_MODE_DISABLED
 		overlay.queue_free()
 	screen = null
 	transition = null
@@ -136,6 +145,12 @@ func _finish_battle(won: bool) -> void:
 		player.input_locked = false
 	if is_instance_valid(encounter_field):
 		encounter_field.battle_resolved(encounter_symbol, won)
+		if won and encounter_context.get("boss", false):
+			# The encounter context remains authoritative even if its symbol is gone.
+			encounter_field.complete_boss()
+			get_node("/root/Tutorial").show_clear(encounter_field)
+		else:
+			get_node("/root/Tutorial").battle_ended(encounter_context)
 	encounter_symbol = null
 	encounter_field = null
 	encounter_context = {}

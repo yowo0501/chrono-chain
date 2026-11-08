@@ -68,7 +68,7 @@ func run() -> void:
 			field._extinguish(area,player)
 			check(field.lit[area],"Repaired lamp cannot extinguish")
 	for count in [3,4,5]:
-		var config: Dictionary = manager.balance_for_context({"boss":false,"light":true,"enemy_count":count},field.settings)
+		var config: Dictionary = manager.balance_for_context({"boss":false,"light":true,"dark_lamps":0,"enemy_count":count},field.settings)
 		check(config.monster_count == count,"Normal encounter preserves 3–5 count")
 	check(manager.balance_for_context({"boss":true,"dark_lamps":0},field.settings).monster_count == 1,"Boss is exactly one")
 	main.free()
