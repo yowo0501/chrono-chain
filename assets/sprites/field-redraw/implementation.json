@@ -1,0 +1,45 @@
+{
+  "mode": "Built-in ImageGen, new field artwork generated from character and style references, followed by opposing-stride corrections",
+  "style": "Compact chibi pixel art; original field display size",
+  "new_poses": 24,
+  "atlas": {
+    "size": [
+      192,
+      256
+    ],
+    "cell": [
+      64,
+      64
+    ],
+    "rows": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "columns": [
+      "neutral",
+      "left foot contact",
+      "right foot contact"
+    ],
+    "foot_baseline": 62,
+    "render_size": [
+      16,
+      16
+    ]
+  },
+  "verification": {
+    "project": "크로노 체인 동방 버전",
+    "functional_suites": 5,
+    "failures": 0,
+    "recorded_frames": 256,
+    "recorded_seconds": 5.12,
+    "battle_assets_unchanged": 44
+  },
+  "artwork_reused_from_previous_atlases": false,
+  "backup": "backups/field-redraw-before",
+  "runtime_assets": [
+    "assets/sprites/field/chuheun_night.png",
+    "assets/sprites/field/yeonwoo_night.png"
+  ]
+}

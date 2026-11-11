@@ -42,8 +42,8 @@ func run() -> void:
 	check(field.lit[0] and field.lit[1] and field.lit[2],"Plaza, bakery, shopping street begin lit")
 	check(not field.lit[5] and not field.lit[8] and field.lit[9],"Four alleys begin dark; vacant lot begins lit")
 	for actor in [player.sprite,player.follower]+field.symbols:
-		check(actor.texture.get_size() == Vector2(192,256),"64px fixed actor frames")
-		check(actor.frame_rect(Rect2()).size == Vector2(16,16),"Actors fit one logical tile")
+		check(actor.texture.get_size() == (Vector2(192,256) if actor in [player.sprite,player.follower] else Vector2(192,256)),"Heroes and symbols use their own atlas layouts")
+		check(actor.frame_rect(Rect2()).size == (Vector2(16,16) if actor in [player.sprite,player.follower] else Vector2(16,16)),"Heroes and symbols share the compact field scale")
 	clear_symbols()
 	var seen := {player.grid_pos:true}
 	var frontier: Array[Vector2i] = [player.grid_pos]

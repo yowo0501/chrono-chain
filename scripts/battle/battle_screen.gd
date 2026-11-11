@@ -59,10 +59,10 @@ var font: SystemFont
 var textures: Array[Texture2D] = []
 var motion_textures: Array[Texture2D] = []
 var expressive_textures: Array[Texture2D] = []
-var calm_idle_texture: Texture2D
 var fixed_windup_body: Texture2D
 var fixed_windup_wrist: Texture2D
 var windup_rig: Dictionary
+var calm_idle_texture: Texture2D
 var chain_texture: Texture2D
 var chain_joins: Dictionary
 var special_actor := -1
@@ -179,10 +179,10 @@ func _ready() -> void:
 		motion_textures.append(load("res://assets/sprites/battle/" + id + "-motion.png") if id in ["chuheun", "yeonwoo"] else null)
 		expressive_textures.append(load("res://assets/sprites/battle/" + id + "-expressive.png") if id in ["chuheun", "yeonwoo"] else null)
 	chain_texture = load("res://assets/sprites/battle/chain-extension.png")
-	calm_idle_texture = load("res://assets/sprites/battle/chuheun-idle-calm.png")
 	fixed_windup_body = load("res://assets/sprites/battle/yeonwoo-windup-body.png")
 	fixed_windup_wrist = load("res://assets/sprites/battle/yeonwoo-windup-wrist.png")
 	windup_rig = JSON.parse_string(FileAccess.get_file_as_string("res://assets/sprites/battle/yeonwoo-windup-rig.json"))
+	calm_idle_texture = load("res://assets/sprites/battle/chuheun-idle-calm.png")
 	chain_joins = JSON.parse_string(FileAccess.get_file_as_string("res://assets/sprites/battle/chain-joins.json"))
 	monster_texture = load("res://assets/sprites/battle/shadow.png")
 	armored_texture = load("res://assets/sprites/battle/armored-shadow.png")
@@ -1028,7 +1028,7 @@ func _draw_hero(index: int) -> void:
 		_label("회복 대상",base+Vector2(-30,-150),GREEN,15)
 
 func _draw_focus(index: int, base: Vector2, tint: Color) -> void:
-	var rect := Rect2(base - Vector2(77, 150)*ACTOR_SCALE, Vector2(154, 154)*ACTOR_SCALE)
+	var rect := Rect2(base - FOOT_ANCHOR * ACTOR_SCALE, ANIMATION_CELL * ACTOR_SCALE)
 	var pose := mini(int(focus_elapsed / FOCUS_DURATION * 4), 3)
 	_frame(focus_texture, index * 4 + pose, 4, 2, rect, tint)
 	# Small blue motes rise toward the character as they gather energy.

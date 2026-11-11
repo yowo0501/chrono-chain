@@ -8,6 +8,7 @@ var elapsed := 0.0
 var applied := false
 var done := false
 var texture: Texture2D = load("res://assets/sprites/battle/support-skills.png")
+var food_texture: Texture2D = load("res://assets/sprites/battle/recovery-food.png")
 const SHIELD_WALK := 0.65
 const SHIELD_TRANSFORM := 2.0
 const SHIELD_IMPACT := 3.05
@@ -15,18 +16,10 @@ const SHIELD_END := 3.85
 const RETURN_TRANSFORM := 0.8
 const RETURN_STARTLED := 1.4
 const RETURN_END := 2.25
-const FEET := [Vector2(177,460),Vector2(542,460),Vector2(924,460),Vector2(1318,460),
-	Vector2(180,787),Vector2(550,787),Vector2(913,787),Vector2(1303,787),
-	Vector2(168,1080),Vector2(536,1080),Vector2(907,1080),Vector2(1288,1080)]
-
 func draw_pose(screen, frame: int, actor: int) -> void:
-	var row := frame / 4
-	var tops := [0,474,796]
-	var heights := [474,322,290]
-	var region := Rect2((frame % 4)*362,tops[row],362,heights[row])
-	var scale: float = screen.ACTOR_SCALE * 0.54
-	var anchor: Vector2 = FEET[frame] - region.position
-	screen.draw_texture_rect_region(texture,Rect2(screen.HERO_POS[actor]-anchor*scale,region.size*scale),region)
+	var region := Rect2((frame % 4) * 384, int(frame / 4) * 240, 384, 240)
+	var scale: float = screen.ACTOR_SCALE
+	screen.draw_texture_rect_region(texture, Rect2(screen.HERO_POS[actor] - screen.FOOT_ANCHOR * scale, screen.ANIMATION_CELL * scale), region)
 
 func advance(delta: float) -> void:
 	if done:
@@ -75,13 +68,12 @@ func draw(screen) -> void:
 				draw_pose(screen,10 if elapsed < 1.5 else 11,0)
 			elif elapsed >= 1.1 and target >= 2:
 				var food_at: Vector2 = screen.hero_position(target)+Vector2(0,-50)
-				screen.draw_colored_polygon(PackedVector2Array([food_at+Vector2(-5,3),food_at+Vector2(5,3),food_at+Vector2(-3,-5)]),Color("e6c693"))
+				screen.draw_texture_rect(food_texture,Rect2(food_at-Vector2(8,8),Vector2(16,16)),false)
 			var to: Vector2 = screen.hero_position(target) + Vector2(8,-65)
 			var p := clampf((elapsed-0.3)/0.8, 0, 1)
 			var food := (origin+Vector2(22,-86)).lerp(to,p) + Vector2(0,-sin(p*PI)*55)
 			if elapsed >= 0.3 and elapsed < 1.1:
-				screen.draw_colored_polygon(PackedVector2Array([food+Vector2(-11,8),food+Vector2(11,8),food+Vector2(-8,-10)]),Color("e6c693"))
-				screen.draw_line(food+Vector2(-9,4),food+Vector2(7,4),Color("73a15f"),3)
+				screen.draw_texture_rect(food_texture,Rect2(food-Vector2(11,10),Vector2(22,20)),false)
 		if applied:
 			var heal_at: Vector2 = screen.hero_position(target)
 			for i in 6:

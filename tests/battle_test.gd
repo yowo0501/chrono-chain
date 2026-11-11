@@ -79,7 +79,7 @@ func run() -> void:
 	check(s.motion_textures[0].get_size() == Vector2(1536, 960) and s.expressive_textures[1].get_size() == Vector2(1536, 960), "32-frame animation atlases have matching cells")
 	check(s.motion_textures.size() == 4 and s.expressive_textures.size() == 4, "expanded animation sets loaded")
 	check(s.calm_idle_texture.get_size() == Vector2(1152, 480), "calm idle six-frame sheet loaded")
-	check(s.fixed_windup_body.get_size() == Screen.ANIMATION_CELL and s.fixed_windup_wrist.get_size() == Screen.ANIMATION_CELL, "fixed body and wrist rig share one anchor")
+	check(s.motion_textures[1].get_size() == Screen.ANIMATION_CELL * 4, "refreshed windup poses share the regular foot anchor")
 	check(s.idle_frame(0, 0.05) == s.idle_frame(0, 0.20), "idle support pose is held instead of rushing")
 	check(s.idle_frame(0, 0.05) == s.idle_frame(0, Screen.CHUHEUN_IDLE_CYCLE + 0.05), "calm idle repeats after full 1.6 seconds")
 	check(Screen.HERO_POS[0].x == Screen.HERO_POS[1].x and Screen.HERO_POS[0].y > Screen.HERO_POS[1].y, "Chuheun stands below Yeonwoo in the front column")

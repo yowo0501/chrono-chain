@@ -6,16 +6,13 @@ signal finished
 enum Stage { PREP, JUMP, CHAIN, MORPH, AIM, THROW, FLIGHT, WAIT, LIGHTNING, LAND, DONE }
 const BLUE := Color("61cfff")
 const WHITE := Color("e9faff")
-# The generated special atlas has larger anatomy than the regular 384x240 cells.
-# Normalize its source pixels, then use the same world scale as regular actors.
+# Keep the established effect and projectile size; actor atlases are normalized.
 const ATLAS_TO_ACTOR := 0.60
-# Explicit atlas regions follow the generated gutters (the source is not a
-# mathematically uniform grid). This prevents neighboring feet/chain fragments.
 const REGIONS := [
-	Rect2(0, 0, 362, 278), Rect2(362, 0, 354, 278), Rect2(716, 0, 344, 278), Rect2(1060, 0, 388, 278),
-	Rect2(0, 278, 390, 287), Rect2(390, 278, 326, 287), Rect2(716, 278, 344, 287), Rect2(1060, 278, 388, 287),
-	Rect2(0, 565, 362, 250), Rect2(362, 565, 354, 250), Rect2(716, 565, 344, 250), Rect2(1060, 565, 388, 250),
-	Rect2(0, 815, 362, 271), Rect2(362, 815, 354, 271), Rect2(716, 815, 344, 271), Rect2(1060, 815, 388, 271)]
+	Rect2(0,0,384,240), Rect2(384,0,384,240), Rect2(768,0,384,240), Rect2(1152,0,384,240),
+	Rect2(0,240,384,240), Rect2(384,240,384,240), Rect2(768,240,384,240), Rect2(1152,240,384,240),
+	Rect2(0,480,384,240), Rect2(384,480,384,240), Rect2(768,480,384,240), Rect2(1152,480,384,240),
+	Rect2(0,720,384,240), Rect2(384,720,384,240), Rect2(768,720,384,240), Rect2(1152,720,384,240)]
 var stage: int = Stage.PREP
 var elapsed := 0.0
 var total_time := 0.0
@@ -108,15 +105,18 @@ func draw(screen) -> void:
 			screen.draw_circle(sky + Vector2(30, -110) * relative_scale, (35 + glow * 35) * relative_scale, Color(0.15, 0.6, 1, glow * 0.13))
 		Stage.AIM:
 			frame = 6
-			screen.draw_dashed_line(sky + Vector2(35, -65) * relative_scale, target_position, Color(0.4, 0.8, 1, 0.45), 1, 7)
+			screen.draw_dashed_line(sky + Vector2(65, -120) * screen.ACTOR_SCALE, target_position, Color(0.4, 0.8, 1, 0.45), 1, 7)
 			screen.draw_arc(target_position, 24, 0, TAU, 24, BLUE, 2)
 		Stage.THROW:
 			frame = 6 if elapsed < 0.07 else (7 if elapsed < 0.15 else 8)
 			actor.x += smoothstep(0.0, 0.22, elapsed) * 12.0
+			if elapsed >= 0.07:
+				var release: Vector2 = actor + Vector2(65,-120) * screen.ACTOR_SCALE
+				_draw_spear(screen,release,(target_position-release).angle())
 		Stage.FLIGHT:
 			frame = 7 if elapsed < 0.15 else 8
-			var start := sky + Vector2(45, -70) * relative_scale
-			var pos := start.lerp(target_position, clampf(elapsed / 0.38, 0, 1))
+			var start: Vector2 = sky + Vector2(65, -120) * screen.ACTOR_SCALE
+			var pos: Vector2 = start.lerp(target_position, clampf(elapsed / 0.38, 0, 1))
 			_draw_spear(screen, pos, (target_position - start).angle())
 		Stage.WAIT, Stage.LIGHTNING:
 			frame = 9
@@ -134,16 +134,13 @@ func draw(screen) -> void:
 	var active_texture: Texture2D = texture
 	if motion_frame >= 0 and motion_texture != null:
 		active_texture = motion_texture
-		var row := int(motion_frame / 4)
-		var tops := [0.0, 304.0, 543.0, 815.0]
-		var heights := [304.0, 239.0, 272.0, 271.0]
-		region = Rect2((motion_frame % 4) * 362, tops[row], 362, heights[row])
-	var dimensions: Vector2 = region.size * art_scale
+		region = REGIONS[motion_frame]
+	var actor_rect := Rect2(actor - screen.FOOT_ANCHOR * screen.ACTOR_SCALE, screen.ANIMATION_CELL * screen.ACTOR_SCALE)
 	if motion_frame < 0 and frame == 11:
 		# Resume the regular standing sprite before handing the turn back.
 		screen._frame(screen.calm_idle_texture, 0, 3, 2, Rect2(actor - screen.FOOT_ANCHOR * screen.ACTOR_SCALE, screen.ANIMATION_CELL * screen.ACTOR_SCALE))
 	else:
-		screen.draw_texture_rect_region(active_texture, Rect2(actor - Vector2(dimensions.x * 0.5, dimensions.y * 0.98), dimensions), region)
+		screen.draw_texture_rect_region(active_texture, actor_rect, region)
 
 func _draw_spear(screen, center: Vector2, angle: float) -> void:
 	var points := PackedVector2Array()

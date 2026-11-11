@@ -12,8 +12,8 @@ func run() -> void:
 	field.grace = 10000
 	field.rng.seed = 120
 	field._tick_light_patrols(0.0,player)
-	check(field.light_patrol_areas.size() == 4,"Exactly half of eight lit areas receive patrols")
-	check(player.follower_grid-player.grid_pos == player.extra_grids[0]-player.follower_grid and player.extra_grids[0]-player.follower_grid == player.extra_grids[1]-player.extra_grids[0],"Initial party is one straight line")
+	check(field.light_patrol_areas.size() == ceili((field.lamps.size()-field.dark_count())/2.0),"Exactly half of the current lit areas receive patrols")
+	check(player.extra_followers.is_empty() and (player.follower_grid-player.grid_pos).length() == 1,"The two field actors begin adjacent")
 	var residents: Array[Node2D] = []
 	for area in field.light_patrol_areas:
 		var count := 0
@@ -31,7 +31,7 @@ func run() -> void:
 	for step in 80:
 		field._decide(patrol,player)
 		if patrol.moving:
-			check(not player.occupies_tile(patrol.target),"Patrol avoids all four occupied party cells")
+			check(not player.occupies_tile(patrol.target),"Patrol avoids both occupied field party cells")
 			patrol.advance(float(field.settings.enemy_step_seconds),float(field.settings.enemy_step_seconds))
 		visited[patrol.grid_pos] = true
 		check(field.area_at(patrol.grid_pos) == patrol.patrol_area,"Patrol stays within its own district")

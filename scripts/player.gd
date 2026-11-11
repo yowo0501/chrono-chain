@@ -6,6 +6,7 @@ extends Node2D
 
 const TILE_SIZE := preload("res://scripts/field.gd").TILE_SIZE
 const MOVE_TIME := 0.24
+const FIELD_COMPANIONS: Array[String] = [] # Current field cast: Chuheun and Yeonwoo only.
 
 const DIR_VECTOR := {
 	"down": Vector2i(0, 1),
@@ -59,14 +60,13 @@ func _ready() -> void:
 			follower_grid = grid_pos + offset
 			break
 	follower.position = Vector2(follower_grid * TILE_SIZE)
-	for id in ["seola", "wiseong"]:
+	for id in FIELD_COMPANIONS:
 		var companion := FieldActor.new()
 		companion.name = id.capitalize()
 		companion.z_base = 2300
 		companion.configure(load("res://assets/sprites/field/%s_night.png" % id))
 		get_parent().add_child.call_deferred(companion)
 		extra_followers.append(companion)
-	_place_extra_followers()
 	_update_sprite(false)
 	var camera := get_node_or_null("Camera2D") as Camera2D
 	if camera != null and field != null:
@@ -217,6 +217,8 @@ func _update_sprite(walking: bool) -> void:
 	sprite.walking = walking
 
 func _place_extra_followers() -> void:
+	if extra_followers.is_empty():
+		return
 	# Prefer a complete straight starting column; walking still follows the path.
 	for direction in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
 		var clear := true

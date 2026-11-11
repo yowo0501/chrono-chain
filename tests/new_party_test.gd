@@ -50,18 +50,17 @@ func run() -> void:
 	field.set_process(false)
 	field.grace = 999
 	check(manager.party.size() == 4,"Four party members registered")
-	check(player.extra_followers.size() == 2,"Three companions follow leader")
+	check(player.extra_followers.is_empty(),"Only Chuheun and Yeonwoo appear on the field")
 	for actor in [player.sprite,player.follower]+player.extra_followers:
-		check(actor.texture.get_size() == Vector2(192,256),"Every field atlas has fixed 64px 3x4 frames")
+		check(actor.texture.get_size() == Vector2(192,256),"Hero field atlases have 12 newly drawn whole-body poses")
 	for step in [Vector2i.RIGHT,Vector2i.RIGHT,Vector2i.UP,Vector2i.UP,Vector2i.LEFT]:
 		var old_leader: Vector2i = player.grid_pos
 		var old_follower: Vector2i = player.follower_grid
-		var old_extra: Vector2i = player.extra_grids[0]
 		player._move_to(player.grid_pos+step)
 		if not player._moving:
 			continue
 		player._advance_step(player.MOVE_TIME)
-		check(player.follower_grid == old_leader and player.extra_grids[0] == old_follower and player.extra_grids[1] == old_extra,"All companions trace predecessor through turns")
+		check(player.follower_grid == old_leader and player.extra_grids.is_empty(),"Yeonwoo traces Chuheun through turns")
 	for area in field.lamps.size():
 		if not field.lit[area]:
 			check(field.repair_lamp(area,player),"Manual repair succeeds")

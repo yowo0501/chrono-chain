@@ -1,0 +1,16 @@
+[
+  {
+    "id": "chuheun",
+    "prompt": "Edit this newly drawn 3-column, 4-row walking sprite sheet. Correct ONLY the walking poses in ROW2 COLUMN3 and ROW3 COLUMN3. Currently the two profile walking poses repeat the same near leg/arm. Make column3 the unmistakable OPPOSITE footfall to column2. ROW2 COLUMN3 (faces LEFT): the NEAR/foreground arm and hand, the one visible along the lower right outline of torso, swing BACK toward SCREEN-RIGHT, hand clearly behind hip. The NEAR foreground leg trails toward SCREEN-RIGHT, trailing boot heel up with toe touching ground behind. The FAR leg stretches FORWARD toward SCREEN-LEFT with the far boot heel leading. ROW3 COLUMN3 (faces RIGHT): NEAR arm swings BACK toward SCREEN-LEFT, hand clearly behind hip; NEAR leg trails toward SCREEN-LEFT with trailing heel lifted; FAR leg steps forward toward SCREEN-RIGHT. These are a low natural walking stride, not a kick. Use clear overlap and near/far limb shading to show alternating legs. Preserve the exact compact chibi style, head positions/shape/size, torso/clothes, all other 10 poses, canvas dimensions, cell positions and baseline. Keep whole bodies seamlessly drawn. Do not mirror the whole body or swap head images. Fully transparent background; no shadow/fog/glow or text.",
+    "refs": [
+      "C:/Users/Administrator/Documents/ChatGPT/크로노 체인 코딩/assets/sprites/field-redraw/source/chuheun-initial.png"
+    ]
+  },
+  {
+    "id": "yeonwoo",
+    "prompt": "Edit this newly drawn 3-column, 4-row walking sprite sheet. Correct ONLY the walking poses in ROW2 COLUMN3 and ROW3 COLUMN3. Currently the two profile walking poses repeat the same near leg/arm. Make column3 the unmistakable OPPOSITE footfall to column2. ROW2 COLUMN3 (faces LEFT): the NEAR/foreground arm and hand, the one visible along the lower right outline of torso, swing BACK toward SCREEN-RIGHT, hand clearly behind hip. The NEAR foreground leg trails toward SCREEN-RIGHT, trailing boot heel up with toe touching ground behind. The FAR leg stretches FORWARD toward SCREEN-LEFT with the far boot heel leading. ROW3 COLUMN3 (faces RIGHT): NEAR arm swings BACK toward SCREEN-LEFT, hand clearly behind hip; NEAR leg trails toward SCREEN-LEFT with trailing heel lifted; FAR leg steps forward toward SCREEN-RIGHT. These are a low natural walking stride, not a kick. Use clear overlap and near/far limb shading to show alternating legs. Preserve the exact compact chibi style, head positions/shape/size, torso/clothes, all other 10 poses, canvas dimensions, cell positions and baseline. Keep whole bodies seamlessly drawn. Do not mirror the whole body or swap head images. Fully transparent background; no shadow/fog/glow or text.",
+    "refs": [
+      "C:/Users/Administrator/Documents/ChatGPT/크로노 체인 코딩/assets/sprites/field-redraw/source/yeonwoo-initial.png"
+    ]
+  }
+]

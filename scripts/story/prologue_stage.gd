@@ -44,15 +44,14 @@ func _draw() -> void:
 			point.y -= sin(rush_progress * PI) * 13.0
 		var frame := 0
 		if rushing:
-			frame = 1 + int(clock * 14.0) % 2
-		elif drawing_chains and chain_progress < 1.0:
-			frame = 1 if chain_progress < 0.6 else 2
+			frame = [1,0,2,0][int(clock*18.0)%4]
 		var shadow := point + Vector2(24,43)
 		draw_set_transform(shadow,0,Vector2(1,0.3))
 		draw_circle(Vector2.ZERO,17,Color(0,0,0,0.35))
 		draw_set_transform(Vector2.ZERO)
 		var row: int = ROWS[facing[id]]
-		draw_texture_rect_region(heroes[id],Rect2(point,HERO_SIZE),Rect2(frame*64,row*64,64,64))
+		# Same full-body atlas and ground anchor as field exploration.
+		draw_texture_rect_region(heroes[id],Rect2(shadow-Vector2(32,62)*0.75,HERO_SIZE),Rect2(frame*64,row*64,64,64))
 		if chain_progress > 0:
 			_draw_chain(point, id)
 

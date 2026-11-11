@@ -59,13 +59,13 @@ func run() -> void:
 		check(not edges.is_empty(),"Expanded object has an interaction perimeter")
 		check(player.grid_pos in edges or not field.path_to(player.grid_pos,edges).is_empty(),"Expanded object reachable from entrance")
 	for actor in [player.sprite,player.follower] + field.symbols:
-		check(actor.texture.get_size() == Vector2(192,256),"Every field actor uses new 64px DS-style art")
+		check(actor.texture.get_size() == (Vector2(192,256) if actor in [player.sprite,player.follower] else Vector2(192,256)),"Each actor uses its matching atlas layout")
 	var start: Vector2 = player.position
 	player._move_to(player.grid_pos+Vector2i.RIGHT)
 	player._advance_step(player.MOVE_TIME/2.0)
 	check(player.position.is_equal_approx(start+Vector2(8,0)),"Pure 2D map retains continuous half-step motion")
 	player._advance_step(player.MOVE_TIME/2.0)
-	check(player.sprite.frame_rect(Rect2()).size == Vector2(16,16),"Sprite retains fixed 2D tile size")
+	check(player.sprite.frame_rect(Rect2()).size == Vector2(16,16),"Compact hero keeps its original fixed field size")
 	# Repeated dark encounters are independent of the five persistent symbols.
 	player.warp_to(Vector2i(31,10))
 	field.grace = 0

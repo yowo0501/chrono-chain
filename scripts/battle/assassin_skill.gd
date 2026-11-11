@@ -97,24 +97,11 @@ func advance(delta: float) -> void:
 		Stage.RECOVER: _enter(Stage.DONE)
 
 func actor_region(frame: int) -> Rect2:
-	var tops := [0.0,278.0,510.0,755.0]
-	var heights := [278.0,232.0,245.0,237.0]
-	# The dash extends beyond its nominal cell; the return starts after it.
-	if frame == 6:
-		return Rect2(793,278,477,232)
-	if frame == 7:
-		return Rect2(1270,278,316,232)
-	return Rect2((frame%4)*396.5,tops[frame/4],396.5,heights[frame/4])
+	return Rect2((frame % 4) * 384, int(frame / 4) * 240, 384, 240)
 
 func actor_rect(frame: int, at: Vector2, battle_scale: float) -> Rect2:
-	# 236px standing figure -> the ordinary Yeonwoo sprite's 162px figure.
-	# One scale for every pose; crouching/yawning never changes body scale.
-	var scale := (162.0/236.0)*battle_scale
-	var feet := [Vector2(199,262),Vector2(208,262),Vector2(262,259),Vector2(240,260),
-		Vector2(187,219),Vector2(205,219),Vector2(250,219),Vector2(173,226),
-		Vector2(194,239),Vector2(208,239),Vector2(221,239),Vector2(250,239),
-		Vector2(176,226),Vector2(220,226),Vector2(225,226),Vector2(223,226)]
-	return Rect2(at-feet[frame]*scale,actor_region(frame).size*scale)
+	# All refreshed skill poses share the regular actor's scale and foot anchor.
+	return Rect2(at - Vector2(128, 232) * battle_scale, actor_region(frame).size * battle_scale)
 
 func _actor(screen, frame: int, at: Vector2, alpha: float = 1.0) -> void:
 	screen.draw_texture_rect_region(texture,actor_rect(frame,at,screen.ACTOR_SCALE),actor_region(frame),Color(1,1,1,alpha))

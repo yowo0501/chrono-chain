@@ -1,0 +1,46 @@
+{
+  "field_cast": [
+    "강추흔",
+    "김연우"
+  ],
+  "field_atlas": {
+    "width": 768,
+    "height": 512,
+    "cell": [
+      96,
+      128
+    ],
+    "directions": [
+      "down",
+      "left",
+      "right",
+      "up"
+    ],
+    "poses_per_direction": 8,
+    "walking_cycle": [
+      1,
+      5,
+      2,
+      3,
+      6,
+      4
+    ],
+    "cycle_seconds": 0.48,
+    "ground_anchor": [
+      48,
+      124
+    ],
+    "whole_body_frames": true
+  },
+  "battle_approach": "Preserved original choreography/acting; ImageGen appearance edits from supplied character sheets. Chuheun overhead lasso/stretch and Yeonwoo wrist-only preparation/yawn/kick restored; timer lance, thunder spear, can drink and sandwich reactions retained.",
+  "generation": "Built-in ImageGen; 4 field sources + 12 battle edit sources. Godot only extracts, aligns and packs complete poses. The GIF encodes unmodified game screenshots.",
+  "verification": {
+    "actual_project": "C:/Users/Administrator/Documents/ChatGPT/크로노 체인 동방 버전",
+    "functional_suites": 9,
+    "failures": 0,
+    "held_input_recording_frames": 256,
+    "recording_seconds": 5.12,
+    "field_gait_idle_flashes": 0,
+    "backup": "C:/Users/Administrator/Documents/ChatGPT/크로노 체인 코딩/backups/character-v2-before/actual-project"
+  }
+}
