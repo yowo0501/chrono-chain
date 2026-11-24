@@ -25,7 +25,7 @@ func _ready() -> void:
 func start(source: Node2D) -> void:
 	field = source
 	enabled = true
-	show_step("move", "방향키로 이동", "↑ ↓ ← → 방향키로 파티를 움직입니다.\n강조된 방향키를 누르거나 클릭해 시작하세요.", [
+	show_step("move", "방향키로 이동", "방향키 두 개를 함께 눌러 대각선으로도 이동합니다.\nShift를 누르면 2배속 대시!\n강조된 방향키를 누르거나 클릭해 시작하세요.", [
 		option("←", Rect2(226,450,72,50), KEY_LEFT, move.bind(Vector2i.LEFT)),
 		option("↑", Rect2(306,450,72,50), KEY_UP, move.bind(Vector2i.UP)),
 		option("↓", Rect2(386,450,72,50), KEY_DOWN, move.bind(Vector2i.DOWN)),
@@ -34,7 +34,7 @@ func start(source: Node2D) -> void:
 func move(direction: Vector2i) -> void:
 	var player: Node2D = field.walker()
 	player._move_to(player.grid_pos + direction)
-	info("light", "첫 목표 · 빛 에어리어", "밝은 구역에서 보이는 적에게 다가가세요.\n적과 접촉하면 전투가 시작됩니다.\nM 지도의 노란 구역이 빛 에어리어입니다.", "빛 에어리어로 출발")
+	info("light", "첫 목표 · 빛 에어리어", "추흔 중심 5×5 범위에 들어온 적에게 락온 표시가 뜹니다. Enter로 호밍 체인을 휘두르세요.\n동작 0.5초 · 후딜 0.25초. 명중하면 아군 선제공격!\n다가오는 적과 접촉하면 적 선제, 도망가는 적은 반반입니다.\nM 지도의 노란 구역이 빛 에어리어입니다.", "빛 에어리어로 출발")
 
 func option(label: String, rect: Rect2, key: int, callback: Callable = Callable(), existing: bool = false) -> Dictionary:
 	return {"label": label, "rect": rect, "key": key, "callback": callback, "existing": existing}
@@ -112,7 +112,7 @@ func _process(_delta: float) -> void:
 		info("boss", "모든 가로등 점등 완료!", "분수 광장에 보스가 나타났습니다.\n지도를 확인하고 광장으로 돌아가 보스에게 다가가세요.", "M · 보스 위치 보기", open_map)
 		choices[0].key = KEY_M
 	elif night_battle_done and not seen.has("lamps"):
-		info("lamps", "다음 목표 · 모든 가로등 밝히기", "꺼진 가로등은 파란 빛으로 표시됩니다.\n가로등 옆에서 E를 누르면 체력 소모 없이 켤 수 있습니다.\n도시의 모든 가로등을 밝히세요!", "M · 가로등 지도 보기", open_map)
+		info("lamps", "다음 목표 · 모든 가로등 밝히기", "꺼진 가로등은 작은 푸른 표식으로 찾을 수 있습니다.\n옆에서 E를 누르면 체력 소모 없이 켤 수 있습니다.\n어둠 구역은 점등 후에도 푸른 밤빛을 유지하며 길이 드러납니다.", "M · 가로등 지도 보기", open_map)
 		choices[0].key = KEY_M
 	elif night_battle_done and not seen.has("lamp_use") and not field.walker()._moving:
 		var target: Dictionary = field.interaction_target(field.walker())

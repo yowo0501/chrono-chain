@@ -1,0 +1,567 @@
+{
+  "source": "프롤로그 챕터 스크립트.docx",
+  "groups": {
+    "opening": [
+      {
+        "speaker": "나레이션",
+        "text": "당신에게 있어서 밤은 어떤 시간인가?",
+        "source_paragraph": 4
+      },
+      {
+        "speaker": "나레이션",
+        "text": "보통은, 밤은 잠을 자는 시간이다.",
+        "source_paragraph": 6
+      },
+      {
+        "speaker": "나레이션",
+        "text": "하루의 모든 일과를 마치고, 편안한 침대에 누워",
+        "source_paragraph": 10
+      },
+      {
+        "speaker": "나레이션",
+        "text": "인생의 모든 복잡한 일들은 잠시 망각하고, 현실이라는 족쇄를 벗어 던진 채로 잠시 휴식할 수 있다.",
+        "source_paragraph": 12
+      },
+      {
+        "speaker": "나레이션",
+        "text": "그러나 누군가에겐 밤은 잠을 버텨가며 비몽사몽 뜬 눈으로 보내는 몽환의 시간일 것이다.",
+        "source_paragraph": 14
+      },
+      {
+        "speaker": "나레이션",
+        "text": "한시도 쉴 틈 없이 생명의 불꽃을 태운다.",
+        "source_paragraph": 16
+      },
+      {
+        "speaker": "나레이션",
+        "text": "어둠 속에서도 빛을 찾아볼 수 있는 시간이 바로 밤이다.",
+        "source_paragraph": 18
+      },
+      {
+        "speaker": "나레이션",
+        "text": "그러던 어느 날, 나는 밤의 어둠 속에서 믿을 수 없는 것을 발견하였다. 그 순간 내 인생은 완전히 바뀌었다.",
+        "source_paragraph": 22
+      },
+      {
+        "speaker": "나레이션",
+        "text": "나는 그제서야 밤의 실체를 알게 되었다.",
+        "source_paragraph": 24
+      },
+      {
+        "speaker": "나레이션",
+        "text": "밤은 시간이 아니다.",
+        "source_paragraph": 28
+      },
+      {
+        "speaker": "나레이션",
+        "text": "밤은…",
+        "source_paragraph": 32
+      }
+    ],
+    "confrontation": [
+      {
+        "speaker": "연우",
+        "text": "…꿈틀 거리는 검은색 액체괴물이었다.",
+        "source_paragraph": 37
+      },
+      {
+        "speaker": "추흔",
+        "text": "갑자기 이상한 혼잣말은 왜 하는 거야?",
+        "source_paragraph": 41
+      },
+      {
+        "speaker": "연우",
+        "text": "…원래 멋있는 이야기의 시작은 독백과 함께 시작되는 법이지.",
+        "source_paragraph": 43
+      },
+      {
+        "speaker": "추흔",
+        "text": "뭐?",
+        "source_paragraph": 45
+      },
+      {
+        "speaker": "연우",
+        "text": "그런 게 있어. 앞이나 봐.",
+        "source_paragraph": 47
+      },
+      {
+        "speaker": "추흔",
+        "text": "어…응…",
+        "source_paragraph": 49
+      },
+      {
+        "speaker": "괄호",
+        "text": "그러니까, 우린…아까 두 가지 삶 속에서.",
+        "source_paragraph": 53
+      },
+      {
+        "speaker": "괄호",
+        "text": "후자의 삶을 살고 있어요.",
+        "source_paragraph": 55
+      },
+      {
+        "speaker": "괄호",
+        "text": "남들이 다 자고 있을 때 열심히 도시를 밝히고 있죠.",
+        "source_paragraph": 57
+      },
+      {
+        "speaker": "괄호",
+        "text": "어떻게 하냐고요?",
+        "source_paragraph": 59
+      },
+      {
+        "speaker": "괄호",
+        "text": "이렇게.",
+        "source_paragraph": 63
+      }
+    ],
+    "attack_intro": [
+      {
+        "speaker": "괄호",
+        "text": "우와, 괴물이다. 정말 크죠?",
+        "source_paragraph": 80
+      },
+      {
+        "speaker": "괄호",
+        "text": "우선 한번 때려 볼까요?",
+        "source_paragraph": 81
+      }
+    ],
+    "attack_qte": [
+      {
+        "speaker": "괄호",
+        "text": "좋아요! 공격을 누르면, 하단에 이렇게 바가 돌아다닐 거에요. 타이밍에 맞춰 space바를 누르세요! 특별히, 가운데에 딱 맞춰 누르면 크리티컬!",
+        "source_paragraph": 83
+      },
+      {
+        "speaker": "괄호",
+        "text": "바는 두 번 왕복해요. 만약 두 번 왕복하는 동안 맞추지 못하면…에이, 설마.",
+        "source_paragraph": 84
+      }
+    ],
+    "attack_hit": [
+      {
+        "speaker": "추흔",
+        "text": "명중이다!",
+        "source_paragraph": 88
+      },
+      {
+        "speaker": "연우",
+        "text": "호들갑 떨지 말고. 아직 안 끝났다.",
+        "source_paragraph": 89
+      }
+    ],
+    "attack_miss": [
+      {
+        "speaker": "연우",
+        "text": "…",
+        "source_paragraph": 91
+      },
+      {
+        "speaker": "추흔",
+        "text": "…",
+        "source_paragraph": 92
+      },
+      {
+        "speaker": "연우",
+        "text": "…사실 기대를 안 해서 실망스럽진 않아.",
+        "source_paragraph": 93
+      },
+      {
+        "speaker": "추흔",
+        "text": "야!!!",
+        "source_paragraph": 94
+      },
+      {
+        "speaker": "연우",
+        "text": "앞이나 봐. 아직 안 끝났다.",
+        "source_paragraph": 95
+      }
+    ],
+    "guard_intro": [
+      {
+        "speaker": "괄호",
+        "text": "적은 다음 턴에 공격해 올 거에요. 이를 대비해서, 방어를 해봅시다!",
+        "source_paragraph": 96
+      }
+    ],
+    "guard_qte": [
+      {
+        "speaker": "괄호",
+        "text": "방어의 경우도 마찬가지에요. 적이 방어한 캐릭터를 공격해오면, 하단에 바가 돌아다닐거에요. 타이밍에 맞춰 space바를 누르면 데미지가 경감됩니다. 특별히, 가운데에 딱 맞춰 누르면 패링!",
+        "source_paragraph": 98
+      }
+    ],
+    "guard_miss_both": [
+      {
+        "speaker": "추흔",
+        "text": "…",
+        "source_paragraph": 105
+      },
+      {
+        "speaker": "연우",
+        "text": "…",
+        "source_paragraph": 106,
+        "expression": "embarrassed"
+      },
+      {
+        "speaker": "추흔",
+        "text": "난 너한테 기대를 많이 했는데…",
+        "source_paragraph": 108
+      },
+      {
+        "speaker": "연우",
+        "text": "조용히 햇!",
+        "source_paragraph": 109,
+        "expression": "angry"
+      }
+    ],
+    "guard_miss_only": [
+      {
+        "speaker": "추흔",
+        "text": "…",
+        "source_paragraph": 105
+      },
+      {
+        "speaker": "연우",
+        "text": "…",
+        "source_paragraph": 106,
+        "expression": "embarrassed"
+      },
+      {
+        "speaker": "연우",
+        "text": "넌 아무것도 못 본거야.",
+        "source_paragraph": 111
+      },
+      {
+        "speaker": "추흔",
+        "text": "뭐를?",
+        "source_paragraph": 112
+      },
+      {
+        "speaker": "연우",
+        "text": "…됐다.",
+        "source_paragraph": 113
+      }
+    ],
+    "free_battle": [
+      {
+        "speaker": "괄호",
+        "text": "적은 둘 중 하나를 랜덤으로 공격해와요. 방어를 언제나 예측할 수는 없으니, 주의하세요!",
+        "source_paragraph": 115
+      },
+      {
+        "speaker": "괄호",
+        "text": "이제 눈 앞의 검은 액체 괴물을 처리해 볼까요?",
+        "source_paragraph": 116
+      }
+    ],
+    "chase": [
+      {
+        "speaker": "추흔",
+        "text": "어, 저 녀석들 도망친다.",
+        "source_paragraph": 122
+      },
+      {
+        "speaker": "연우",
+        "text": "그걸 ‘어, 저 녀석들 도망친다’ 라고 멀뚱멀뚱히 보고 있는 바보가 어딨냐.",
+        "source_paragraph": 123
+      },
+      {
+        "speaker": "추흔",
+        "text": "음…",
+        "source_paragraph": 124
+      },
+      {
+        "speaker": "연우",
+        "text": "쫓아가자.",
+        "source_paragraph": 125
+      },
+      {
+        "speaker": "괄호",
+        "text": "맵을 돌아다니며 흩어진 적을 찾으세요. 방향키를 이용해 움직일 수 있습니다.",
+        "source_paragraph": 127
+      }
+    ],
+    "dash": [
+      {
+        "speaker": "연우",
+        "text": "…",
+        "source_paragraph": 130
+      },
+      {
+        "speaker": "추흔",
+        "text": "왜?",
+        "source_paragraph": 131
+      },
+      {
+        "speaker": "연우",
+        "text": "느긋느긋하게 걸어다니고 있을 때가 아니잖아, 이 멍충아.",
+        "source_paragraph": 132
+      },
+      {
+        "speaker": "추흔",
+        "text": "아, 그렇지.",
+        "source_paragraph": 133
+      },
+      {
+        "speaker": "연우",
+        "text": "뛰어!",
+        "source_paragraph": 134
+      },
+      {
+        "speaker": "괄호",
+        "text": "필드에서 shift 키를 누르면 달릴 수 있어요!",
+        "source_paragraph": 135
+      }
+    ],
+    "sighting": [
+      {
+        "speaker": "괄호",
+        "text": "저기 도망가는 녀석이 보이네요. 뛰어가서 잡아 볼까요?",
+        "source_paragraph": 138
+      }
+    ],
+    "lockon": [
+      {
+        "speaker": "괄호",
+        "text": "해당 적에게 가까이 다가가면, 머리 위에 이렇게 락온 표시가 뜰거에요. 이때 엔터를 눌러 필드의 적을 때리면, 선제 공격을 할 수 있어요!",
+        "source_paragraph": 141
+      }
+    ],
+    "multi_qte": [
+      {
+        "speaker": "괄호",
+        "text": "적이 여러 개죠? 이렇게 되면 바도 여러 개가 뜰 거에요. 적마다 해당하는 바가 다르게 배정되어 있어요!",
+        "source_paragraph": 144
+      }
+    ],
+    "next_pack": [
+      {
+        "speaker": "괄호",
+        "text": "나머지 적도 잡으러 가봅시다!",
+        "source_paragraph": 148
+      }
+    ],
+    "final_intro": [
+      {
+        "speaker": "추흔",
+        "text": "와, 많다.",
+        "source_paragraph": 153
+      },
+      {
+        "speaker": "연우",
+        "text": "한 놈씩 잡아선 끝이 없겠는걸…",
+        "source_paragraph": 154
+      },
+      {
+        "speaker": "추흔",
+        "text": "어떡하지.",
+        "source_paragraph": 155
+      },
+      {
+        "speaker": "연우",
+        "text": "집중이나 해.",
+        "source_paragraph": 156
+      },
+      {
+        "speaker": "추흔",
+        "text": "오케이!",
+        "source_paragraph": 157
+      }
+    ],
+    "flick_after": [
+      {
+        "speaker": "추흔",
+        "text": "아야!",
+        "source_paragraph": 159
+      },
+      {
+        "speaker": "연우",
+        "text": "집중 버튼을 누르라고, 이 바보야.",
+        "source_paragraph": 160
+      },
+      {
+        "speaker": "추흔",
+        "text": "알겠어…알겠다고.",
+        "source_paragraph": 161
+      }
+    ],
+    "focus_intro": [
+      {
+        "speaker": "괄호",
+        "text": "이 버튼이 보이세요? 이 게임에서 모든 행동들은 스택을 쌓아요.",
+        "source_paragraph": 163
+      },
+      {
+        "speaker": "괄호",
+        "text": "공격은 공격 스택을, 수비는 수비 스택을…그리고 집중을 따로 해서 쌓아야 하는 집중 스택이 있죠.",
+        "source_paragraph": 164
+      },
+      {
+        "speaker": "괄호",
+        "text": "이 스택들을 사용하여 특수 스킬을 쓸 수 있어요!",
+        "source_paragraph": 165
+      },
+      {
+        "speaker": "괄호",
+        "text": "지금은 집중 스택이 하나도 없어요. 집중해 볼까요?",
+        "source_paragraph": 166
+      }
+    ],
+    "focus_after": [
+      {
+        "speaker": "괄호",
+        "text": "다음 턴에 막강한 스킬을 쓸 수 있겠어요. 이번 턴을 넘기는 게 관건이에요.",
+        "source_paragraph": 168
+      }
+    ],
+    "special_intro": [
+      {
+        "speaker": "괄호",
+        "text": "이제 특수 스킬을 써볼까요? 특수를 눌러보세요!",
+        "source_paragraph": 171
+      }
+    ],
+    "timer_intro": [
+      {
+        "speaker": "괄호",
+        "text": "타이머를 써봐요!",
+        "source_paragraph": 173
+      }
+    ],
+    "victory": [
+      {
+        "speaker": "추흔",
+        "text": "휴~끝났다.",
+        "source_paragraph": 177
+      },
+      {
+        "speaker": "연우",
+        "text": "네 바보짓만 아니었어도 더 일찍 끝났을 것 같은데…",
+        "source_paragraph": 178
+      },
+      {
+        "speaker": "추흔",
+        "text": "얼마나 바보짓을 했다고 그러는거야…",
+        "source_paragraph": 179
+      }
+    ],
+    "novel": [
+      {
+        "speaker": "추흔",
+        "text": "그래서 아까 하던 얘기는 뭐야?",
+        "source_paragraph": 183
+      },
+      {
+        "speaker": "연우",
+        "text": "…아, 그거?",
+        "source_paragraph": 184
+      },
+      {
+        "speaker": "연우",
+        "text": "그냥…뭔가…최근에 소설 같은 걸 써보고 있어서.",
+        "source_paragraph": 185
+      },
+      {
+        "speaker": "추흔",
+        "text": "소설?",
+        "source_paragraph": 186
+      },
+      {
+        "speaker": "연우",
+        "text": "응. 그래서 그냥 시작을 어떻게 끊을 지 생각을 하고 있었어.",
+        "source_paragraph": 187
+      },
+      {
+        "speaker": "추흔",
+        "text": "무슨 소설인데? 알려줘!",
+        "source_paragraph": 188
+      },
+      {
+        "speaker": "연우",
+        "text": "어차피 너는 다 아는 이야기야, 바보야.",
+        "source_paragraph": 189
+      },
+      {
+        "speaker": "추흔",
+        "text": "뭔 얘기인데?",
+        "source_paragraph": 190
+      }
+    ],
+    "ending": [
+      {
+        "speaker": "괄호",
+        "text": "이건…그러니까…시작을 끊기가 힘드네요.",
+        "source_paragraph": 192
+      },
+      {
+        "speaker": "괄호",
+        "text": "그냥…",
+        "source_paragraph": 193
+      },
+      {
+        "speaker": "괄호",
+        "text": "과거를 잃어버린 소년과",
+        "source_paragraph": 194
+      },
+      {
+        "speaker": "괄호",
+        "text": "미래를 잃어버린 소녀의 이야기에요.",
+        "source_paragraph": 195
+      },
+      {
+        "speaker": "괄호",
+        "text": "그 안에 펼쳐지는 온갖 소동과…",
+        "source_paragraph": 196
+      },
+      {
+        "speaker": "괄호",
+        "text": "개그와…",
+        "source_paragraph": 197
+      },
+      {
+        "speaker": "괄호",
+        "text": "감동과…",
+        "source_paragraph": 198
+      },
+      {
+        "speaker": "괄호",
+        "text": "미스터리와…",
+        "source_paragraph": 199
+      },
+      {
+        "speaker": "괄호",
+        "text": "로맨스…크흠.",
+        "source_paragraph": 200
+      },
+      {
+        "speaker": "괄호",
+        "text": "아, 아무튼 시작해 볼까요?",
+        "source_paragraph": 201
+      },
+      {
+        "speaker": "괄호",
+        "text": "로, 로고 띄워!",
+        "source_paragraph": 202
+      }
+    ],
+    "logo": [
+      {
+        "speaker": "괄호",
+        "text": "그렇지, 그렇지. 누가 디자인했는지는 몰라도 멋진 로고네.",
+        "source_paragraph": 204
+      },
+      {
+        "speaker": "괄호",
+        "text": "자 그러면…이야기의 시작은…",
+        "source_paragraph": 205
+      },
+      {
+        "speaker": "괄호",
+        "text": "아주, 아주 평범한 거리에서 시작됩니다.",
+        "source_paragraph": 206
+      }
+    ]
+  }
+}

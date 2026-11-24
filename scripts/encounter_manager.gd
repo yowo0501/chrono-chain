@@ -74,7 +74,7 @@ func balance_for_context(context: Dictionary, map_settings: Dictionary) -> Dicti
 
 func enemy_count_limits(context: Dictionary) -> Vector2i:
 	# Missing field progress uses the early-game limit, not the final stretch.
-	return Vector2i(3, 5) if int(context.get("dark_lamps", 4)) <= 2 else Vector2i(2, 4)
+	return Vector2i(2, 3) if int(context.get("dark_lamps", 4)) <= 2 else Vector2i(1, 2)
 
 func start_battle(walker: Node2D, context: Dictionary = {}, symbol: Node2D = null, source_field: Node2D = null) -> void:
 	if active or (is_instance_valid(source_field) and source_field.boss_defeated):
@@ -99,6 +99,14 @@ func start_battle(walker: Node2D, context: Dictionary = {}, symbol: Node2D = nul
 	add_child(overlay)
 	screen = null
 	transition = Transition.new()
+	var focus: Vector2 = player.position + Vector2(8, 8)
+	if is_instance_valid(symbol):
+		focus = (player.position + symbol.position) * 0.5 + Vector2(8, 8)
+	var screen_point: Vector2 = player.get_canvas_transform() * focus
+	var snapshot: Image = null
+	if DisplayServer.get_name() != "headless":
+		snapshot = get_viewport().get_texture().get_image()
+	transition.configure(snapshot, screen_point / get_viewport().get_visible_rect().size)
 	transition.covered.connect(_on_transition_covered)
 	transition.finished.connect(_on_transition_finished)
 	overlay.add_child(transition)
@@ -142,6 +150,7 @@ func _finish_battle(won: bool) -> void:
 	transition = null
 	active = false
 	if is_instance_valid(player):
+		player.reset_field_action()
 		player.input_locked = false
 	if is_instance_valid(encounter_field):
 		encounter_field.battle_resolved(encounter_symbol, won)
@@ -154,4 +163,3 @@ func _finish_battle(won: bool) -> void:
 	encounter_symbol = null
 	encounter_field = null
 	encounter_context = {}
-

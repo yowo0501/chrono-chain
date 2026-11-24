@@ -94,21 +94,21 @@ func run() -> void:
 		field.lit.fill(true)
 		for area in remaining:
 			field.lit[area+5] = false
-		var lower := 3 if remaining <= 2 else 2
+		var lower := 2 if remaining <= 2 else 1
 		for light in [true,false]:
 			var seen := {}
 			for trial in 40:
 				manager.start_symbol_battle(player,null,field,{"boss":false,"light":light,"dark_lamps":99})
 				var rolled: int = manager.encounter_balance.monster_count
 				check(manager.encounter_context.dark_lamps == remaining,"Count uses live field progress")
-				check(rolled >= lower and rolled <= lower+2, "Enemy count follows remaining lamps")
+				check(rolled >= lower and rolled <= lower+1, "Enemy count follows remaining lamps")
 				seen[rolled] = true
 				manager._finish_battle(true)
 				await process_frame
-			check(seen.size() == 3, "All three allowed group sizes occur")
+			check(seen.size() == 2, "Both allowed group sizes occur")
 		for requested in [-1,99]:
 			var config: Dictionary = manager.balance_for_context({"boss":false,"light":true,"dark_lamps":remaining,"enemy_count":requested},field.settings)
-			check(config.monster_count == (lower if requested < 0 else lower+2),"Explicit counts obey progress limits")
+			check(config.monster_count == (lower if requested < 0 else lower+1),"Explicit counts obey progress limits")
 	manager.start_symbol_battle(player,null,field,{"boss":true,"light":false,"dark_lamps":3})
 	check(manager.encounter_balance.monster_count == 1, "Boss remains a single enemy")
 	manager._finish_battle(true)

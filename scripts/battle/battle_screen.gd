@@ -12,7 +12,7 @@ const MUTED := Color("97a7bc")
 const ORANGE := Color("ffb35a")
 const BLUE := Color("61cfff")
 const GREEN := Color("66dfb0")
-const HERO_POS := [Vector2(265, 370), Vector2(265, 232), Vector2(150, 300), Vector2(150, 438)]
+const HERO_POS := [Vector2(300, 390), Vector2(205, 265)]
 const SHIELD_POS := Vector2(382, 270)
 const FOE_POS := [Vector2(475, 416), Vector2(587, 340), Vector2(694, 264)]
 const FOUR_FOE_POS := [Vector2(475, 440), Vector2(660, 440), Vector2(475, 245), Vector2(660, 245)]
@@ -22,6 +22,7 @@ const FOOT_ANCHOR := Vector2(128, 232)
 const SPECIAL_DURATION := 2.4
 const FOCUS_DURATION := 1.0
 const CHUHEUN_IDLE_CYCLE := 1.6
+const YEONWOO_IDLE_CYCLE := 1.8
 const YEONWOO_SPIN_CYCLE := 1.6
 const WINDUP_FRAMES := [8, 9, 10, 11, 12, 13]
 enum Phase { INTRO, COMMAND, TARGET, ATTACK_QTE, GUARD_QTE, RESOLVE, ENEMY, RESULT, TIMER, SKILLS, ASSASSIN, SUPPORT, BIND }
@@ -63,6 +64,9 @@ var fixed_windup_body: Texture2D
 var fixed_windup_wrist: Texture2D
 var windup_rig: Dictionary
 var calm_idle_texture: Texture2D
+var yeonwoo_idle_texture: Texture2D
+var renewed_actor = preload("res://scripts/battle/renewed_actor.gd").new()
+const ChainVisual = preload("res://scripts/chain_visual.gd")
 var chain_texture: Texture2D
 var chain_joins: Dictionary
 var special_actor := -1
@@ -82,6 +86,8 @@ var skill_index := 0
 var target_action := "attack"
 var armored_encounter := false
 var field_context: Dictionary = {}
+var opening_party_bonus := false
+var opening_enemy_bonus := false
 var enemy_positions: Array[Vector2] = []
 var reveal_remaining := 0.0
 var boss_dark := false
@@ -109,9 +115,7 @@ var seola_shield_texture: Texture2D = load("res://assets/sprites/battle/seola-sh
 var seola_overhead_texture: Texture2D = load("res://assets/sprites/battle/seola-overhead.png")
 
 func hero_position(index: int) -> Vector2:
-	if index == 2 and int(party[index].get("shield_turns", 0)) > 0 and int(party[index].hp) > 0:
-		return SHIELD_POS
-	return HERO_POS[index]
+	return HERO_POS[clampi(index,0,party.size()-1)]
 
 func darkness_active() -> bool:
 	return boss_dark or not bool(field_context.get("light", true))
@@ -170,11 +174,12 @@ func setup(heroes: Array, settings: Dictionary, random: RandomNumberGenerator, a
 	_place_enemies()
 
 func _ready() -> void:
+	preload("res://scripts/story/chapter/gold_palette.gd").apply(self)
 	font = SystemFont.new()
 	font.font_names = PackedStringArray(["Malgun Gothic", "Noto Sans CJK KR", "Arial"])
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	for id in ["chuheun", "yeonwoo", "seola", "wiseong"]:
+	for id in ["chuheun", "yeonwoo"]:
 		textures.append(load("res://assets/sprites/battle/" + id + ".png"))
 		motion_textures.append(load("res://assets/sprites/battle/" + id + "-motion.png") if id in ["chuheun", "yeonwoo"] else null)
 		expressive_textures.append(load("res://assets/sprites/battle/" + id + "-expressive.png") if id in ["chuheun", "yeonwoo"] else null)
@@ -183,6 +188,7 @@ func _ready() -> void:
 	fixed_windup_wrist = load("res://assets/sprites/battle/yeonwoo-windup-wrist.png")
 	windup_rig = JSON.parse_string(FileAccess.get_file_as_string("res://assets/sprites/battle/yeonwoo-windup-rig.json"))
 	calm_idle_texture = load("res://assets/sprites/battle/chuheun-idle-calm.png")
+	yeonwoo_idle_texture = load("res://assets/sprites/yeonwoo-toe-idle/toe-tap.png")
 	chain_joins = JSON.parse_string(FileAccess.get_file_as_string("res://assets/sprites/battle/chain-joins.json"))
 	monster_texture = load("res://assets/sprites/battle/shadow.png")
 	armored_texture = load("res://assets/sprites/battle/armored-shadow.png")
@@ -192,7 +198,7 @@ func _ready() -> void:
 	assassin_texture = load("res://assets/sprites/battle/yeonwoo-assassin.png")
 	_resize()
 	get_viewport().size_changed.connect(_resize)
-	_schedule(1.0, _start_party_turn)
+	_schedule(1.0, _start_opening_turn)
 
 func _resize() -> void:
 	var view := get_viewport_rect().size
@@ -292,6 +298,15 @@ func attack_frame(elapsed: float) -> int:
 	return 7
 
 func idle_frame(index: int, time: float) -> int:
+	if index == 1:
+		# Original small toe poses only; reverse before the high lift and settle.
+		var t := fposmod(time, YEONWOO_IDLE_CYCLE)
+		var poses := [0, 1, 2, 1]
+		var boundaries := [0.65, 0.85, 1.05, 1.25]
+		for i in boundaries.size():
+			if t < boundaries[i]:
+				return poses[i]
+		return 0
 	# Full support/landing poses last longer than the small weight transfers.
 	var t := fposmod(time, CHUHEUN_IDLE_CYCLE)
 	var boundaries: Array = [0.28, 0.50, 0.80, 1.08, 1.30] if index == 0 else [0.7, 0.9, 1.3]
@@ -305,31 +320,32 @@ func attack_anchor(index: int) -> Vector2:
 	return HERO_POS[index]
 
 func chain_points(index: int, elapsed: float) -> PackedVector2Array:
-	var frame := attack_frame(elapsed)
-	var joins: Dictionary = chain_joins["chuheun" if index == 0 else "yeonwoo"]
-	if not joins.has(str(frame)):
-		return PackedVector2Array()
-	var join: Array = joins[str(frame)]
-	var start := attack_anchor(index) + Vector2(join[0], join[1]) * ACTOR_SCALE
-	var end: Vector2 = foe_position(target_index) + Vector2(-24, -105) * ACTOR_SCALE
-	var reach := smoothstep(0.10, 0.20, elapsed) * (1.0 - smoothstep(0.40, 0.54, elapsed))
+	var frame: int = renewed_actor.attack_frame(elapsed)
+	var start: Vector2 = renewed_actor.socket(index,frame,attack_anchor(index))
+	var end: Vector2 = foe_position(target_index)+Vector2(-12,-70)
+	var reach := smoothstep(0.10,0.20,elapsed)*(1.0-smoothstep(0.40,0.60,elapsed))
 	if reach <= 0.001:
 		return PackedVector2Array()
-	end = start.lerp(end, reach)
-	var span := end.x - start.x
-	var c1 := start + Vector2(span * 0.30, 0)
-	var c2 := end - Vector2(span * 0.25, 0)
-	var points := PackedVector2Array()
-	for i in 49:
-		var t := i / 48.0
-		var point := start.bezier_interpolate(c1, c2, end, t)
-		point.y += sin(t * PI) * (1.0 - reach) * 24.0
-		points.append(point)
-	return points
+	return PackedVector2Array([start,start.lerp(end,reach)])
 
 func _schedule(seconds: float, callback: Callable) -> void:
 	delay = seconds
 	pending = callback
+
+func _start_opening_turn() -> void:
+	opening_party_bonus = field_context.get("initiative", "normal") == "party"
+	opening_enemy_bonus = field_context.get("initiative", "normal") == "enemy"
+	if opening_enemy_bonus:
+		enemy_index = 0
+		phase = Phase.ENEMY
+		heading = "적 선제공격"
+		message = "다가온 그림자가 먼저 움직인다 · 방어 타이밍을 준비하세요"
+		_schedule(0.8, _enemy_action)
+	else:
+		_start_party_turn()
+		if opening_party_bonus:
+			heading = "아군 선제공격 / " + str(party[hero_index].name)
+			message = "선제 턴 · 적의 첫 행동을 봉쇄했습니다"
 
 func _start_party_turn() -> void:
 	for hero in party:
@@ -343,6 +359,13 @@ func _next_hero() -> void:
 	while hero_index < party.size() and int(party[hero_index].hp) <= 0:
 		hero_index += 1
 	if hero_index >= party.size():
+		if opening_party_bonus:
+			opening_party_bonus = false
+			phase = Phase.RESOLVE
+			heading = "선제공격 성공"
+			message = "적이 태세를 갖추기 전에 다시 행동합니다"
+			_schedule(0.8, _start_party_turn)
+			return
 		enemy_index = 0
 		phase = Phase.ENEMY
 		heading = "상대 턴"
@@ -684,6 +707,10 @@ func _enemy_action() -> void:
 	while enemy_index < enemies.size() and int(enemies[enemy_index].hp) <= 0:
 		enemy_index += 1
 	if enemy_index >= enemies.size():
+		if opening_enemy_bonus:
+			opening_enemy_bonus = false
+			_start_party_turn()
+			return
 		var shield_expired := false
 		for hero in party:
 			if int(hero.get("shield_turns", 0)) > 0 and round_number != shield_skip_round:
@@ -705,7 +732,7 @@ func _enemy_action() -> void:
 		_schedule(0.7,_after_enemy)
 		return
 	var interval := int(enemies[enemy_index].get("action_interval", 1))
-	if round_number % interval != 0:
+	if not opening_enemy_bonus and round_number % interval != 0:
 		action_kind = ""
 		action_index = -1
 		message = str(enemies[enemy_index].name) + "가 다음 공격을 준비한다"
@@ -746,6 +773,9 @@ func _after_enemy() -> void:
 	_enemy_action()
 
 func _begin_shield_return() -> void:
+	if party.size() < 3:
+		_start_party_turn()
+		return
 	hero_index = 2
 	party[2].guarding = false
 	phase = Phase.SUPPORT
@@ -902,7 +932,7 @@ func _draw() -> void:
 	if darkness_active():
 		_label("밝힘 %.1f초" % reveal_remaining if reveal_remaining > 0 else "바인드 · 전체 위치선" if phase == Phase.BIND else "어둠 · 기억한 위치선 유지" if not known_markers.is_empty() else "어둠 · 위치선 숨김", Vector2(520,72), BLUE, 13)
 	draw_line(Vector2(28, 88), Vector2(740, 88), Color("33455d"), 1)
-	for i in [0, 1, 2, 3]:
+	for i in party.size():
 		if i >= party.size():
 			continue
 		if not (action_kind == "attack" and phase == Phase.RESOLVE and action_index == i):
@@ -1003,17 +1033,9 @@ func _draw_hero(index: int) -> void:
 	elif alive and (winding or attacking):
 		_draw_action(index, base, winding, tint)
 	elif alive and frame == 0:
-		var rect := Rect2(base - FOOT_ANCHOR * ACTOR_SCALE, ANIMATION_CELL * ACTOR_SCALE)
-		if special_actor == index:
-			_frame(expressive_textures[index], special_frame(), 4, 4, rect, tint)
-		else:
-			var pose := idle_frame(index, clock + index * 0.4)
-			if index == 0:
-				_frame(calm_idle_texture, pose, 3, 2, rect, tint)
-			else:
-				_frame(motion_textures[index], pose, 4, 4, rect, tint)
+		draw_renewed_pose(index,renewed_actor.idle_frame(index,clock),base,tint)
 	else:
-		_frame(textures[index], frame, 4, 2, sprite_rect, tint)
+		draw_renewed_pose(index,15 if not alive else (2 if frame == 4 else 3),base,tint)
 	if not alive:
 		_label("전투 불능", base + Vector2(-31, -12), MUTED, 13)
 	elif bool(hero.guarding):
@@ -1027,10 +1049,15 @@ func _draw_hero(index: int) -> void:
 		draw_arc(base + Vector2(0,-75),65,0,TAU,32,GREEN,2)
 		_label("회복 대상",base+Vector2(-30,-150),GREEN,15)
 
+func draw_renewed_pose(index: int, pose: int, base: Vector2, tint: Color = Color.WHITE, serious: bool = false) -> void:
+	renewed_actor.draw(self,index,pose,base,tint,serious)
+
+func _draw_yeonwoo_idle(pose: int, base: Vector2, tint: Color) -> void:
+	draw_renewed_pose(1,0 if pose == 0 else 1,base,tint)
+
 func _draw_focus(index: int, base: Vector2, tint: Color) -> void:
 	var rect := Rect2(base - FOOT_ANCHOR * ACTOR_SCALE, ANIMATION_CELL * ACTOR_SCALE)
-	var pose := mini(int(focus_elapsed / FOCUS_DURATION * 4), 3)
-	_frame(focus_texture, index * 4 + pose, 4, 2, rect, tint)
+	draw_renewed_pose(index,9 if focus_elapsed < FOCUS_DURATION*0.75 else 10,base,tint)
 	# Small blue motes rise toward the character as they gather energy.
 	for i in 7:
 		var t := fposmod(clock * 0.8 + i / 7.0, 1.0)
@@ -1039,74 +1066,21 @@ func _draw_focus(index: int, base: Vector2, tint: Color) -> void:
 		draw_circle(Vector2(x, y), 2.0 + (i % 2), Color(0.38, 0.82, 1.0, 1.0 - t * 0.55))
 
 func _draw_action(index: int, base: Vector2, winding: bool, tint: Color) -> void:
-	var rect := Rect2(base - FOOT_ANCHOR * ACTOR_SCALE, ANIMATION_CELL * ACTOR_SCALE)
 	if winding:
-		if index == 1:
-			_draw_fixed_windup(base, qte_elapsed, tint)
-		else:
-			_frame(motion_textures[index], WINDUP_FRAMES[int(qte_elapsed * 5.0) % WINDUP_FRAMES.size()], 4, 4, rect, tint)
+		var pose := 4 if qte_elapsed < 0.16 else 5
+		draw_renewed_pose(index,pose,base,tint)
+		var wrist: Vector2 = renewed_actor.socket(index,pose,base)
+		ChainVisual.draw_links(self,PackedVector2Array([wrist,wrist+Vector2(-12,18)]),1.6,tint)
 	else:
-		var elapsed := clampf(0.8 - fx_time, 0, 0.8)
-		_draw_chain_extension(chain_points(index, elapsed), tint)
-		_frame(expressive_textures[index], attack_frame(elapsed), 4, 4, rect, tint)
+		var elapsed := clampf(0.8-fx_time,0,0.8)
+		_draw_chain_extension(chain_points(index,elapsed),tint)
+		draw_renewed_pose(index,renewed_actor.attack_frame(elapsed),base,tint)
 
 func _draw_fixed_windup(base: Vector2, time: float, tint: Color) -> void:
-	# One unchanging body texture guarantees identical head, hair and planted feet.
-	# The cuff pivot moves only the wrist and its integrated three-link chain stub.
-	var phase_angle := fposmod(time, YEONWOO_SPIN_CYCLE) / YEONWOO_SPIN_CYCLE * TAU
-	var wrist_angle := sin(phase_angle) * 0.12
-	var pivot := Vector2(windup_rig.pivot[0], windup_rig.pivot[1])
-	var tip := Vector2(windup_rig.tip[0], windup_rig.tip[1])
-	var start := base + (pivot + (tip - pivot).rotated(wrist_angle)) * ACTOR_SCALE
-	# A vertical lasso behind the body. Links travel around a stable loop instead
-	# of changing the whole silhouette between unrelated generated poses.
-	var center := base + Vector2(-64, -112) * ACTOR_SCALE
-	var radius := Vector2(25, 45) * ACTOR_SCALE
-	var loop := PackedVector2Array()
-	for i in 65:
-		var angle := phase_angle + i * TAU / 64.0
-		loop.append(center + Vector2(cos(angle), sin(angle)) * radius)
-	var tail := PackedVector2Array()
-	var end: Vector2 = loop[0]
-	for i in 25:
-		var t := i / 24.0
-		tail.append(start.bezier_interpolate(start + Vector2(-12, 8), end + Vector2(12, 0), end, t))
-	_draw_chain_extension(tail, tint, true)
-	_draw_chain_extension(loop, tint, true)
-	var rect := Rect2(base - FOOT_ANCHOR * ACTOR_SCALE, ANIMATION_CELL * ACTOR_SCALE)
-	draw_texture_rect(fixed_windup_body, rect, false, tint)
-	var corners := PackedVector2Array()
-	for corner in [Vector2.ZERO, Vector2(ANIMATION_CELL.x, 0), ANIMATION_CELL, Vector2(0, ANIMATION_CELL.y)]:
-		corners.append(base + (pivot + (corner - FOOT_ANCHOR - pivot).rotated(wrist_angle)) * ACTOR_SCALE)
-	var uv := PackedVector2Array([Vector2(0,0),Vector2(1,0),Vector2(1,1),Vector2(0,1)])
-	draw_polygon(corners, PackedColorArray([tint,tint,tint,tint]), uv, fixed_windup_wrist)
+	draw_renewed_pose(1,4 if time < 0.16 else 5,base,tint)
 
-func _draw_chain_extension(points: PackedVector2Array, tint: Color, short_links: bool = false) -> void:
-	if points.size() < 2:
-		return
-	# Repeat the sampled steel links along the curve, keeping their native width.
-	# Explicit quad vertices avoid resetting the composition's critical-hit transform.
-	var distance := 0.0
-	var next_link := 0.0
-	# Short one-link samples follow tight lasso curves without polygonal corners.
-	var tile_size := Vector2(13 if short_links else 26, 10) * ACTOR_SCALE
-	var spacing := (10.0 if short_links else 22.0) * ACTOR_SCALE
-	var u := 0.5 if short_links else 1.0
-	var uv := PackedVector2Array([Vector2(0,0),Vector2(u,0),Vector2(u,1),Vector2(0,1)])
-	for i in range(1, points.size()):
-		var segment := points[i] - points[i-1]
-		var length := segment.length()
-		if length < 0.001:
-			continue
-		var along := segment / length
-		var across := Vector2(-along.y, along.x) * tile_size.y * 0.5
-		while next_link <= distance + length:
-			var center := points[i-1] + along * (next_link - distance)
-			var half := along * tile_size.x * 0.5
-			var quad := PackedVector2Array([center-half-across, center+half-across, center+half+across, center-half+across])
-			draw_polygon(quad, PackedColorArray([tint,tint,tint,tint]), uv, chain_texture)
-			next_link += spacing
-		distance += length
+func _draw_chain_extension(points: PackedVector2Array, tint: Color, _short_links: bool = false) -> void:
+	ChainVisual.draw_links(self,points,1.8,tint)
 
 func _draw_enemy(index: int) -> void:
 	var visibility := visibility_strength()
@@ -1312,6 +1286,9 @@ func _ally_rect(index: int) -> Rect2:
 	return Rect2(410+(index%2)*162,541+(index/2)*42,158,39)
 
 func draw_new_pose(index: int, pose: int, base: Vector2, tint: Color = Color.WHITE) -> void:
+	if index < 2:
+		draw_renewed_pose(index,[0,1,6,7,2,3,10,11][clampi(pose,0,7)],base,tint)
+		return
 	var scale := ACTOR_SCALE * (0.88 if index == 2 else 1.0)
 	_frame(textures[index], pose, 4, 2, Rect2(base-Vector2(96,192)*scale,Vector2(192,200)*scale),tint)
 
@@ -1376,3 +1353,4 @@ func _draw_new_hero(index: int, base: Vector2, alive: bool, winding: bool, attac
 		else:
 			base.y += sin(clock*3)*0.8
 	draw_new_pose(index,pose,base,tint)
+

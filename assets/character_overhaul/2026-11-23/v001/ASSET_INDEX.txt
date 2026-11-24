@@ -1,0 +1,22 @@
+캐릭터 오버홀 v001 / 2026-11-23
+
+적용 프로젝트: 크로노 체인 동방 버전
+references: 확정 캐릭터 시트 원본 사본
+candidates: A~E 필드 스타일 선택용 원본과 정규화 비교본. 아직 최종 선택 전.
+source: 캐릭터별 전투 16포즈 생성 원본
+runtime: 게임에서 사용하는 전투 아틀라스 (4x4, 셀 192x160)
+metadata: 생성 프롬프트, 참고 링크, 프레임별 손목 연결 위치
+review: 비교 화면, 전투/스킬 실제 렌더, 공격 GIF
+backup: 이번 캐릭터 변경 전 관련 스크립트 사본
+
+필드 후보: A FFVI / B Chrono Trigger / C Trials of Mana / D Suikoden II / E Breath of Fire III
+후보 크기는 본 프로젝트의 제안 규격이며 원작 게임의 픽셀 규격을 의미하지 않음.
+
+현재 적용: 전투 대기, 방어, 피격, 공격, 집중, 전투 불능 및 튜토리얼 스킬 몸동작.
+필드 체인: 손목 기준 8방향 45도 축, 고정 타격 거리, 준비-전개-회수, 금속 링크 렌더링.
+미완료: 선택 스타일 기준 필드 걷기/대기 및 8방향 전용 공격 몸동작. 기존 필드 몸체는 선택 전 유지.
+메뉴는 현재 별도 프롤로그 개정으로 시작 버튼만 있음. 튜토리얼 라우터 진입 후 전투에서 새 아틀라스 로딩 확인.
+
+검증: character_overhaul_test 197/0, timer_test 541/0, encounter_revision_test 2973/0,
+confirm_input_test 39/0, tutorial_test 29/0, prototype_fixes_test 21/0.
+registered_character_flow_test: 등록 프로젝트의 튜토리얼 -> 전투에서 양쪽 새 아틀라스 로딩 성공.

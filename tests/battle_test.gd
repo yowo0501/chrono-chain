@@ -22,9 +22,11 @@ func fixture() -> Control:
 	var s := Screen.new()
 	var random := RandomNumberGenerator.new()
 	random.seed = 71
-	# This regression fixture models two enemy actions; live encounters use three to five.
+	# Fixed damage fixture for QTE rules; live two-hero balance is covered separately.
 	var settings: Dictionary = manager.balance.duplicate(true)
 	settings.monster_count = 2
+	settings.monster.max_hp = 90
+	settings.monster.attack = 16
 	s.setup(manager.party.duplicate(true), settings, random)
 	root.add_child(s)
 	s.set_process(false)
@@ -38,17 +40,15 @@ func run() -> void:
 	transition.set_process(false)
 	transition.covered.connect(func(): cover_events += 1)
 	transition.finished.connect(func(): finish_events += 1)
-	transition.advance(0.18)
-	check(transition.pulse_alpha() > 0.85 and cover_events == 0, "first dark pulse")
-	transition.advance(0.18)
-	check(transition.pulse_alpha() < 0.01, "first pulse returns to field")
-	transition.advance(0.18)
-	check(transition.pulse_alpha() > 0.85, "second dark pulse")
-	transition.advance(0.18)
-	check(transition.pulse_alpha() < 0.01 and transition.wipe_progress() < 0.01, "second pulse returns before wipe")
 	transition.advance(0.5)
-	check(is_equal_approx(transition.wipe_progress(), 0.5) and cover_events == 0, "half clockwise wipe still shows field")
-	transition.advance(0.51)
+	check(transition.zoom_factor() > 1.5 and cover_events == 0, "zoom focuses on contact before battle")
+	check(transition.close_progress() == 0.0, "diagonal slit stays open for one second")
+	transition.advance(0.5)
+	check(transition.close_progress() == 0.0 and cover_events == 0, "shutters start only after 1.0 seconds")
+	transition.advance(0.15)
+	check(is_equal_approx(transition.close_progress(), 0.5), "both shutters close halfway")
+	check(cover_events == 0, "battle is not created through an open slit")
+	transition.advance(0.151)
 	check(cover_events == 1 and finish_events == 0, "battle created only at full black")
 	transition.advance(0.5)
 	transition.advance(5)
@@ -77,7 +77,7 @@ func run() -> void:
 	check(s.textures[0].get_size() == Vector2(768, 400), "hero sheet twice original resolution")
 	check(s.monster_texture.get_size() == Vector2(576, 176), "monster sheet twice original resolution")
 	check(s.motion_textures[0].get_size() == Vector2(1536, 960) and s.expressive_textures[1].get_size() == Vector2(1536, 960), "32-frame animation atlases have matching cells")
-	check(s.motion_textures.size() == 4 and s.expressive_textures.size() == 4, "expanded animation sets loaded")
+	check(s.textures.size() == 2 and s.motion_textures[0].get_size() == Vector2(1536,960), "Previous two-hero battle art restored")
 	check(s.calm_idle_texture.get_size() == Vector2(1152, 480), "calm idle six-frame sheet loaded")
 	check(s.motion_textures[1].get_size() == Screen.ANIMATION_CELL * 4, "refreshed windup poses share the regular foot anchor")
 	check(s.idle_frame(0, 0.05) == s.idle_frame(0, 0.20), "idle support pose is held instead of rushing")
@@ -99,7 +99,7 @@ func run() -> void:
 	s.action_kind = ""
 	s.special_wait = 0.01
 	s.advance(0.02)
-	check(s.special_actor == 2, "alternation survives an interrupted special")
+	check(s.special_actor == 0, "two-hero alternation survives an interrupted special")
 	s.special_actor = -1
 	s.special_wait = 7
 	for actor in 2:
@@ -122,12 +122,8 @@ func run() -> void:
 	check(s.hero_index == 1 and s.phase == Screen.Phase.COMMAND, "second hero acts next")
 	s.select_command(1)
 	s.advance(0.6)
-	for actor in [2,3]:
-		check(s.hero_index == actor, "New party member receives own turn")
-		s.select_command(1)
-		s.advance(0.6)
 	s.advance(0.6)
-	check(s.phase == Screen.Phase.ENEMY, "enemy turn follows four heroes")
+	check(s.phase == Screen.Phase.ENEMY, "enemy turn follows two heroes")
 	s.defending_index = 1
 	s.advance(0.6)
 	check(s.phase == Screen.Phase.GUARD_QTE, "guard opens QTE")
@@ -166,8 +162,6 @@ func run() -> void:
 	s = fixture()
 	s.party[0].hp = 0
 	s.party[1].hp = 1
-	s.party[2].hp = 0
-	s.party[3].hp = 0
 	s.defending_index = 1
 	s._enemy_strike()
 	s.advance(0.9)
@@ -230,6 +224,7 @@ func run() -> void:
 	manager.start_battle(player)
 	check(manager.active and player.input_locked, "explicit encounter request locks field")
 	check(manager.screen == null and is_instance_valid(manager.transition), "encounter starts on field transition")
+	manager.transition.set_process(false)
 	var encounter_count: int = manager.encounters
 	manager.start_battle(player)
 	check(manager.encounters == encounter_count, "transition blocks duplicate encounters")
@@ -238,9 +233,9 @@ func run() -> void:
 	await create_timer(0.3).timeout
 	Input.action_release("ui_right")
 	check(player.position == prior and manager.steps == 0, "combat blocks field walking")
-	await create_timer(1.45).timeout
+	manager.transition.advance(Transition.COVER_TIME + 0.01)
 	check(is_instance_valid(manager.screen) and manager.screen.process_mode == Node.PROCESS_MODE_DISABLED, "battle exists behind full black with input locked")
-	await create_timer(0.5).timeout
+	manager.transition.advance(Transition.BLACK_HOLD + Transition.REVEAL_DURATION)
 	check(manager.transition == null and manager.screen.process_mode == Node.PROCESS_MODE_INHERIT, "battle activates after reveal")
 	manager._finish_battle(true)
 	await process_frame

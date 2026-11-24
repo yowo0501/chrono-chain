@@ -11,32 +11,20 @@
       "name": "김연우",
       "max_hp": 100,
       "attack": 28
-    },
-    {
-      "id": "seola",
-      "name": "강설아",
-      "max_hp": 180,
-      "attack": 22
-    },
-    {
-      "id": "wiseong",
-      "name": "장위성",
-      "max_hp": 95,
-      "attack": 26
     }
   ],
   "monster": {
     "id": "shadow",
     "name": "그림자",
-    "max_hp": 90,
-    "attack": 16
+    "max_hp": 66,
+    "attack": 12
   },
-  "monster_count": 3,
+  "monster_count": 2,
   "armored_monster": {
     "id": "armored_shadow",
     "name": "중장 그림자",
-    "max_hp": 480,
-    "attack": 20,
+    "max_hp": 300,
+    "attack": 15,
     "action_interval": 2
   },
   "timer": {
@@ -82,43 +70,6 @@
           "defense": 1
         },
         "target": "ally"
-      }
-    ],
-    "seola": [
-      {
-        "id": "shield",
-        "name": "방패 전개",
-        "cost": {
-          "defense": 2
-        },
-        "target": "self"
-      },
-      {
-        "id": "shield_swing",
-        "name": "크게 휘두르기",
-        "cost": {
-          "focus": 1
-        },
-        "target": "position"
-      }
-    ],
-    "wiseong": [
-      {
-        "id": "illuminate",
-        "name": "맵 밝히기",
-        "cost": {
-          "focus": 1
-        },
-        "target": "all"
-      },
-      {
-        "id": "bind",
-        "name": "바인드",
-        "cost": {
-          "attack": 1,
-          "focus": 1
-        },
-        "target": "all"
       }
     ]
   },

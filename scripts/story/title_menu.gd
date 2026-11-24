@@ -1,20 +1,60 @@
 extends "res://scripts/story/story_screen.gd"
+var rooftop: Texture2D = preload("res://assets/prologue/chapter/skyscraper-roof.png")
 var logo: Texture2D = preload("res://assets/prologue/logo-chain-lettering.png")
+var elapsed := 0.0
+var mark: TextureRect
+var start_button: Button
 
 func _ready() -> void:
 	super._ready()
-	var first := button_at("프롤로그 실행", Rect2(224,481,320,54), _open_prologue)
-	button_at("튜토리얼 실행", Rect2(224,551,320,54), _open_tutorial)
-	var hint := label_at("↑ ↓ 선택   ·   Space / Enter 실행   ·   F10 메뉴로", Rect2(0,628,768,26), 13, Color("888888"))
-	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	first.grab_focus()
+	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	mark = TextureRect.new()
+	mark.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+	mark.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	mark.texture = logo
+	mark.position = Vector2(399,58)
+	mark.size = Vector2(342,342)
+	mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var blend := CanvasItemMaterial.new()
+	blend.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	mark.material = blend
+	mark.modulate.a = 0
+	add_child(mark)
+	start_button = button_at("시 작",Rect2(284,552,200,52),_open_prologue)
+	start_button.add_theme_stylebox_override("normal",box(Color(0.025,0.06,0.12,0.85),Color("708c9b")))
+	start_button.add_theme_stylebox_override("hover",box(Color("172c42"),Color("e7ca89")))
+	start_button.add_theme_stylebox_override("focus",box(Color(0.1,0.2,0.3,0.18),Color("e7ca89")))
+	start_button.add_theme_stylebox_override("pressed",box(Color("24405a"),Color("f1dbad")))
+	start_button.add_theme_color_override("font_color",Color("e7d7b0"))
+	start_button.disabled = true
+	start_button.modulate.a = 0
+	start_button.hide()
+
+func _process(delta: float) -> void:
+	advance_intro(delta)
+
+func advance_intro(delta: float) -> void:
+	elapsed += delta
+	mark.modulate.a = smoothstep(2.7,4.7,elapsed)
+	start_button.modulate.a = smoothstep(5.0,6.0,elapsed)
+	start_button.visible = elapsed>=5.0
+	if elapsed>=6.0 and start_button.disabled:
+		start_button.disabled = false
+		start_button.grab_focus()
+	queue_redraw()
+
+func _input(event: InputEvent) -> void:
+	if elapsed>=6.0: return
+	if event is InputEventKey and event.pressed and not event.echo:
+		var key: int = event.physical_keycode if event.physical_keycode else event.keycode
+		if key in [KEY_ENTER,KEY_KP_ENTER]:
+			advance_intro(6.0-elapsed)
+			get_viewport().set_input_as_handled()
 
 func _open_prologue() -> void:
+	if elapsed<6.0: return
 	get_node("/root/StoryRouter").open_scene("res://scenes/prologue/prologue.tscn")
 
-func _open_tutorial() -> void:
-	get_node("/root/StoryRouter").open_scene("res://scenes/main/main.tscn")
-
 func _draw() -> void:
-	draw_rect(Rect2(Vector2.ZERO, DESIGN), Color.BLACK)
-	draw_texture_rect(logo, Rect2(84,-40,600,600), false)
+	draw_rect(Rect2(Vector2.ZERO,DESIGN),Color.BLACK)
+	draw_texture_rect_region(rooftop,Rect2(0,0,768,672),Rect2(0,180,rooftop.get_width(),rooftop.get_width()*672.0/768),Color(1,1,1,smoothstep(0,2.5,elapsed)))

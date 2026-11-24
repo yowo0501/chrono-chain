@@ -1,7 +1,7 @@
 extends Node2D
 ## 2D field: light/dark state persists while battle overlays are open.
 const TILE_SIZE := 16
-const OFFSETS := [Vector2i.UP, Vector2i.LEFT, Vector2i.RIGHT, Vector2i.DOWN]
+const OFFSETS := [Vector2i.UP, Vector2i.LEFT, Vector2i.RIGHT, Vector2i.DOWN, Vector2i(-1,-1), Vector2i(1,-1), Vector2i(-1,1), Vector2i(1,1)]
 @export var test_grid := false
 var settings: Dictionary
 var tiles: Array = []
@@ -20,6 +20,7 @@ var notice := "도시의 모든 가로등을 밝히세요 · 지도 M"
 var notice_time := 6.0
 var hud: Control
 var pending_contact: Node2D
+var pending_initiative := "normal"
 var last_player_area := -1
 var last_player_lit := true
 var map_scale := 1
@@ -48,14 +49,14 @@ func _tick_light_patrols(delta: float, player: Node2D) -> void:
 	for area in light_patrol_areas.keys():
 		if not lit[area]:
 			light_patrol_areas.erase(area)
-	var desired := ceili(candidates.size()/2.0)
+	var desired := maxi(0, ceili(candidates.size()/2.0)-2)
 	while light_patrol_areas.size() > desired:
 		light_patrol_areas.erase(light_patrol_areas.keys().back())
 	for area in light_patrol_areas:
 		candidates.erase(area)
 	while light_patrol_areas.size() < desired and not candidates.is_empty():
 		var chosen := rng.randi_range(0,candidates.size()-1)
-		light_patrol_areas[candidates[chosen]] = rng.randi_range(1,2)
+		light_patrol_areas[candidates[chosen]] = 1
 		candidates.remove_at(chosen)
 	for symbol in symbols:
 		if symbol.patrol_area >= 0 and not light_patrol_areas.has(symbol.patrol_area):
@@ -69,7 +70,7 @@ func _tick_light_patrols(delta: float, player: Node2D) -> void:
 		for tile in area_cells[area]:
 			if not _occupied(tile) and not player.occupies_tile(tile) and _distance(tile,player.grid_pos) > 4 and tile not in object_edges(lamps[area]):
 				free.append(tile)
-		while residents < int(light_patrol_areas[area]) and not free.is_empty():
+		while residents < int(light_patrol_areas[area]) and not free.is_empty() and symbols.size() < int(settings.max_active_symbols):
 			var chosen := rng.randi_range(0,free.size()-1)
 			var symbol := _spawn_symbol(free[chosen])
 			symbol.patrol_area = area
@@ -94,7 +95,7 @@ func _index_areas() -> void:
 			area_cells[area].append(tile)
 			for offset in OFFSETS:
 				var next: Vector2i = tile + offset
-				if is_blocked(next):
+				if not can_step(tile,next):
 					continue
 				var neighbor := area_at(next)
 				if neighbor != area:
@@ -275,7 +276,8 @@ func _process(delta: float) -> void:
 		if symbol.defeated:
 			continue
 		if symbol.moving:
-			if symbol.advance(delta, float(settings.enemy_step_seconds)):
+			record_encounter_motion(symbol, player)
+			if symbol.advance(delta, float(settings.enemy_step_seconds)*maxf(1.0,(Vector2(symbol.target*TILE_SIZE)-symbol.origin).length()/TILE_SIZE)):
 				symbol.wait = float(settings.enemy_idle_seconds)
 		else:
 			var area := area_at(symbol.grid_pos)
@@ -292,6 +294,7 @@ func _process(delta: float) -> void:
 				symbol.wait -= delta
 				if symbol.wait <= 0 and not boss_defeated:
 					_decide(symbol,player)
+					record_encounter_motion(symbol, player)
 		_update_visibility(symbol)
 		if check_contact(player):
 			break
@@ -327,7 +330,7 @@ func path_to(start: Vector2i, goals: Array[Vector2i], symbol: Node2D = null, all
 			return path
 		for offset in OFFSETS:
 			var next: Vector2i = current + offset
-			if previous.has(next) or is_blocked(next) or _occupied(next, symbol):
+			if previous.has(next) or not can_step(current,next) or _occupied(next, symbol):
 				continue
 			if player != null and (next == player.grid_pos or (player._moving and next == player._step_target)):
 				continue
@@ -347,7 +350,7 @@ func _decide(symbol: Node2D, player: Node2D) -> void:
 		var neighbors: Array[Vector2i] = []
 		for offset in OFFSETS:
 			var next: Vector2i = symbol.grid_pos + offset
-			if not is_blocked(next) and area_at(next) == symbol.patrol_area and not _occupied(next,symbol) and not player.occupies_tile(next):
+			if can_step(symbol.grid_pos,next) and area_at(next) == symbol.patrol_area and not _occupied(next,symbol) and not player.occupies_tile(next):
 				neighbors.append(next)
 		if not neighbors.is_empty():
 			symbol.start_step(neighbors[rng.randi_range(0,neighbors.size()-1)])
@@ -386,7 +389,7 @@ func _flee_neighbor(symbol: Node2D, player: Node2D) -> void:
 	var distance := _distance(best, player.grid_pos)
 	for offset in OFFSETS:
 		var candidate: Vector2i = symbol.grid_pos + offset
-		if is_blocked(candidate) or _occupied(candidate, symbol) or candidate == player.grid_pos:
+		if not can_step(symbol.grid_pos,candidate) or _occupied(candidate, symbol) or candidate == player.grid_pos:
 			continue
 		if player._moving and candidate == player._step_target:
 			continue
@@ -423,7 +426,7 @@ func _extinguish(area: int, _player: Node2D) -> void:
 	queue_redraw()
 
 func interact(player: Node2D) -> void:
-	if test_grid or EncounterManager.active or player._moving or player.input_locked:
+	if test_grid or EncounterManager.active or player._moving or player.input_locked or player.chain_remaining() > 0.0:
 		return
 	var target := interaction_target(player)
 	if target.is_empty():
@@ -468,7 +471,8 @@ func check_contact(player: Node2D) -> bool:
 			return false
 		var contacted := pending_contact
 		pending_contact = null
-		_engage(contacted, player)
+		_engage(contacted, player, pending_initiative)
+		pending_initiative = "normal"
 		return true
 	var actors: Array[Node2D] = symbols.duplicate()
 	if boss_spawned and not boss_defeated:
@@ -481,16 +485,18 @@ func check_contact(player: Node2D) -> bool:
 		if symbol.position.distance_to(player.position) < TILE_SIZE * 0.60:
 			if player._moving:
 				pending_contact = symbol
+				pending_initiative = contact_initiative(symbol, player)
 				player.input_locked = true
 				return false
-			_engage(symbol, player)
+			_engage(symbol, player, contact_initiative(symbol, player))
 			return true
 	return false
 
-func _engage(symbol: Node2D, player: Node2D) -> void:
+func _engage(symbol: Node2D, player: Node2D, initiative: String = "normal") -> void:
 	if boss_defeated or EncounterManager.active or not is_instance_valid(symbol) or symbol.defeated:
 		return
 	EncounterManager.start_symbol_battle(player, symbol, self, {
+		"initiative": initiative,
 		"boss": symbol.is_boss, "light": true if symbol.is_boss else is_lit(symbol.grid_pos),
 		"dark_lamps": boss_dark_count if symbol.is_boss else dark_count()
 	})
@@ -544,3 +550,72 @@ func _draw() -> void:
 			var rect := Rect2(Vector2(x,y)*TILE_SIZE,Vector2.ONE*TILE_SIZE)
 			draw_rect(rect,Color("63716b") if tile_kind(Vector2i(x,y)) == "#" else Color("dce3dc") if (x+y)%2 == 0 else Color("ccd6ce"))
 			draw_rect(rect,Color("a0afa4"),false,0.3)
+
+
+func record_encounter_motion(symbol: Node2D, player: Node2D) -> void:
+	if not symbol.moving:
+		return
+	var velocity: Vector2 = Vector2(symbol.target * TILE_SIZE) - symbol.origin
+	var toward: float = velocity.dot(player.position - symbol.position)
+	if absf(toward) > 0.01:
+		symbol.encounter_motion = "approaching" if toward > 0.0 else "retreating"
+
+func contact_initiative(symbol: Node2D, player: Node2D) -> String:
+	record_encounter_motion(symbol, player)
+	match symbol.encounter_motion:
+		"approaching":
+			return "enemy"
+		"retreating":
+			return "party" if rng.randf() < 0.5 else "enemy"
+	return "normal"
+
+var locked_target: Node2D
+const Lockon = preload("res://scripts/field_lockon.gd")
+
+func chain_target(player: Node2D, _reach_tiles: float = 2.0) -> Node2D:
+	var actors: Array[Node2D] = symbols.duplicate()
+	if boss_spawned and not boss_defeated and is_instance_valid(boss): actors.append(boss)
+	var candidates: Array = []
+	var origin := Vector2i((player.position/TILE_SIZE).round())
+	for symbol in actors:
+		if not is_instance_valid(symbol) or symbol.defeated: continue
+		if not symbol.is_boss and not is_lit(symbol.grid_pos): continue
+		if Lockon.in_range(origin,Vector2i((symbol.position/TILE_SIZE).round())):
+			candidates.append(symbol)
+	locked_target = Lockon.choose(candidates,locked_target if is_instance_valid(locked_target) else null,rng)
+	return locked_target
+
+func try_chain_hit(player: Node2D, reach_tiles: float) -> bool:
+	if boss_defeated or EncounterManager.active:
+		return false
+	var target: Node2D = player.chain_victim
+	if not is_instance_valid(target) or target.defeated:
+		return false
+	if target == null:
+		return false
+	pending_contact = null
+	pending_initiative = "normal"
+	_engage(target, player, "party")
+	return EncounterManager.active
+
+func can_step(origin: Vector2i, destination: Vector2i) -> bool:
+	var delta := destination-origin
+	if delta == Vector2i.ZERO or absi(delta.x)>1 or absi(delta.y)>1 or is_blocked(destination):
+		return false
+	if delta.x != 0 and delta.y != 0:
+		return not is_blocked(origin+Vector2i(delta.x,0)) and not is_blocked(origin+Vector2i(0,delta.y))
+	return true
+
+func chain_clear_distance(player: Node2D) -> float:
+	var direction := Vector2(player.DIR_VECTOR[player.facing]).normalized()
+	var center: Vector2 = player.position+Vector2(8,8)
+	var previous: Vector2i = player.grid_pos
+	var maximum: float = player.CHAIN_RANGE*TILE_SIZE
+	for distance in range(1,ceili(maximum)+1):
+		var sample := center+direction*distance
+		var tile := Vector2i(floori(sample.x/TILE_SIZE),floori(sample.y/TILE_SIZE))
+		if tile != previous:
+			if not can_step(previous,tile):
+				return float(distance-1)
+			previous = tile
+	return maximum

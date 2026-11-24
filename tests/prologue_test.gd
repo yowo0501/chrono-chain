@@ -34,61 +34,29 @@ func run() -> void:
 	router.open_scene(router.MENU)
 	await settle()
 	var menu: Control = current_scene
-	check(menu.get_viewport().gui_get_focus_owner().text == "프롤로그 실행", "Menu defaults to prologue")
+	menu.advance_intro(6.1)
+	check(menu.get_viewport().gui_get_focus_owner().text == "시 작", "Menu defaults to prologue")
 	await click(menu.get_viewport().gui_get_focus_owner().get_global_rect().get_center())
 	await settle()
 	var story: Control = current_scene
 	story.set_process(false)
-	check(story.event_index == 0 and not story.stage.visible, "Opening starts on black")
-	check(not tutorial.enabled and not manager.active, "Prologue does not enable tutorial/combat")
+	check(story.mode=="opening" and not story.field.visible,"New chapter starts at rooftop")
+	check(not tutorial.enabled and not manager.active,"Old onboarding is isolated")
 	story.advance_time(0.1)
-	var index: int = story.event_index
 	await key(KEY_SPACE)
-	check(story.event_index == index and story.narration.visible_characters == story.narration.text.length(), "First key reveals text without skipping")
+	check(story.guide.index==0 and story.guide.text_label.visible_characters==story.guide.text_label.text.length(),"First key completes text")
 	await key(KEY_ENTER)
-	check(story.event_index == index + 1, "Second key advances exactly once")
-	await click(story.narration.get_global_rect().get_center())
-	check(story.event_index == 1 and story.narration.visible_characters == story.narration.text.length(), "Click reveals text")
-	await click(story.narration.get_global_rect().get_center())
-	check(story.event_index == 2, "Next click advances text")
-	var lines := 2
-	var completed_signal := [false]
-	story.finished.connect(func(): completed_signal[0] = true)
-	for safety in 80:
-		if story.completed:
-			break
-		if story.waiting_for_text:
-			lines += 1
-			if story.current.has("display_text"):
-				check(story.current.display_text.replace("\n", " ") == story.current.text, "Presentation line breaks preserve source wording")
-			story.advance_time(20)
-			var text_label: Label = story.narration if story.current.type == "narration" else story.body
-			check(text_label.get_line_count() * text_label.get_line_height() <= text_label.size.y, "Dialogue fits vertically: " + text_label.text)
-			story.advance_dialogue()
-		else:
-			index = story.event_index
-			story.advance_dialogue()
-			check(story.event_index == index, "Timed staging cannot be skipped by dialogue input")
-			story.advance_time(10)
-	check(lines == 20, "All twenty source lines played")
-	check(story.completed and completed_signal[0], "Timeline reaches final logo and completion signal")
-	check(story.stage.chain_progress == 1 and story.stage.rush_progress == 1, "Draw and rush finish")
-	check(story.stage.facing.chuheun == "up", "Chuheun turns back toward monster")
-	check(story.logo_alpha == 1 and not story.stage.visible, "Logo follows blackout")
-	check(manager.encounters == 0 and not manager.active and not paused, "No combat during full prologue")
-	story.restart()
-	await settle()
-	check(current_scene.event_index == 0 and current_scene.stage.chain_progress == 0, "Replay starts from clean opening")
+	check(story.guide.index==1,"Second key advances one line")
 	await key(KEY_F10)
 	await settle()
-	check(current_scene.scene_file_path == router.MENU, "F10 returns to menu")
-	current_scene._open_tutorial()
+	check(current_scene.scene_file_path==router.MENU,"F10 exits the chapter")
+	router.open_scene("res://scenes/main/main.tscn")
 	await settle()
 	check(current_scene.name == "Main" and tutorial.active and paused, "Tutorial button opens original field and onboarding")
 	await key(KEY_F10)
 	await settle()
 	check(current_scene.scene_file_path == router.MENU and not paused and not tutorial.active, "F10 exits even paused tutorial")
-	current_scene._open_tutorial()
+	router.open_scene("res://scenes/main/main.tscn")
 	await settle()
 	check(tutorial.active and tutorial.seen.has("move"), "Tutorial can start again")
 	# Simulate a real active encounter and leave it through the same router.

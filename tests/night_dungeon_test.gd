@@ -37,13 +37,13 @@ func run() -> void:
 	field.grace = 10000
 	check(field.width() == 128 and field.height() == 64,"128 by 64 field")
 	check(field.lamps.size() == 16 and field.dark_count() == 4,"Sixteen districts, four begin dark")
-	check(field.symbols.size() == 5,"Five initial symbols")
+	check(field.symbols.size() == 3,"Three initial symbols")
 	check(field.is_lit(field.start_tile()),"Entrance is lit")
 	check(field.lit[0] and field.lit[1] and field.lit[2],"Plaza, bakery, shopping street begin lit")
 	check(not field.lit[5] and not field.lit[8] and field.lit[9],"Four alleys begin dark; vacant lot begins lit")
 	for actor in [player.sprite,player.follower]+field.symbols:
 		check(actor.texture.get_size() == (Vector2(192,256) if actor in [player.sprite,player.follower] else Vector2(192,256)),"Heroes and symbols use their own atlas layouts")
-		check(actor.frame_rect(Rect2()).size == (Vector2(16,16) if actor in [player.sprite,player.follower] else Vector2(16,16)),"Heroes and symbols share the compact field scale")
+		check(actor.frame_rect(Rect2()).size == (Vector2(16,16) if actor in [player.sprite,player.follower] else Vector2(16,16)),"Heroes and symbols use registered field scales")
 	clear_symbols()
 	var seen := {player.grid_pos:true}
 	var frontier: Array[Vector2i] = [player.grid_pos]
@@ -53,7 +53,7 @@ func run() -> void:
 		index += 1
 		for offset in field.OFFSETS:
 			var next: Vector2i = tile+offset
-			if not field.is_blocked(next) and not seen.has(next):
+			if field.can_step(tile,next) and not seen.has(next):
 				seen[next] = true
 				frontier.append(next)
 	for y in field.height():
@@ -174,7 +174,7 @@ func run() -> void:
 	check(not field.boss_spawned,"Boss waits for the final lamp")
 	field.repair_lamp(remaining,player)
 	check(field.boss_spawned and field.dark_count()==0,"All lamps lit summons boss")
-	check(field.boss.grid_pos == Vector2i(21,42),"Boss appears in fountain plaza")
+	check(field.boss.grid_pos == Vector2i(25,42),"Boss appears in rebuilt fountain plaza")
 	var existing: Node2D = field.boss
 	field._extinguish(1,player)
 	field.repair_lamp(1,player)
@@ -185,12 +185,12 @@ func run() -> void:
 	for trial in 50:
 		manager.start_symbol_battle(player,null,field,{"boss":false,"light":true})
 		var count: int = manager.encounter_balance.monster_count
-		check(count in [3,4,5],"Ordinary battle has three to five foes")
+		check(count in [2,3],"Late ordinary battle has two to three foes")
 		rolls[count] = true
 		manager._finish_battle(true)
 		await process_frame
-	check(rolls.size()==3,"All three group sizes occur")
-	check(manager.balance_for_context({"boss":false,"light":true,"dark_lamps":0,"enemy_count":99},field.settings).monster_count==5,"Explicit context cannot exceed late-game cap")
+	check(rolls.size()==2,"Both group sizes occur")
+	check(manager.balance_for_context({"boss":false,"light":true,"dark_lamps":0,"enemy_count":99},field.settings).monster_count==3,"Explicit context cannot exceed late-game cap")
 	# Contact during movement commits the tile before opening the battle.
 	field.grace = 0
 	var crossing: Node2D = field._spawn_symbol(Vector2i(23,44))

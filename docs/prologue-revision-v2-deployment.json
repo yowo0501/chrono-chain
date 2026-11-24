@@ -1,0 +1,153 @@
+{
+  "backup": "C:\\Users\\Administrator\\Documents\\ChatGPT\\크로노 체인 동방 버전\\backups\\prologue-revision-20261123-160339",
+  "files": [
+    {
+      "path": "scripts/story/title_menu.gd",
+      "sha256": "1924922a54dc6dc16a72058078695adb1e3ed2a4a287bd813ca060f70babcd1b"
+    },
+    {
+      "path": "scripts/story/chapter/prologue_chapter.gd",
+      "sha256": "1f05abdd01eb87c502ddac5d2cd343f95c034297c9f52c75da8aff08965a6b3a"
+    },
+    {
+      "path": "scripts/story/chapter/lesson_battle.gd",
+      "sha256": "e2b46facb7bb861529ee843fd6b4d833a6724c15a2f78dda8d6df4def9ed27a4"
+    },
+    {
+      "path": "data/prologue_chapter.json",
+      "sha256": "c92e86175b0d79c8ac1beac545d65dee96690d4bcbf32907d50cc51e920009c0"
+    },
+    {
+      "path": "tools/import_prologue_chapter.py",
+      "sha256": "464d8fd403953e5c3d5c7f14df02e0b0d84c5a70bc3c798764db4adab4effcdc"
+    },
+    {
+      "path": "tools/pack_chapter_flick.gd",
+      "sha256": "a4f9f14d8a747ad991a9e5c0f0382c9cc4ec7965beb289e4eaa78e8e01df7ab9"
+    },
+    {
+      "path": "tests/prologue_test.gd",
+      "sha256": "f2d684eb58a7d441c92a707859365d7a52ea3c7b49b396bdc27e7557537620d7"
+    },
+    {
+      "path": "tests/prologue_revision_test.gd",
+      "sha256": "fa8aa168a28a73532076156cd8cc84ef547f35e739b622b48d857f48994926cc"
+    },
+    {
+      "path": "tests/preview_prologue_chapter.gd",
+      "sha256": "9ca95e0e219bfb8f3eb16531f4e6f797817b218f68fa44418feb76c3c14fb6fc"
+    },
+    {
+      "path": "docs/prologue-revision-v2.md",
+      "sha256": "501ab788e7e331d21753754cc4f3c70fc2821e8c8bfb8dcff23c55f4c8bc81e3"
+    },
+    {
+      "path": "scripts/story/title_menu.gd.uid",
+      "sha256": "6f375b81e667674dfcc4f968845311ac77f3af028897c9a5589e003fc5d2bab5"
+    },
+    {
+      "path": "scripts/story/chapter/prologue_chapter.gd.uid",
+      "sha256": "90db5ef7810889bb14a9d4ade43e0da41863082bd97496581956130527dba91e"
+    },
+    {
+      "path": "scripts/story/chapter/lesson_battle.gd.uid",
+      "sha256": "0870b4a17e6385b2b46ad9af03476bb638d46cccbf4d7d441c8eb1275c65d669"
+    },
+    {
+      "path": "tools/pack_chapter_flick.gd.uid",
+      "sha256": "e12c55dd15abb43778d37afe10c7ac4a1ac310ce19fc9ed03c483c28222ca2af"
+    },
+    {
+      "path": "tests/prologue_test.gd.uid",
+      "sha256": "21956a109101b994c66f2b5776abfd20df43fa76c7a228bd56696f8e93e186f6"
+    },
+    {
+      "path": "tests/preview_prologue_chapter.gd.uid",
+      "sha256": "66a2b3dde9c6c12b4b0ccfc743dd5a1ad3289473bc60124e61dd6fa7f9a548b9"
+    },
+    {
+      "path": "assets/prologue/chapter/rooftop-v2.png",
+      "sha256": "f868ab80e44a59ebc4c3489bfad48dcf08ede213a65b708718522f4435bf6a8e"
+    },
+    {
+      "path": "assets/prologue/chapter/ending-v2.png",
+      "sha256": "6b7f3654c53d4fd78baf5a8e936af93f5d5831ca77b44cded94845f78467a920"
+    },
+    {
+      "path": "assets/prologue/chapter/flick-v2-source.png",
+      "sha256": "15f62912305e5691554eb4d57f3e59e081e11bae609d7cd492ff0a3010c3fe8a"
+    },
+    {
+      "path": "assets/prologue/chapter/flick-v2.png",
+      "sha256": "d5458db493ee9dae9d12ad6a4388b45020ceb2947aa10c588f3e04ae54f7530d"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/01-opening.png",
+      "sha256": "e668316f0e9330ccadccccababd9848b65e5d9d37145afe0bc55b8fc06b5a105"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/02-confrontation.png",
+      "sha256": "28dc748fb488b42ba8f0d255c376fc08a09ffa5eb88c42987ba1220eb34e0172"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/03-attack-lesson.png",
+      "sha256": "72bb8a9423f5131fe44f3b20d67b641c5850ae56f0b27f598afa2a45d69f5f7a"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/04-qte-lesson.png",
+      "sha256": "967029b9c68d5312412c7db9154937fac041257c1827293265d97adac8a592d9"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/05-field-lockon.png",
+      "sha256": "9f7186efa84248ce855a95cde21f0212272d3f47b14a341dec3d06e6bcbc222d"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/06-flick.png",
+      "sha256": "fe0ae7dd5bb081d6b68001e8f59c24b99ee8d73573a6cd051c00064ff50b4c25"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/07-focus-lesson.png",
+      "sha256": "96139e0b5e7d81c56a4da12c6592a0fb65da6bb62397356d225d2acf16ff800d"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/08-ending.png",
+      "sha256": "1c506e7dbb9062c2a04c63157f913a588d9414bb5e9975ec5f04435cf94f1413"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/09-logo.png",
+      "sha256": "aeaa010b1d5b9ffb52f210b5d82c687530a6b5eb50b512cddde7832706da073a"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/10-relax.png",
+      "sha256": "9fc4bcfd85b4f2c8b54f6491f29a0a6522e70a75d50988befd5f4eff957cd8b2"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/11-smile.png",
+      "sha256": "dee0408909632514d03e53b82497b9dd039f2ec38a332961b5e2f3730a6f1f0d"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/12-homing-chain.png",
+      "sha256": "335fbb1500ddafdb4616a237d11cd6090c803ee5eb890ec92df4bd3428442fdf"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/13-title.png",
+      "sha256": "fc70ba4159c5dde78856f5862932d87e9fb38a2ac91d64f70eb536cd7e0be2c1"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/flick-4.4.png",
+      "sha256": "60b98d3be259b6df210197af80f9ec26fc25f1e15fc0345b47cd28b61b4cb66d"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/flick-5.9.png",
+      "sha256": "30cf72b84b6d1bd2ca30054e9909216dab07c2e5c2d14066b283b4afd1508dbc"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/flick-6.3.png",
+      "sha256": "4ec2f8170db265c46edae65cfc15c46c8c505adec0ec49ec9f6d8c507d680223"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/flick-6.7.png",
+      "sha256": "38d08ed9f3aa721d478adc6c33aab6b86218cda38f1f4abcbbc92029daa750ea"
+    }
+  ]
+}

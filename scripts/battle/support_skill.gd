@@ -17,9 +17,8 @@ const RETURN_TRANSFORM := 0.8
 const RETURN_STARTLED := 1.4
 const RETURN_END := 2.25
 func draw_pose(screen, frame: int, actor: int) -> void:
-	var region := Rect2((frame % 4) * 384, int(frame / 4) * 240, 384, 240)
-	var scale: float = screen.ACTOR_SCALE
-	screen.draw_texture_rect_region(texture, Rect2(screen.HERO_POS[actor] - screen.FOOT_ANCHOR * scale, screen.ANIMATION_CELL * scale), region)
+	var poses := [9,10,11,8,9,9,8,0,10,11,9,8]
+	screen.draw_renewed_pose(actor,poses[clampi(frame,0,11)],screen.HERO_POS[actor],Color.WHITE,true)
 
 func advance(delta: float) -> void:
 	if done:

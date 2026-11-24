@@ -40,7 +40,7 @@ func run() -> void:
 		screen._pay_skill(screen.balance.special_skills.chuheun[0])
 		screen.hero_index = 1
 		screen._pay_skill(screen.balance.special_skills.yeonwoo[0])
-		var expected := [[1,3,1], [2,1,2]]
+		var expected := [[1,3,1], [0,3,3]]
 		for i in 2:
 			screen.party[i].hp = 1 if won else 0
 			screen.party[i].guarding = true
@@ -57,7 +57,7 @@ func run() -> void:
 			for j in STACKS.size():
 				check(manager.screen.party[i][STACKS[j]] == expected[i][j], "Next battle inherits unspent stacks")
 		manager.screen.hero_index = 1
-		check(not manager.screen.can_use_skill(manager.balance.special_skills.yeonwoo[0]), "Carried cost is preserved; one missing defense stack blocks repeat cast")
+		check(not manager.screen.can_use_skill(manager.balance.special_skills.yeonwoo[0]), "Carried cost is preserved; spent attack stacks block repeat cast")
 		manager._finish_battle(true)
 		await process_frame
 	manager.reset_party()

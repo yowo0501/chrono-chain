@@ -11,6 +11,7 @@ var defeated := false
 var dormant := false
 var is_boss := false
 var patrol_area := -1
+var encounter_motion := "neutral"
 
 func place(tile: Vector2i) -> void:
 	grid_pos = tile
@@ -21,7 +22,7 @@ func place(tile: Vector2i) -> void:
 
 func start_step(tile: Vector2i) -> void:
 	var offset := tile - grid_pos
-	facing = "right" if offset.x > 0 else "left" if offset.x < 0 else "down" if offset.y > 0 else "up"
+	facing = ("down" if offset.y > 0 else "up") + ("_right" if offset.x > 0 else "_left") if offset.x != 0 and offset.y != 0 else "right" if offset.x > 0 else "left" if offset.x < 0 else "down" if offset.y > 0 else "up"
 	origin = position
 	target = tile
 	elapsed = 0.0

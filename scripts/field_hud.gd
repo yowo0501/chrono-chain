@@ -73,16 +73,17 @@ func _draw() -> void:
 		objective = "분수 광장  ·  보스 출현"
 	label_at(objective,Vector2(228,28),PAPER,19)
 	label_at("가로등 %d / %d 점등" % [field.lamps.size()-field.dark_count(), field.lamps.size()],Vector2(228,51),MUTED,15)
+	label_at("체인 대기 %.1f초" % player.chain_remaining() if player.chain_remaining() > 0.0 else "Shift 대시 · Enter 락온 체인", Vector2(454,51),GOLD,14)
 	_draw_minimap(player)
 	draw_rect(Rect2(0,596,768,76), Color("17252c"))
 	for i in EncounterManager.party.size():
 		var hero: Dictionary = EncounterManager.party[i]
-		var x := 22+i*187
+		var x := 22+i*374
 		label_at("%s  %d/%d" % [hero.name,hero.hp,hero.max_hp],Vector2(x,618),PAPER,14)
-		draw_rect(Rect2(x,624,157,4),Color("3b4b50"))
-		draw_rect(Rect2(x,624,157*float(hero.hp)/hero.max_hp,4),Color("79c6ad"))
+		draw_rect(Rect2(x,624,344,4),Color("3b4b50"))
+		draw_rect(Rect2(x,624,344*float(hero.hp)/hero.max_hp,4),Color("79c6ad"))
 	var target: Dictionary = field.interaction_target(player)
-	var hint := "방향키 이동   E 조사   M 지도"
+	var hint := "방향키 8방향   E 조사   M 지도"
 	if not target.is_empty():
 		if field.lit[field.lamps.find(target.tile)]:
 			hint = "E  가로등 확인"

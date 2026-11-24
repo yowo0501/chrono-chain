@@ -23,10 +23,10 @@ func run() -> void:
 	assert(not player.field.is_blocked(Vector2i(3, 4)))
 	assert(player.field.is_blocked(Vector2i(-1, 6)))
 	for actor in [player.sprite, player.follower]:
-		assert(actor.texture.get_size() == Vector2(192, 256), "Three DS-style 64px frames per direction")
+		assert(actor.texture.get_size() == Vector2(192, 256), "Restored three-frame four-direction art")
 		assert(actor.regions.size() == 12)
 		for region in actor.regions:
-			assert(actor.frame_rect(region) == Rect2(0, 0, 16, 16), "No per-pose scaling")
+			assert(actor.frame_rect(region) == Rect2(-8, -15, 32, 32), "C style fixed scale and shared feet anchor")
 		var atlas: Image = actor.texture.get_image()
 		for row in 4:
 			var idle := atlas.get_region(Rect2i(0, row * 64, 64, 64))
@@ -47,7 +47,7 @@ func run() -> void:
 		player._move_to(target)
 		assert(player.position == start and player.grid_pos == previous, "Starting a step must not teleport")
 		assert(player.sprite.step_pose != old_pose, "Alternate the leading foot each tile")
-		assert(player.sprite.current_frame == 0, "Start with feet together")
+		assert(player.sprite.current_frame == 0, "Start with passing pose")
 		player._move_to(previous + Vector2i.RIGHT)
 		assert(player._step_target == target, "Cannot redirect midway through a tile")
 		var last: Vector2 = start

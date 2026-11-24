@@ -53,7 +53,7 @@ func run() -> void:
 	field.set_process(false)
 	player.set_process(false)
 	check(field.width() == 128 and field.height() == 64,"Expanded night city dimensions")
-	check(field.lamps.size() == 16 and field.symbols.size() == 5,"Sixteen lamp districts and five initial symbols")
+	check(field.lamps.size() == 16 and field.symbols.size() == 3,"Sixteen lamp districts and three initial symbols")
 	for anchor in field.lamps:
 		var edges: Array[Vector2i] = field.object_edges(anchor)
 		check(not edges.is_empty(),"Expanded object has an interaction perimeter")
@@ -65,8 +65,8 @@ func run() -> void:
 	player._advance_step(player.MOVE_TIME/2.0)
 	check(player.position.is_equal_approx(start+Vector2(8,0)),"Pure 2D map retains continuous half-step motion")
 	player._advance_step(player.MOVE_TIME/2.0)
-	check(player.sprite.frame_rect(Rect2()).size == Vector2(16,16),"Compact hero keeps its original fixed field size")
-	# Repeated dark encounters are independent of the five persistent symbols.
+	check(player.sprite.frame_rect(Rect2()).size == Vector2(16,16),"Registered whole-body field size")
+	# Repeated dark encounters are independent of the three persistent symbols.
 	player.warp_to(Vector2i(31,10))
 	field.grace = 0
 	field.settings.dark_encounter.chance_per_step = 0.0
@@ -77,7 +77,7 @@ func run() -> void:
 			check(not manager.active,"Dark entry itself does not guarantee a battle")
 		field.player_step_completed(player)
 		check(manager.active and manager.encounter_symbol == null,"Dark step cap triggers a repeatable ambient battle")
-		check(int(manager.encounter_context.enemy_count) in [2,3,4],"Early random dark encounter has two to four enemies")
+		check(int(manager.encounter_context.enemy_count) in [1,2],"Early random dark encounter has one to two enemies")
 		manager._finish_battle(true)
 		field.grace = 0
 		check(field.defeated_count == 0,"Ambient victory never consumes symbol progress")

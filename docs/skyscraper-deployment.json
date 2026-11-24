@@ -1,0 +1,15 @@
+{
+  "backup": "skyscraper-20261123-161918",
+  "files": {
+    "scripts/story/title_menu.gd": "b034951dc182061b9d0cac32261cb73707f8321a01d14a3f1db5468045cb0aa5",
+    "scripts/story/chapter/prologue_chapter.gd": "442f72ec5b59221db82b45ea24576469ce6d9b1427ed055cbf377b0658915787",
+    "tests/skyscraper_test.gd": "b5ec1b85c1b1d0d629fb8e3c40a3bfa7bcf5860215ac601b1d103d602d104fef",
+    "assets/prologue/chapter/skyscraper-roof.png": "2f6fc941321478d1281125972b336de284006be33d551445fd268a0a55b28e1f",
+    "assets/prologue/chapter/skyscraper-shaft.png": "fd32b7a21a8ed7a436e7d5fc5d5445ca5edd11f7ef0765965ee4c229afe2fafb",
+    "docs/skyscraper-opening.md": "fe59d43ed7d16c3c4fd8ad6eb6447bf562bf6fee96fdb839721d83691e5d5612",
+    "art-reviews/prologue-chapter/14-skyscraper-menu.png": "f1ed66c008da8d54c3091cb1fc7647778567812e7005efd7914f64333f9ab7d2",
+    "art-reviews/prologue-chapter/15-skyscraper-descent.png": "9453cc77acad24d95bed3b2eaebe2793dc6697d768d2c4d3c116691bad976945",
+    "art-reviews/prologue-chapter/16-skyscraper-late-descent.png": "8bea5fbd2fcf4220bfe90240fcfa27f106c7d606f302cf330d362c6647382162",
+    "art-reviews/prologue-chapter/17-skyscraper-blackout.png": "85735af514eb77954983640d34a53e831debfe891fe85988331b92720dc45181"
+  }
+}

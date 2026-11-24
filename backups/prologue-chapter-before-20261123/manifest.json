@@ -1,0 +1,308 @@
+{
+  "date": "2026-11-23",
+  "workspace": "C:\\Users\\Administrator\\Documents\\ChatGPT\\크로노 체인 코딩",
+  "live": "C:\\Users\\Administrator\\Documents\\ChatGPT\\크로노 체인 동방 버전",
+  "backup": "C:\\Users\\Administrator\\Documents\\ChatGPT\\크로노 체인 동방 버전\\backups\\prologue-chapter-before-20261123",
+  "files": [
+    {
+      "path": "art-reviews/prologue-chapter/01-opening.png",
+      "existed_before": false,
+      "sha256": "0dff3805445be8b0cd119b625bac3848368bf67b2b53ddf882a5bab5b1cec53e"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/02-confrontation.png",
+      "existed_before": false,
+      "sha256": "dfb10e827b7e6b8310bd25147094d86f21918aa24e8691a8ff3ff24860102f32"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/03-attack-lesson.png",
+      "existed_before": false,
+      "sha256": "72bb8a9423f5131fe44f3b20d67b641c5850ae56f0b27f598afa2a45d69f5f7a"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/04-qte-lesson.png",
+      "existed_before": false,
+      "sha256": "967029b9c68d5312412c7db9154937fac041257c1827293265d97adac8a592d9"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/05-field-lockon.png",
+      "existed_before": false,
+      "sha256": "d5655c37c0c623f44b01bd0e31cb680e1bd53a10fa3b8bab92819f9e61bb8289"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/06-flick.png",
+      "existed_before": false,
+      "sha256": "fc5462057ecff3f0de472a536349a437f28119d5fb6ac6ec076abc3613d1c861"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/07-focus-lesson.png",
+      "existed_before": false,
+      "sha256": "4e5bc3550147421c9315144b147c27a7f6f925b8d53512f6b6d53bc48b67e5e4"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/08-ending.png",
+      "existed_before": false,
+      "sha256": "964433d58e61d57c7291e9ce0b6b53bb3e26b03cca4bfaae78e1b1dfaf188cd8"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/09-logo.png",
+      "existed_before": false,
+      "sha256": "9ed804c042ec023540c7d5fb0869aa909a360bd8fac613cf6addfadf1a8592ec"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/10-relax.png",
+      "existed_before": false,
+      "sha256": "7818a97f608ef5b54627f70572a30dc8f0cfc7760a5530e30d8dfe6d3af6ddad"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/11-smile.png",
+      "existed_before": false,
+      "sha256": "a541d74d108604e66a13e860063dbda73a5eac793928065efee13eb2e0fef963"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/12-homing-chain.png",
+      "existed_before": false,
+      "sha256": "b344fd926586074f91e347328d8e3c4f1cf546ce5ad0ff0d566956f770a26d19"
+    },
+    {
+      "path": "art-reviews/prologue-chapter/13-title.png",
+      "existed_before": false,
+      "sha256": "5044b3b1d045b6954bf79d4f24cb161aba703cabf89e957c8d97298cc0608ce3"
+    },
+    {
+      "path": "assets/prologue/chapter/comic-poses-source.png",
+      "existed_before": false,
+      "sha256": "221fb931821676b8f7978b0d6128bbd25cfaad170a9d6ed41d17c6d9a86546aa"
+    },
+    {
+      "path": "assets/prologue/chapter/comic-poses.png",
+      "existed_before": false,
+      "sha256": "92aab570b343549674d27100967b501b7b0d19841cea213d09c68ef71483709a"
+    },
+    {
+      "path": "assets/prologue/chapter/ending.png",
+      "existed_before": false,
+      "sha256": "40214c34e5e3219923b9e74355b648916889b508fe68577a07d1dc0f7cde63e4"
+    },
+    {
+      "path": "assets/prologue/chapter/event-poses-source.png",
+      "existed_before": false,
+      "sha256": "28552137c040d74ade48772d0ba96c45d7a29f5a5503a7ee0a0947fd8471731e"
+    },
+    {
+      "path": "assets/prologue/chapter/event-poses.png",
+      "existed_before": false,
+      "sha256": "d75cd17b3ee980ef15f816ffcc3e73d76b5113323e271faa0cd4baa44880f118"
+    },
+    {
+      "path": "assets/prologue/chapter/README.md",
+      "existed_before": false,
+      "sha256": "3425c090e37bd1e543d1530bc80d94dd5b00238c00922c5d05016519191b75bc"
+    },
+    {
+      "path": "assets/prologue/chapter/rooftop.png",
+      "existed_before": false,
+      "sha256": "06c9a41da32e936aba415a2063bc54ebbf84b99d8127b8ffac8b0da9dcb40083"
+    },
+    {
+      "path": "assets/shaders/yeonwoo_gold.gdshader",
+      "existed_before": false,
+      "sha256": "669e96fcfeff40351f890df30aab4ccd332c2fe0b10f34dfe9cf37bf2a333c8a"
+    },
+    {
+      "path": "assets/shaders/yeonwoo_gold.gdshader.uid",
+      "existed_before": false,
+      "sha256": "ab957d9c3774d2a3c5cc71a73f2805ba5e5b2cf534d7c55463f43a656e45c22a"
+    },
+    {
+      "path": "data/prologue_chapter.json",
+      "existed_before": false,
+      "sha256": "1aacf0ada7eb622255ee16c11f34c15d41356e7f7881fe028caa4a1c46f596bf"
+    },
+    {
+      "path": "docs/prologue-chapter-implementation.md",
+      "existed_before": false,
+      "sha256": "4ba5fc640f9376cf27f5d7e1d51aa4e5e2600b49c088de317576b3a50505e6b9"
+    },
+    {
+      "path": "docs/prologue-chapter-source.txt",
+      "existed_before": false,
+      "sha256": "edf52851b4fe505677e6abb28ec7555a07dad7de5416de3f6eedcc211b09c593"
+    },
+    {
+      "path": "scenes/prologue/prologue.tscn",
+      "existed_before": true,
+      "sha256": "2fc845db80dd638b3c7274ebf192661f0d5f8264cd7eb6755fc8ff30ef6dc9a1"
+    },
+    {
+      "path": "scripts/battle/battle_screen.gd",
+      "existed_before": true,
+      "sha256": "c568c80ddb77350557473d44f791718781f3820a619a44faba682376ae9302ae"
+    },
+    {
+      "path": "scripts/field.gd",
+      "existed_before": true,
+      "sha256": "b3d968535c7be59b382770430fca87719246a28fba22e96dd809d3163274fc67"
+    },
+    {
+      "path": "scripts/field_actor.gd",
+      "existed_before": true,
+      "sha256": "7694973568249b6b6256103d6cf5b98114ae9270f9f3c7d45fe519cdf56d7d57"
+    },
+    {
+      "path": "scripts/field_hud.gd",
+      "existed_before": true,
+      "sha256": "baecbe894b3ca3742900e6eaaccdd3f6ded99991c620ae03fc5839f679276053"
+    },
+    {
+      "path": "scripts/field_lockon.gd",
+      "existed_before": false,
+      "sha256": "562234df42989a4996c76e465794d13a94155e83bfb86d2fb7c850724234b615"
+    },
+    {
+      "path": "scripts/field_lockon.gd.uid",
+      "existed_before": false,
+      "sha256": "44eda0192604aa0532d83526574472c18f26518daac788cdef4330e98b74a677"
+    },
+    {
+      "path": "scripts/player.gd",
+      "existed_before": true,
+      "sha256": "2fac74db6bfed737dea82e482f2f7930832413eab22fd1af14454669d3c749a1"
+    },
+    {
+      "path": "scripts/story/chapter/chase_field.gd",
+      "existed_before": false,
+      "sha256": "a2b5eded9ffd44f4943ab2c3e1d435c56df9e1dd02935305c93fa8a470707e50"
+    },
+    {
+      "path": "scripts/story/chapter/chase_field.gd.uid",
+      "existed_before": false,
+      "sha256": "1dd463214a83aa51732b6c4fb12b33ab93140fd6d6166b92797d97235303a698"
+    },
+    {
+      "path": "scripts/story/chapter/dialogue.gd",
+      "existed_before": false,
+      "sha256": "913798529fe36e02631a7fa15e3154bca98c3e86aa299d8f5bc59c20bffcdd51"
+    },
+    {
+      "path": "scripts/story/chapter/dialogue.gd.uid",
+      "existed_before": false,
+      "sha256": "214a174cfd5adc952fd6334dc91a52b0cfe394f44b7cd518d456b4bc8a6e1192"
+    },
+    {
+      "path": "scripts/story/chapter/gold_palette.gd",
+      "existed_before": false,
+      "sha256": "490832ab444a1b092a9c178e50e030408567462b114dc597bb7eef9c80bdb4ba"
+    },
+    {
+      "path": "scripts/story/chapter/gold_palette.gd.uid",
+      "existed_before": false,
+      "sha256": "d1d4994342c3ce35a94a666b98e1545eb7adc63eed0ef2dbc41cc6b58bd87698"
+    },
+    {
+      "path": "scripts/story/chapter/lesson_battle.gd",
+      "existed_before": false,
+      "sha256": "82226a5e100c1db33eec5b1e7a6e970e1fc79151c7db8fdfc4c91c7b41ada000"
+    },
+    {
+      "path": "scripts/story/chapter/lesson_battle.gd.uid",
+      "existed_before": false,
+      "sha256": "0870b4a17e6385b2b46ad9af03476bb638d46cccbf4d7d441c8eb1275c65d669"
+    },
+    {
+      "path": "scripts/story/chapter/prologue_chapter.gd",
+      "existed_before": false,
+      "sha256": "5fcc75b060c791c935a74f70ce8d1d297a8f3969a9ed3752f7799625f76adabd"
+    },
+    {
+      "path": "scripts/story/chapter/prologue_chapter.gd.uid",
+      "existed_before": false,
+      "sha256": "90db5ef7810889bb14a9d4ade43e0da41863082bd97496581956130527dba91e"
+    },
+    {
+      "path": "scripts/story/title_menu.gd",
+      "existed_before": true,
+      "sha256": "3661c13be3131d5c82411e6acd6412c97143b2d2f8e736a85ddc7309718b1abe"
+    },
+    {
+      "path": "scripts/tutorial.gd",
+      "existed_before": true,
+      "sha256": "5640a21c4a3914182b34e81dd481db7bbe611299e08b237ae2a987e097ea8790"
+    },
+    {
+      "path": "tests/duo_overhaul_test.gd",
+      "existed_before": true,
+      "sha256": "99f3ee48458bda5fdbe4836ab22d4b6f0168130df0adad6fdb137b6addea5183"
+    },
+    {
+      "path": "tests/field_gimmicks_test.gd",
+      "existed_before": true,
+      "sha256": "99e69e3a040712991b9b746e9e9ff309b374f32ef640899e7bbc648ea203ea13"
+    },
+    {
+      "path": "tests/preview_prologue_chapter.gd",
+      "existed_before": false,
+      "sha256": "8bc29618e591d8982704b3f0b20e9f51403df9568b41c687d0589c555c8a84b0"
+    },
+    {
+      "path": "tests/preview_prologue_chapter.gd.uid",
+      "existed_before": false,
+      "sha256": "66a2b3dde9c6c12b4b0ccfc743dd5a1ad3289473bc60124e61dd6fa7f9a548b9"
+    },
+    {
+      "path": "tests/prologue_chapter_branches_test.gd",
+      "existed_before": false,
+      "sha256": "fa2be558e08fbd7d6eae3debb04fbf3e94102fc192f8f3d0104bb04ba35b5dc5"
+    },
+    {
+      "path": "tests/prologue_chapter_branches_test.gd.uid",
+      "existed_before": false,
+      "sha256": "31cf92a50c602f4ac5c7bd87b0ff14c1972d4de08ef8c30b129fbd40aec78779"
+    },
+    {
+      "path": "tests/prologue_chapter_test.gd",
+      "existed_before": false,
+      "sha256": "debb0a99e1308d2614e4303d8a1769e63a0d63d5b3feb2c73a61da2eb14ab859"
+    },
+    {
+      "path": "tests/prologue_chapter_test.gd.uid",
+      "existed_before": false,
+      "sha256": "54fd931c1814dea10429e161627d2601dba9329332625ede88582d66a4027ceb"
+    },
+    {
+      "path": "tests/prologue_test.gd",
+      "existed_before": true,
+      "sha256": "71f4e1eb463bd7e3cc41f3859ade30a3c2c7a58cebdadf7c5a10e9e56cde3a17"
+    },
+    {
+      "path": "tests/README.md",
+      "existed_before": true,
+      "sha256": "2d3e58e642a69f1132f271e69cdb308719b4a5f20029320109bcf56f9da95b34"
+    },
+    {
+      "path": "tools/import_prologue_chapter.py",
+      "existed_before": false,
+      "sha256": "379393da3966d435d1e6e69807ab1d8c599c9b642ba2460da6af27b4f92f36d3"
+    },
+    {
+      "path": "tools/pack_chapter_comic.gd",
+      "existed_before": false,
+      "sha256": "f6a1950be640a1966e3c1dc69215b1ce28314157314a12cec023bf463aef870f"
+    },
+    {
+      "path": "tools/pack_chapter_comic.gd.uid",
+      "existed_before": false,
+      "sha256": "52022c3bfe8291c1130f56ea93f302d150d06cceaedd5d785da05e13569b3504"
+    },
+    {
+      "path": "tools/pack_chapter_events.gd",
+      "existed_before": false,
+      "sha256": "a9f3ee43658f336c8c010d79d8b3120703084e14d1b3343d32b67ce6cde71ad4"
+    },
+    {
+      "path": "tools/pack_chapter_events.gd.uid",
+      "existed_before": false,
+      "sha256": "f24056a5f1935b499b5329429ceb222e5b0b44c028e7b3ea51c136fcf8f684ba"
+    }
+  ]
+}

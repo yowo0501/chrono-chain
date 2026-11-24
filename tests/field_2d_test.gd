@@ -31,7 +31,7 @@ func run() -> void:
 	check(field.get_node("Town2D").art.size() == 9,"Nine detailed night-city assets load")
 	check(field.width() == 128 and field.height() == 64,"Enlarged layout retained")
 	check(player.sprite.visible and player.follower.visible,"Native 2D party sprites render")
-	check(field.symbols.size() == 5 and field.lamps.size() == 16,"Encounter count and districts preserved")
+	check(field.symbols.size() == 3 and field.lamps.size() == 16,"Two-hero encounter count and sixteen districts")
 	for y in field.height():
 		for x in field.width():
 			check(field.tile_kind(Vector2i(x,y)) != "F","No flowerbed tiles remain")

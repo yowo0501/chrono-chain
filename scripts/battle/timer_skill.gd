@@ -130,17 +130,15 @@ func draw(screen) -> void:
 		Stage.LAND:
 			actor = origin
 			frame = 10 if elapsed < 0.4 else 11
-	var region: Rect2 = REGIONS[frame]
-	var active_texture: Texture2D = texture
-	if motion_frame >= 0 and motion_texture != null:
-		active_texture = motion_texture
-		region = REGIONS[motion_frame]
-	var actor_rect := Rect2(actor - screen.FOOT_ANCHOR * screen.ACTOR_SCALE, screen.ANIMATION_CELL * screen.ACTOR_SCALE)
-	if motion_frame < 0 and frame == 11:
-		# Resume the regular standing sprite before handing the turn back.
-		screen._frame(screen.calm_idle_texture, 0, 3, 2, Rect2(actor - screen.FOOT_ANCHOR * screen.ACTOR_SCALE, screen.ANIMATION_CELL * screen.ACTOR_SCALE))
-	else:
-		screen.draw_texture_rect_region(active_texture, actor_rect, region)
+	var pose := 0
+	match stage:
+		Stage.PREP: pose = 9
+		Stage.JUMP: pose = 12
+		Stage.CHAIN, Stage.MORPH, Stage.AIM: pose = 10
+		Stage.THROW, Stage.FLIGHT: pose = 11
+		Stage.WAIT, Stage.LIGHTNING: pose = 8
+		Stage.LAND: pose = 13 if elapsed < 0.4 else 0
+	screen.draw_renewed_pose(0,pose,actor,Color.WHITE,true)
 
 func _draw_spear(screen, center: Vector2, angle: float) -> void:
 	var points := PackedVector2Array()

@@ -1,0 +1,9 @@
+{
+  "backup": "opening-pixel-20261123-161049",
+  "files": {
+    "scripts/story/title_menu.gd": "1dfd74523e24f12d03726a8211ab0605625069c77761cc10dae5b332ec8d5be6",
+    "scripts/story/chapter/prologue_chapter.gd": "6c0866abe3f297c94dcc7d99cf85de148ffd94590245bde904250c6aab4ffabf",
+    "assets/prologue/chapter/rooftop-pixel-v3.png": "64df4617ec3311ca8efa8f9fc0f5788d2e7021d5529e878623e041f52c8021b7",
+    "docs/opening-pixel-v3.md": "385e3e30f91d15d8aacd795a1d6fb7cf47576d4e74a2bdb91b5513c6e9dcb852"
+  }
+}

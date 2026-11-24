@@ -1,11 +1,15 @@
 extends Node2D
 
-## Grid-snapped 4-direction movement: a held direction repeats whole tiles.
+## Grid-snapped 8-direction movement: a held direction repeats whole tiles.
 ## Each step smoothly crosses to an adjacent cell with a synchronized foot cycle; blocked tiles
 ## just turn the character to face that way instead of moving.
 
 const TILE_SIZE := preload("res://scripts/field.gd").TILE_SIZE
 const MOVE_TIME := 0.24
+const DASH_MULTIPLIER := 2.0
+const CHAIN_RANGE := 2.0 # Half-width of the inclusive 5x5 lock-on square.
+const CHAIN_SWING := 0.5
+const CHAIN_RECOVERY := 0.25
 const FIELD_COMPANIONS: Array[String] = [] # Current field cast: Chuheun and Yeonwoo only.
 
 const DIR_VECTOR := {
@@ -13,6 +17,10 @@ const DIR_VECTOR := {
 	"left": Vector2i(-1, 0),
 	"right": Vector2i(1, 0),
 	"up": Vector2i(0, -1),
+	"up_left": Vector2i(-1,-1),
+	"up_right": Vector2i(1,-1),
+	"down_left": Vector2i(-1,1),
+	"down_right": Vector2i(1,1),
 }
 
 const FieldActor = preload("res://scripts/field_actor.gd")
@@ -30,6 +38,13 @@ var facing := "down"
 var _moving := false
 var input_locked := false
 var _step_elapsed := 0.0
+var _step_duration := MOVE_TIME
+var chain_elapsed := -1.0
+var chain_queued := false
+var chain_victim: Node2D
+var chain_axis := Vector2.RIGHT
+var chain_reach := 0.0
+const ChainVisual = preload("res://scripts/chain_visual.gd")
 var _step_target: Vector2i
 var _follower_target: Vector2i
 var _step_start: Vector2
@@ -37,6 +52,11 @@ var _follower_start: Vector2
 
 
 func _ready() -> void:
+	if not InputMap.has_action("field_dash"):
+		InputMap.add_action("field_dash")
+		var dash_key := InputEventKey.new()
+		dash_key.physical_keycode = KEY_SHIFT
+		InputMap.action_add_event("field_dash", dash_key)
 	field = get_tree().get_first_node_in_group("field")
 	if field != null and not field.test_grid:
 		position = Vector2(field.start_tile() * TILE_SIZE)
@@ -48,12 +68,12 @@ func _ready() -> void:
 	sprite = FieldActor.new()
 	sprite.name = "Chuheun"
 	add_child(sprite)
-	sprite.configure(load("res://assets/sprites/field/chuheun_night.png"))
+	sprite.configure(load("res://assets/character_overhaul/2026-11-23/field_c/runtime/chuheun-walk.png"))
 	follower = FieldActor.new()
 	follower.z_base = 2300
 	follower.name = "Yeonwoo"
 	get_parent().add_child.call_deferred(follower)
-	follower.configure(load("res://assets/sprites/field/yeonwoo_night.png"))
+	follower.configure(load("res://assets/character_overhaul/2026-11-23/field_c/runtime/yeonwoo-walk.png"))
 	follower_grid = grid_pos
 	for offset in [Vector2i.UP, Vector2i.LEFT, Vector2i.RIGHT, Vector2i.DOWN]:
 		if field == null or not field.is_blocked(grid_pos + offset):
@@ -79,6 +99,14 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	z_index = 2300 + roundi(position.y)
+	if EncounterManager.active:
+		return
+	if field != null:
+		field.chain_target(self,CHAIN_RANGE)
+		queue_redraw()
+	if chain_elapsed >= 0.0:
+		_advance_chain(delta)
+		return
 	if _moving:
 		_advance_step(delta)
 		return
@@ -88,12 +116,24 @@ func _process(delta: float) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		var key: int = event.physical_keycode if event.physical_keycode != 0 else event.keycode
+		if key in [KEY_ENTER, KEY_KP_ENTER]:
+			if field != null and field.chain_target(self,CHAIN_RANGE) == null:
+				field.interact(self)
+			else:
+				request_chain()
+			get_viewport().set_input_as_handled()
+			return
+		if key == KEY_T:
+			request_chain()
+			get_viewport().set_input_as_handled()
+			return
 		if key in [KEY_E, KEY_Z, KEY_SPACE, KEY_ENTER, KEY_KP_ENTER] and field != null:
 			field.interact(self)
 			get_viewport().set_input_as_handled()
 
 
 func warp_to(tile: Vector2i) -> void:
+	reset_field_action()
 	grid_pos = tile
 	position = Vector2(tile * TILE_SIZE)
 	z_index = 2300 + roundi(position.y)
@@ -112,38 +152,38 @@ func warp_to(tile: Vector2i) -> void:
 
 
 func _try_input_step() -> void:
-	if input_locked:
+	if input_locked or chain_elapsed >= 0.0:
 		return
 	var dir := _read_direction()
 	if dir == "":
 		return
 	facing = dir
 	var target: Vector2i = grid_pos + DIR_VECTOR[dir]
-	if field != null and field.is_blocked(target):
+	if field != null and not field.can_step(grid_pos,target):
 		_update_sprite(false)
 		return
 	_move_to(target)
 
 
 func _read_direction() -> String:
-	if Input.is_action_pressed("ui_down"):
-		return "down"
-	if Input.is_action_pressed("ui_up"):
-		return "up"
-	if Input.is_action_pressed("ui_left"):
-		return "left"
-	if Input.is_action_pressed("ui_right"):
-		return "right"
+	var delta := Vector2i(int(Input.is_action_pressed("ui_right"))-int(Input.is_action_pressed("ui_left")), int(Input.is_action_pressed("ui_down"))-int(Input.is_action_pressed("ui_up")))
+	for direction in DIR_VECTOR:
+		if DIR_VECTOR[direction] == delta:
+			return direction
 	return ""
 
 
 func _move_to(target: Vector2i) -> void:
-	if _moving or input_locked or (target - grid_pos).length_squared() != 1:
+	if _moving or input_locked or chain_elapsed >= 0.0 or (target - grid_pos).length_squared() not in [1,2]:
 		return
-	if field != null and field.is_blocked(target):
+	if field != null and not field.can_step(grid_pos,target):
 		_update_sprite(false)
 		return
 	_moving = true
+	var dash := Input.is_action_pressed("field_dash")
+	_step_duration = MOVE_TIME * Vector2(target-grid_pos).length() / (DASH_MULTIPLIER if dash else 1.0)
+	sprite.dashing = dash
+	follower.dashing = dash
 	var previous := grid_pos
 	var direction_delta := target - previous
 	for direction in DIR_VECTOR:
@@ -178,8 +218,8 @@ func _move_to(target: Vector2i) -> void:
 
 
 func _advance_step(delta: float) -> void:
-	_step_elapsed = minf(_step_elapsed + delta, MOVE_TIME)
-	var progress := _step_elapsed / MOVE_TIME
+	_step_elapsed = minf(_step_elapsed + delta, _step_duration)
+	var progress := _step_elapsed / _step_duration
 	# Logical cells commit on arrival; render positions cross every pixel in between.
 	position = _step_start.lerp(Vector2(_step_target * TILE_SIZE), progress).round()
 	follower.position = _follower_start.lerp(Vector2(_follower_target * TILE_SIZE), progress).round()
@@ -190,7 +230,7 @@ func _advance_step(delta: float) -> void:
 	sprite.set_step_progress(progress)
 	if follower.walking:
 		follower.set_step_progress(progress)
-	if _step_elapsed >= MOVE_TIME:
+	if _step_elapsed >= _step_duration:
 		_on_move_finished()
 
 
@@ -208,7 +248,10 @@ func _on_move_finished() -> void:
 		extra_followers[i].end_step()
 	_update_sprite(false)
 	EncounterManager.step_completed(self)
-	# Continue directly at tile boundaries; battles may lock input above.
+	# Finish a tile before a buffered swing; contact takes priority at this boundary.
+	if chain_queued:
+		chain_queued = false
+		request_chain()
 	_try_input_step()
 
 
@@ -257,3 +300,82 @@ func _exit_tree() -> void:
 			companion.queue_free()
 	if is_instance_valid(follower):
 		follower.queue_free()
+
+
+func request_chain() -> bool:
+	if input_locked or EncounterManager.active or chain_elapsed >= 0.0:
+		return false
+	if _moving:
+		chain_queued = true
+		return true
+	chain_queued = false
+	chain_victim = field.chain_target(self,CHAIN_RANGE) if field != null else null
+	if not is_instance_valid(chain_victim): return false
+	var aim: Vector2 = chain_victim.position-position
+	chain_axis = ChainVisual.axis8(aim)
+	chain_reach = maxf(8.0,aim.dot(chain_axis))
+	var octant := posmod(roundi(chain_axis.angle()/(PI/4.0)),8)
+	facing = ["right","down_right","down","down_left","left","up_left","up","up_right"][octant]
+	chain_elapsed = 0.0
+	_update_sprite(false)
+	sprite.end_step()
+	sprite.set_chain_progress(0.0)
+	queue_redraw()
+	return true
+
+func chain_remaining() -> float:
+	return maxf(0.0, CHAIN_SWING + CHAIN_RECOVERY - chain_elapsed) if chain_elapsed >= 0.0 else 0.0
+
+func reset_field_action() -> void:
+	chain_elapsed = -1.0
+	chain_reach = 0.0
+	chain_queued = false
+	chain_victim = null
+	if is_instance_valid(sprite):
+		sprite.action_lean = 0.0
+		sprite.action_offset = Vector2.ZERO
+		sprite.set_chain_progress(1.0)
+	queue_redraw()
+
+func _advance_chain(delta: float) -> void:
+	var previous := chain_elapsed
+	chain_elapsed = minf(chain_elapsed + delta, CHAIN_SWING + CHAIN_RECOVERY)
+	sprite.set_chain_progress(clampf(chain_elapsed / CHAIN_SWING,0.0,1.0))
+	if previous < CHAIN_SWING:
+		# Sweep the interval as well as its endpoint so a slow frame cannot skip a hit.
+		var peak := clampf(CHAIN_SWING * 0.64, previous, minf(chain_elapsed, CHAIN_SWING))
+		var reach := chain_extension(peak / CHAIN_SWING) * CHAIN_RANGE
+		if peak >= CHAIN_SWING*0.64 and field != null and field.try_chain_hit(self, reach):
+			sprite.action_lean = 0.0
+			sprite.action_offset = Vector2.ZERO
+			queue_redraw()
+			return
+	sprite.action_lean = 0.0
+	sprite.action_offset = Vector2.ZERO
+	if chain_remaining() <= 0.00001:
+		reset_field_action()
+	queue_redraw()
+
+func chain_extension(progress: float) -> float:
+	# Deliberate draw-back, cast, then retract; no early hit during anticipation.
+	return smoothstep(0.30,0.60,progress) * (1.0-smoothstep(0.76,0.98,progress))
+
+func _draw() -> void:
+	if field != null and is_instance_valid(field.locked_target) and not EncounterManager.active:
+		var marker: Vector2 = field.locked_target.position-position+Vector2(8,-7)
+		draw_arc(marker,5,0,TAU,16,Color("f4d07a"),1)
+		draw_line(marker-Vector2(7,0),marker+Vector2(7,0),Color("f4d07a"),0.6)
+		draw_line(marker-Vector2(0,7),marker+Vector2(0,7),Color("f4d07a"),0.6)
+	if chain_elapsed <= 0.0 or chain_elapsed >= CHAIN_SWING:
+		return
+	ChainVisual.draw_links(self,chain_geometry(chain_elapsed/CHAIN_SWING))
+
+func chain_geometry(progress: float) -> PackedVector2Array:
+	var extension := chain_extension(progress)
+	if extension <= 0.001:
+		return PackedVector2Array()
+	var wrist: Vector2 = sprite.chain_socket()
+	var direction := Vector2(DIR_VECTOR[facing]).normalized()
+	var reach := chain_reach if chain_reach > 0.0 else CHAIN_RANGE*TILE_SIZE
+	# Fixed 45-degree axis, no sine-wave deflection or tip retarget jitter.
+	return PackedVector2Array([wrist,wrist+direction*reach*extension])

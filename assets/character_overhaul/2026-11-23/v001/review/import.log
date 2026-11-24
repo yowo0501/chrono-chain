@@ -1,0 +1,236 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started 프로젝트 초기화 (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | 파일 구조 스캔 중...[39m[0m
+WARNING: Detected another project.godot at res://backups/art-rollback-20261116-150938. The folder will be ignored.
+   at: _should_skip_directory (editor/file_system/editor_file_system.cpp:3497)
+[  16% ] [90m[1mfirst_scan_filesystem[22m | 전역 클래스 이름을 불러오는 중...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | GDExtensions 검증 중...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | 오토로드 스크립트를 만드는 중...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | 플러그인을 초기화 중...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | 파일 스캔 시작 중...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started 전역 클래스를 등록하는 중... (4 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  20% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  40% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  60% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started 액션 스캔 중... (65 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | A-native.png[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | B-native.png[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | C-native.png[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | D-native.png[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | E-native.png[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | attack-0-00.png[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | attack-0-01.png[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | attack-0-02.png[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | attack-0-03.png[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | attack-0-04.png[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | attack-0-05.png[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | attack-0-06.png[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | attack-0-07.png[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | attack-0-08.png[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | attack-0-09.png[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | attack-0-10.png[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | attack-0-11.png[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | attack-0-12.png[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | attack-0-13.png[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | attack-0-14.png[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | attack-0-15.png[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | attack-0-16.png[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | attack-0-17.png[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | attack-0-18.png[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | attack-0-19.png[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | attack-0-20.png[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | attack-0-21.png[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | attack-0-22.png[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | attack-0-23.png[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | attack-0-24.png[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | attack-1-00.png[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | attack-1-01.png[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | attack-1-02.png[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | attack-1-03.png[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | attack-1-04.png[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | attack-1-05.png[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | attack-1-06.png[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | attack-1-07.png[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | attack-1-08.png[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | attack-1-09.png[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | attack-1-10.png[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | attack-1-11.png[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | attack-1-12.png[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | attack-1-13.png[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | attack-1-14.png[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | attack-1-15.png[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | attack-1-16.png[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | attack-1-17.png[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | attack-1-18.png[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | attack-1-19.png[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | attack-1-20.png[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | attack-1-21.png[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | attack-1-22.png[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | attack-1-23.png[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | attack-1-24.png[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | battle-focus-0.png[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | battle-focus-1.png[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | battle-idle.png[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | battle-strike-0.png[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | battle-strike-1.png[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | battle-windup-0.png[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | battle-windup-1.png[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | field-five-options.png[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | chuheun-battle.png[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | yeonwoo-battle.png[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started 애셋 (다시) 가져오는 중 (65 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[   1% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[   3% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[   4% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[   6% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[   7% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[   9% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  10% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  12% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  13% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  15% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  16% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  18% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  19% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  21% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  22% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  24% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  25% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  27% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  28% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  30% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  31% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  33% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  34% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  36% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  37% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  39% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  40% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  42% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  43% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  45% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  46% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  48% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  50% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  51% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  53% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  54% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  56% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  57% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  59% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  60% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  62% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  63% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  65% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  66% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  68% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  69% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  71% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  72% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  74% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  75% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  77% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  78% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  80% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  81% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  83% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  84% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  86% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  87% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  89% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  90% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  92% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  93% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  95% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[  96% ] [90m[1mreimport[22m | 다시 가져올 파일을 준비 중...[39m[0m
+[   0% ] [90m[1mreimport[22m | 다시 가져오기 전 작업을 수행 중...[39m[0m
+[   0% ] [90m[1mreimport[22m | attack-1-03.png[39m[0m
+[   1% ] [90m[1mreimport[22m | attack-1-04.png[39m[0m
+[   3% ] [90m[1mreimport[22m | attack-1-05.png[39m[0m
+[   4% ] [90m[1mreimport[22m | attack-1-06.png[39m[0m
+[   6% ] [90m[1mreimport[22m | attack-1-07.png[39m[0m
+[   7% ] [90m[1mreimport[22m | attack-1-08.png[39m[0m
+[   9% ] [90m[1mreimport[22m | attack-1-09.png[39m[0m
+[  10% ] [90m[1mreimport[22m | attack-1-10.png[39m[0m
+[  12% ] [90m[1mreimport[22m | attack-1-11.png[39m[0m
+[  13% ] [90m[1mreimport[22m | attack-1-12.png[39m[0m
+[  15% ] [90m[1mreimport[22m | attack-1-13.png[39m[0m
+[  16% ] [90m[1mreimport[22m | attack-1-14.png[39m[0m
+[  18% ] [90m[1mreimport[22m | attack-1-15.png[39m[0m
+[  19% ] [90m[1mreimport[22m | attack-1-16.png[39m[0m
+[  21% ] [90m[1mreimport[22m | attack-1-17.png[39m[0m
+[  22% ] [90m[1mreimport[22m | attack-1-18.png[39m[0m
+[  24% ] [90m[1mreimport[22m | attack-1-19.png[39m[0m
+[  25% ] [90m[1mreimport[22m | attack-1-20.png[39m[0m
+[  27% ] [90m[1mreimport[22m | attack-1-21.png[39m[0m
+[  28% ] [90m[1mreimport[22m | attack-1-22.png[39m[0m
+[  30% ] [90m[1mreimport[22m | attack-1-23.png[39m[0m
+[  31% ] [90m[1mreimport[22m | attack-1-24.png[39m[0m
+[  33% ] [90m[1mreimport[22m | battle-focus-0.png[39m[0m
+[  34% ] [90m[1mreimport[22m | battle-focus-1.png[39m[0m
+[  36% ] [90m[1mreimport[22m | battle-idle.png[39m[0m
+[  37% ] [90m[1mreimport[22m | battle-strike-0.png[39m[0m
+[  39% ] [90m[1mreimport[22m | battle-strike-1.png[39m[0m
+[  40% ] [90m[1mreimport[22m | battle-windup-0.png[39m[0m
+[  42% ] [90m[1mreimport[22m | battle-windup-1.png[39m[0m
+[  43% ] [90m[1mreimport[22m | field-five-options.png[39m[0m
+[  45% ] [90m[1mreimport[22m | chuheun-battle.png[39m[0m
+[  46% ] [90m[1mreimport[22m | yeonwoo-battle.png[39m[0m
+[  48% ] [90m[1mreimport[22m | A-native.png[39m[0m
+[  50% ] [90m[1mreimport[22m | B-native.png[39m[0m
+[  51% ] [90m[1mreimport[22m | C-native.png[39m[0m
+[  53% ] [90m[1mreimport[22m | D-native.png[39m[0m
+[  54% ] [90m[1mreimport[22m | E-native.png[39m[0m
+[  56% ] [90m[1mreimport[22m | attack-0-00.png[39m[0m
+[  57% ] [90m[1mreimport[22m | attack-0-01.png[39m[0m
+[  59% ] [90m[1mreimport[22m | attack-0-02.png[39m[0m
+[  60% ] [90m[1mreimport[22m | attack-0-03.png[39m[0m
+[  62% ] [90m[1mreimport[22m | attack-0-04.png[39m[0m
+[  63% ] [90m[1mreimport[22m | attack-0-05.png[39m[0m
+[  65% ] [90m[1mreimport[22m | attack-0-06.png[39m[0m
+[  66% ] [90m[1mreimport[22m | attack-0-07.png[39m[0m
+[  68% ] [90m[1mreimport[22m | attack-0-08.png[39m[0m
+[  69% ] [90m[1mreimport[22m | attack-0-09.png[39m[0m
+[  71% ] [90m[1mreimport[22m | attack-0-10.png[39m[0m
+[  72% ] [90m[1mreimport[22m | attack-1-02.png[39m[0m
+[  74% ] [90m[1mreimport[22m | attack-1-01.png[39m[0m
+[  75% ] [90m[1mreimport[22m | attack-1-00.png[39m[0m
+[  77% ] [90m[1mreimport[22m | attack-0-24.png[39m[0m
+[  78% ] [90m[1mreimport[22m | attack-0-23.png[39m[0m
+[  80% ] [90m[1mreimport[22m | attack-0-22.png[39m[0m
+[  81% ] [90m[1mreimport[22m | attack-0-21.png[39m[0m
+[  83% ] [90m[1mreimport[22m | attack-0-20.png[39m[0m
+[  84% ] [90m[1mreimport[22m | attack-0-19.png[39m[0m
+[  86% ] [90m[1mreimport[22m | attack-0-18.png[39m[0m
+[  87% ] [90m[1mreimport[22m | attack-0-17.png[39m[0m
+[  89% ] [90m[1mreimport[22m | attack-0-16.png[39m[0m
+[  90% ] [90m[1mreimport[22m | attack-0-15.png[39m[0m
+[  92% ] [90m[1mreimport[22m | attack-0-14.png[39m[0m
+[  93% ] [90m[1mreimport[22m | attack-0-13.png[39m[0m
+[  95% ] [90m[1mreimport[22m | attack-0-12.png[39m[0m
+[  96% ] [90m[1mreimport[22m | attack-0-11.png[39m[0m
+[  98% ] [90m[1mreimport[22m | 애셋 가져오기 마무리 중...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started 애셋 (다시) 가져오는 중 (65 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | 다시 가져오기 후 작업을 수행 중...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started 편집기를 불러오는 중 (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | 편집기 레이아웃을 불러오는 중...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | 독을 불러오는 중...[39m[0m
+[  33% ] [90m[1mloading_editor_layout[22m | 씬을 다시 여는 중...[39m[0m
+[  50% ] [90m[1mloading_editor_layout[22m | 중앙 편집기 레이아웃을 불러오는 중...[39m[0m
+[  66% ] [90m[1mloading_editor_layout[22m | 플러그인 창 레이아웃을 불러오는 중...[39m[0m
+[  83% ] [90m[1mloading_editor_layout[22m | 편집기 레이아웃이 준비되었습니다.[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m
