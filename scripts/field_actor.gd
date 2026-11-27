@@ -15,6 +15,7 @@ var regions: Array[Rect2] = []
 var chain_texture: Texture2D
 var chain_anchors: Array = []
 var chain_frame := 0
+var frame_size := 64
 var style_c := false
 const CHAIN_DIRECTIONS := {"down":0,"down_left":1,"left":2,"up_left":3,"up":4,"up_right":5,"right":6,"down_right":7}
 const TILE_SIZE := preload("res://scripts/field.gd").TILE_SIZE
@@ -22,9 +23,11 @@ const FRAME_SIZE := 64
 const DIRECTIONS := {"down":0,"down_left":1,"left":1,"up_left":1,"up":3,"up_right":2,"right":2,"down_right":2}
 
 func configure(source: Texture2D) -> void:
-	assert(source.get_size() == Vector2(FRAME_SIZE * 3, FRAME_SIZE * 4), "Field sprites require a 3x4 atlas of 64px frames")
 	texture = source
 	style_c = "/field_c/" in source.resource_path
+	frame_size = source.get_width()/3
+	assert(source.get_height() == frame_size*4)
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR if style_c else CanvasItem.TEXTURE_FILTER_NEAREST
 	if "yeonwoo" in source.resource_path:
 		preload("res://scripts/story/chapter/gold_palette.gd").apply(self)
 	if style_c and "chuheun" in source.resource_path:
@@ -36,7 +39,7 @@ func configure(source: Texture2D) -> void:
 	regions.clear()
 	for row in 4:
 		for column in 3:
-			regions.append(Rect2(Vector2(column, row) * FRAME_SIZE, Vector2.ONE * FRAME_SIZE))
+			regions.append(Rect2(Vector2(column, row) * frame_size, Vector2.ONE * frame_size))
 	queue_redraw()
 
 func begin_step() -> void:
@@ -75,7 +78,7 @@ func _draw() -> void:
 	if chain_texture != null and action_progress < 1.0:
 		if style_c:
 			var pose := 1 if action_progress >= 0.3 and action_progress < 0.8 else 0
-			draw_texture_rect_region(chain_texture,Rect2(-16,-24,48,48),Rect2(pose*96,int(CHAIN_DIRECTIONS[facing])*96,96,96))
+			draw_texture_rect_region(chain_texture,Rect2(-16,-24,48,48),Rect2(pose*512,int(CHAIN_DIRECTIONS[facing])*512,512,512))
 			return
 		# Authored arm/torso poses; no simulated lean or split-body replacement.
 		draw_texture_rect_region(chain_texture,Rect2(-4,-6.5,24,24),Rect2(chain_frame*96,direction*96,96,96))
@@ -104,7 +107,7 @@ func chain_socket() -> Vector2:
 	if style_c and not chain_anchors.is_empty():
 		var pose := 1 if action_progress >= 0.3 and action_progress < 0.8 else 0
 		var hand: Array = chain_anchors[int(CHAIN_DIRECTIONS[facing])*2+pose].tip
-		return Vector2(-16,-24)+Vector2(hand[0],hand[1])*0.5
+		return Vector2(-16,-24)+Vector2(hand[0],hand[1])*(48.0/512.0)
 	if chain_anchors.is_empty():
 		return Vector2(8,10)
 	var tip: Array = chain_anchors[int(DIRECTIONS[facing])*6+chain_frame].tip

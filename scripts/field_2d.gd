@@ -13,7 +13,7 @@ var floor_decals: Array[Dictionary] = []
 
 func _ready() -> void:
 	field = get_parent()
-	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	for kind in ["bakery","shop","house","warehouse","fountain","arch","crate","lamp","bench","tree","factory","workshop","servicehouse","junk","wall_dark","wall_warm","manhole","puddle","drain"]:
 		art[kind] = load(BASE+kind+".png")
 	for item in field.settings.decor:
@@ -90,7 +90,7 @@ func _surface(kind: String, tile: Vector2i, tint: Color = Color.WHITE) -> void:
 	var at := Vector2(tile*TILE)
 	# Eight-pixel stones match the actor scale; water keeps broader ripples.
 	var period := 8 if kind == "water" else 4
-	var sample_size := 128/period
+	var sample_size: float = floors[kind].get_width()/float(period)
 	var source := Rect2(posmod(tile.x,period)*sample_size,posmod(tile.y,period)*sample_size,sample_size,sample_size)
 	draw_texture_rect_region(floors[kind],Rect2(at,Vector2(16,16)),source,tint)
 
@@ -189,4 +189,5 @@ func _draw() -> void:
 	for i in field.lamps.size():
 		var at := Vector2(field.lamps[i]*TILE)+Vector2(8,8)
 		draw_texture_rect(art.lamp,Rect2(at-Vector2(5,24),Vector2(10,28)),false,Color("b5bfc9") if not field.lit[i] else Color.WHITE)
+
 

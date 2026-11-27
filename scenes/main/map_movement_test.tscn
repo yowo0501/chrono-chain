@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/main/main.tscn" id="1"]
+
+[node name="MapMovementTest" instance=ExtResource("1")]
+
+[node name="Field" parent="." index="0"]
+movement_only = true

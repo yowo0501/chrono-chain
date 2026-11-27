@@ -1,0 +1,258 @@
+[
+  {
+    "path": "reference/.gdignore",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "reference/battle/armored-shadow.png",
+    "sha256": "52c11eaa278894bdab396653e96655082b86968c8e0add5d1cec073656a86e86"
+  },
+  {
+    "path": "reference/battle/chain-extension.png",
+    "sha256": "59c133e1831ebecff1a8d25782f573bde89a2fe904d12c1198ebdaf048ce7547"
+  },
+  {
+    "path": "reference/battle/chain-joins.json",
+    "sha256": "fd93b70f304ff830813db4abd94deb11ad1308dd58796ea2e7bec02bbb57d24e"
+  },
+  {
+    "path": "reference/battle/chuheun-action-source.png",
+    "sha256": "6e5dc26dae310ad58dba967f20a60e9089f014bdb36f7855b75177265a4003fd"
+  },
+  {
+    "path": "reference/battle/chuheun-action.png",
+    "sha256": "bb12587161631a034305f0573f16058329f48e836c93ebe98750a88fbdcb3dca"
+  },
+  {
+    "path": "reference/battle/chuheun-expressive-source.png",
+    "sha256": "fccc390f0facdd6e12677d5e528093b3fbb914e6ba0781ef58469fae794679f6"
+  },
+  {
+    "path": "reference/battle/chuheun-expressive.png",
+    "sha256": "52478bb0bd5b18698591299b0da2165f48c2057b87a9334e74bf90a0af24b1b7"
+  },
+  {
+    "path": "reference/battle/chuheun-idle-calm-source.png",
+    "sha256": "3a442b09c55fa8b22be61b782624ead9f3d46d6df9376f171580b3c1f046619f"
+  },
+  {
+    "path": "reference/battle/chuheun-idle-calm.png",
+    "sha256": "5904b9cc552c824f1508c1e67b66fb1ce4dd3b8bf3bdcec2785471040745df05"
+  },
+  {
+    "path": "reference/battle/chuheun-motion-source.png",
+    "sha256": "83fbeae822580a9e934ad7ae730b538fa146d86c4a2d98f0fdbc5c99e23cdb26"
+  },
+  {
+    "path": "reference/battle/chuheun-motion.png",
+    "sha256": "1088c344946349baaaca5c4a1c28355dc9a5ca61e265dc39fefe7c7329392700"
+  },
+  {
+    "path": "reference/battle/chuheun-source.png",
+    "sha256": "dd60880c6c94234999685efb3e460449273bbc7b43547eff929d1e75face5708"
+  },
+  {
+    "path": "reference/battle/chuheun-timer-v2.png",
+    "sha256": "32bdabe6a858454c16e394aa9b3cccbd4bba197d838eff30afd5224c5bd086ca"
+  },
+  {
+    "path": "reference/battle/chuheun-timer.png",
+    "sha256": "7d03f83397cc81ed2cd92d0f7dee792b8d62c32f2770406284997c9fe1feaef3"
+  },
+  {
+    "path": "reference/battle/chuheun.png",
+    "sha256": "fdd6856b0ef74397fa22f6005b8e1ecd146df6e78dbd9848ee63abba151d1a1e"
+  },
+  {
+    "path": "reference/battle/focus.png",
+    "sha256": "12a03c32917e74e696016e65f58357c92f06070a9bfac041aeeb10b2dccbe67b"
+  },
+  {
+    "path": "reference/battle/new-party-source.png",
+    "sha256": "1cf8fed6b7581c05a80a8a17ae0a91489258115f9fcb41d53ca9914e4802fa99"
+  },
+  {
+    "path": "reference/battle/recovery-food.png",
+    "sha256": "342cd96dfe18e88ef3a569f938df5395bc60c416c94d393d33aa1bf0aadfad00"
+  },
+  {
+    "path": "reference/battle/seola-cohesive-source.png",
+    "sha256": "899ef91beef53179d3b771e913060466b1a3ef501081dd512b0af83381a556c9"
+  },
+  {
+    "path": "reference/battle/seola-overhead-source.png",
+    "sha256": "29ed106ed7c820f7dd81753a6748a2a1f5cde20305327e567115a0d4bb25e3b7"
+  },
+  {
+    "path": "reference/battle/seola-overhead.png",
+    "sha256": "b1ebeeaffb33c90c56a9b9b7afd7e1422ef86b78434cfb6c14bf0147ed733bb0"
+  },
+  {
+    "path": "reference/battle/seola-shield-source.png",
+    "sha256": "66e48e9240c6ee3098e7cce7f8344b636758dceb2135e32bd30ae8a5b34987d2"
+  },
+  {
+    "path": "reference/battle/seola-shield.png",
+    "sha256": "bf17f908c88897f026c34008439582e519e87fe1451b45f29b89cd3e3bd38305"
+  },
+  {
+    "path": "reference/battle/seola-unified-source.png",
+    "sha256": "e883aaf10a702a2be98d45796d4704e89e236160c18201804fe948235a617372"
+  },
+  {
+    "path": "reference/battle/seola.png",
+    "sha256": "367a20fac6a1cc12d7479c5ee2f96928a4b8d3532026b68d08708a65aefc6791"
+  },
+  {
+    "path": "reference/battle/shadow-source.png",
+    "sha256": "0f7659037786395f50f6bde1ce9818a16d6717fb39576247beacee2abcb70fd5"
+  },
+  {
+    "path": "reference/battle/shadow.png",
+    "sha256": "c6b4da7a21297153aa8b9b5a83496749d0f217bea821149f2e3ca963b99d9b6f"
+  },
+  {
+    "path": "reference/battle/support-skills.png",
+    "sha256": "984c6d9c5484920e807e3fdb8b37dbdbec97fffd5e7d63131a677ccf42bd05c1"
+  },
+  {
+    "path": "reference/battle/wiseong.png",
+    "sha256": "8704bcb9d1203951eba8eb7730b64cc2700527268861ce079ee4b355adc08d41"
+  },
+  {
+    "path": "reference/battle/yeonwoo-action-source.png",
+    "sha256": "d2db7cb79bd3242d20f82f5bfecce880dfa962c19f56c17fc2161ac8b479ae24"
+  },
+  {
+    "path": "reference/battle/yeonwoo-action.png",
+    "sha256": "28322b2145c620f8f1dc4aeaf2228237b3d1c1bd012b1d0a11434b56c2f020b8"
+  },
+  {
+    "path": "reference/battle/yeonwoo-assassin.png",
+    "sha256": "638b4a11670b08e93834658b604155b0df616e8568afdbe8ce4f03a75df5c8ba"
+  },
+  {
+    "path": "reference/battle/yeonwoo-expressive-source.png",
+    "sha256": "c0afc4c8fab43ff6b793fe5582612e7d5941e17fc00e014a6a27f812e977f45d"
+  },
+  {
+    "path": "reference/battle/yeonwoo-expressive.png",
+    "sha256": "e2ac46f1a4a7dfe8f10c80bb3fd0ea5ba2e7240d71f51616b960bc582779f50e"
+  },
+  {
+    "path": "reference/battle/yeonwoo-eyes-v2.png",
+    "sha256": "bf7e24347cc8b0c8eae1563f048374322a31bf0297e5d127426c82eb72a9eaa1"
+  },
+  {
+    "path": "reference/battle/yeonwoo-eyes.png",
+    "sha256": "0e7f2cb4b545494830a9548944ee9821b52aa00e102c27d30bab81521be91aa5"
+  },
+  {
+    "path": "reference/battle/yeonwoo-motion-source.png",
+    "sha256": "a43f7107b7e0e9e813a9acc3f4f8b78b49e042f727e775caff58339f3eaefe2d"
+  },
+  {
+    "path": "reference/battle/yeonwoo-motion.png",
+    "sha256": "4640ce11ce451709275efb2a84ace94897ff119f9f900247999b4434da5b23a0"
+  },
+  {
+    "path": "reference/battle/yeonwoo-source.png",
+    "sha256": "b683554dff2e2c02e46263fa6e50a50ad542b14982b596e904b6c02f100eb1fc"
+  },
+  {
+    "path": "reference/battle/yeonwoo-windup-body.png",
+    "sha256": "acfb585cbb81715f8bf6141ec6c599adfaadd0a4229e0f248e7297b598923924"
+  },
+  {
+    "path": "reference/battle/yeonwoo-windup-fixed-source.png",
+    "sha256": "4386cba4e561c37c63d5db3a0c42b6748e192a3450b8e034d747d41e81f8289d"
+  },
+  {
+    "path": "reference/battle/yeonwoo-windup-rig.json",
+    "sha256": "98fe00e50c7a2db018c7fe6659dbdf90dcb868a2e94006d2b721d4d9ecc911ee"
+  },
+  {
+    "path": "reference/battle/yeonwoo-windup-wrist.png",
+    "sha256": "af2d5a96aa3ada9ec7bc316eab89fb991e95fb16b5687eb2058330a0385e3ff1"
+  },
+  {
+    "path": "reference/battle/yeonwoo.png",
+    "sha256": "c46daf8b9d08680084e531626731b4b2ff55e8fdb3e4f9be95b4d286c4ec4ba4"
+  },
+  {
+    "path": "reference/code/assassin_skill.gd",
+    "sha256": "6af59dd27eb7c6f69640d6464c7dcfca615c22bc5ecb26edee523203465379f6"
+  },
+  {
+    "path": "reference/code/battle_screen.gd",
+    "sha256": "c568c80ddb77350557473d44f791718781f3820a619a44faba682376ae9302ae"
+  },
+  {
+    "path": "reference/code/field_actor.gd",
+    "sha256": "7694973568249b6b6256103d6cf5b98114ae9270f9f3c7d45fe519cdf56d7d57"
+  },
+  {
+    "path": "reference/code/player.gd",
+    "sha256": "2fac74db6bfed737dea82e482f2f7930832413eab22fd1af14454669d3c749a1"
+  },
+  {
+    "path": "reference/code/support_skill.gd",
+    "sha256": "f58acce7da1aaea7e0232135a6d1bcf172c9c2cc74f86370a7cc241b13995e97"
+  },
+  {
+    "path": "reference/code/timer_skill.gd",
+    "sha256": "6babd1c3a74e3dc9e5b9362814df92bf8ac21ade7d2ef21fde37ab37f884d028"
+  },
+  {
+    "path": "reference/skill-sources/chuheun-timer-morph.png",
+    "sha256": "cc89e80d3091f569c89c9622e78e1e6b3bf7724ba0991b458549d21ba80caf81"
+  },
+  {
+    "path": "reference/skill-sources/chuheun-timer.png",
+    "sha256": "27676eb851c7c4bee59ebc4ed15475dbad81bdb4ab96f4e13231e120045d67ce"
+  },
+  {
+    "path": "reference/skill-sources/focus.png",
+    "sha256": "d8489420d879deabdd3c67618061c6f16e55a51ef34e9aed418bc6696321118d"
+  },
+  {
+    "path": "reference/skill-sources/support.png",
+    "sha256": "2f5cec23cd96d773bfa9661baefc61e1e5861454e3f592f55569a8c65264d41b"
+  },
+  {
+    "path": "reference/skill-sources/yeonwoo-assassin.png",
+    "sha256": "c99262b0b2cf9b8c3f67cd40cc60a49b0a0e8956dd9453108573200b668952a7"
+  },
+  {
+    "path": "reference/toe-idle/prompts-v2.json",
+    "sha256": "2590b8bdbe3d7f1f3ae6c735668889092b8324ee4386eeb4df27ffc153ddfe26"
+  },
+  {
+    "path": "reference/toe-idle/prompts.json",
+    "sha256": "a44bbc4e3e100ba83a06c8e0352c1c43b7c5f1bb638f19d432f0982aacfff166"
+  },
+  {
+    "path": "reference/toe-idle/registration-v2.json",
+    "sha256": "fa29f48dc04e26456993dd68b7ee1494675fff1f3cd0a58fce283a186573ecb8"
+  },
+  {
+    "path": "reference/toe-idle/registration.json",
+    "sha256": "0859f96b34da62041118e06bc4e8a70e247c8b8fd517ffc3059c55fb29651920"
+  },
+  {
+    "path": "reference/toe-idle/source-v2.png",
+    "sha256": "00e4eb839c1cab0932e3d26efa358f4d76510da2e256684779940661d56ca970"
+  },
+  {
+    "path": "reference/toe-idle/source.png",
+    "sha256": "80bc2c37016d0085931c389233744ac0d19757de0aedd75be59599a526a9e5f9"
+  },
+  {
+    "path": "reference/toe-idle/toe-tap-v2.png",
+    "sha256": "efed09c7346efd616fd55103819fbb3cb0c762b640e0c5199a0ed64a3019578d"
+  },
+  {
+    "path": "reference/toe-idle/toe-tap.png",
+    "sha256": "9d20974778f3751977567e601e92079876ef7c8066cd257e5ca29480ed63a73d"
+  }
+]

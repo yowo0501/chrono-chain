@@ -6,7 +6,7 @@ signal encounter(id: int, preemptive: bool)
 const Lockon = preload("res://scripts/field_lockon.gd")
 const TILE := 32.0
 const WORLD := Vector2i(40,26)
-const BASE := "res://assets/art_overhaul/2026-11-23/fields/v003/runtime/"
+const BASE := "res://assets/art_overhaul/2026-11-23/fields/style_c/runtime/"
 var actor: Node2D
 var partner: Node2D
 var tile := Vector2i(19,16)
@@ -52,7 +52,7 @@ var chain_layer: Node2D
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	rng.randomize()
 	chain_layer = Node2D.new()
 	chain_layer.z_index = 1000
@@ -68,12 +68,12 @@ func _ready() -> void:
 	var Actor = load("res://scripts/field_actor.gd")
 	actor = Actor.new()
 	add_child(actor)
-	actor.scale = Vector2(3,3)
-	actor.configure(load("res://assets/sprites/field/chuheun_night.png"))
+	actor.scale = Vector2(2,2)
+	actor.configure(load("res://assets/character_overhaul/2026-11-23/field_c/runtime/chuheun-walk.png"))
 	partner = Actor.new()
 	add_child(partner)
-	partner.scale = Vector2(3,3)
-	partner.configure(load("res://assets/sprites/field/yeonwoo_night.png"))
+	partner.scale = Vector2(2,2)
+	partner.configure(load("res://assets/character_overhaul/2026-11-23/field_c/runtime/yeonwoo-walk.png"))
 	for spec in [["shop",2,2,5,3],["house",13,2,5,3],["bakery",24,1,5,3],["warehouse",33,11,5,4],["workshop",2,12,4,4],["shop",11,9,5,3],["house",24,8,5,3],["lamp",16,12,1,2],["lamp",24,12,1,2],["tree",26,16,2,2],["bench",18,22,3,1],["house",15,22,3,2]]:
 		props.append({"art":load(BASE+spec[0]+".png"),"rect":Rect2i(spec[1],spec[2],spec[3],spec[4])})
 	for home in homes:
@@ -232,8 +232,8 @@ func _update_camera() -> void:
 	camera.y = clampf(camera.y,-40,WORLD.y*TILE-480)
 
 func _update_actors() -> void:
-	actor.position = (position_px-camera+Vector2(-8,-16)).round()
-	partner.position = (partner_px-camera+Vector2(-8,-16)).round()
+	actor.position = (position_px-camera+Vector2(-16,-32)).round()
+	partner.position = (partner_px-camera+Vector2(-16,-32)).round()
 	actor.facing = facing
 	if mode == "confrontation": partner.facing = "up"
 	if sequence in ["relax","smile"]:
@@ -246,7 +246,7 @@ func _draw() -> void:
 		for x in WORLD.x:
 			var at := Vector2(x,y)*TILE-camera
 			if at.x< -TILE or at.y< -TILE or at.x>768 or at.y>672: continue
-			draw_texture_rect_region(floor_art,Rect2(at,Vector2.ONE*TILE),Rect2((x%4)*32,(y%4)*32,32,32),Color("788ca6"))
+			draw_texture_rect_region(floor_art,Rect2(at,Vector2.ONE*TILE),Rect2(Vector2(x%4,y%4)*floor_art.get_width()/4.0,Vector2.ONE*floor_art.get_width()/4.0),Color("788ca6"))
 	for prop in props:
 		var r: Rect2i = prop.rect
 		draw_texture_rect(prop.art,Rect2(Vector2(r.position)*TILE-camera,Vector2(r.size)*TILE),false)
@@ -286,7 +286,7 @@ func _draw() -> void:
 
 func _draw_chain() -> void:
 	if cast_time>=0:
-		var start: Vector2 = actor.position+actor.chain_socket()*3
+		var start: Vector2 = actor.position+actor.chain_socket()*actor.scale
 		var target: Vector2 = slime_positions[cast_target]-camera+Vector2(16,8)
 		var t := smoothstep(0.20,0.44,cast_time)
 		var end := start.lerp(target,t)

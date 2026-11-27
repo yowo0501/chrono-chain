@@ -1,0 +1,1524 @@
+[
+  {
+    "bytes": 808982,
+    "path": "reference/battle/armored-shadow.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "52c11eaa278894bdab396653e96655082b86968c8e0add5d1cec073656a86e86",
+    "size": [
+      2172,
+      724
+    ]
+  },
+  {
+    "bytes": 836,
+    "path": "reference/battle/chain-extension.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "59c133e1831ebecff1a8d25782f573bde89a2fe904d12c1198ebdaf048ce7547",
+    "size": [
+      26,
+      10
+    ]
+  },
+  {
+    "bytes": 263,
+    "path": "reference/battle/chain-joins.json",
+    "sha256": "fd93b70f304ff830813db4abd94deb11ad1308dd58796ea2e7bec02bbb57d24e"
+  },
+  {
+    "bytes": 1912462,
+    "path": "reference/battle/chuheun-action-source.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "6e5dc26dae310ad58dba967f20a60e9089f014bdb36f7855b75177265a4003fd",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  {
+    "bytes": 324832,
+    "path": "reference/battle/chuheun-action.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "bb12587161631a034305f0573f16058329f48e836c93ebe98750a88fbdcb3dca",
+    "size": [
+      1152,
+      448
+    ]
+  },
+  {
+    "bytes": 1523436,
+    "frames": [
+      {
+        "aspect": 1.09090909090909,
+        "bounds": [
+          38,
+          13,
+          275,
+          300
+        ],
+        "frame": 0,
+        "opaque_area": 34832,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 0.856230031948882,
+        "bounds": [
+          0,
+          45,
+          313,
+          268
+        ],
+        "frame": 1,
+        "opaque_area": 32063,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 0.757188498402556,
+        "bounds": [
+          0,
+          76,
+          313,
+          237
+        ],
+        "frame": 2,
+        "opaque_area": 27573,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 0.748387096774194,
+        "bounds": [
+          0,
+          81,
+          310,
+          232
+        ],
+        "frame": 3,
+        "opaque_area": 28787,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.05743243243243,
+        "bounds": [
+          17,
+          0,
+          296,
+          313
+        ],
+        "frame": 4,
+        "opaque_area": 32792,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.0,
+        "bounds": [
+          0,
+          0,
+          313,
+          313
+        ],
+        "frame": 5,
+        "opaque_area": 32103,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.0,
+        "bounds": [
+          0,
+          0,
+          313,
+          313
+        ],
+        "frame": 6,
+        "opaque_area": 31706,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.05387205387205,
+        "bounds": [
+          0,
+          0,
+          297,
+          313
+        ],
+        "frame": 7,
+        "opaque_area": 31088,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.09824561403509,
+        "bounds": [
+          21,
+          0,
+          285,
+          313
+        ],
+        "frame": 8,
+        "opaque_area": 28025,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.12996389891697,
+        "bounds": [
+          36,
+          0,
+          277,
+          313
+        ],
+        "frame": 9,
+        "opaque_area": 29738,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.01954397394137,
+        "bounds": [
+          0,
+          0,
+          307,
+          313
+        ],
+        "frame": 10,
+        "opaque_area": 31057,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.23228346456693,
+        "bounds": [
+          40,
+          0,
+          254,
+          313
+        ],
+        "frame": 11,
+        "opaque_area": 30734,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.39366515837104,
+        "bounds": [
+          60,
+          0,
+          221,
+          308
+        ],
+        "frame": 12,
+        "opaque_area": 31224,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.39366515837104,
+        "bounds": [
+          58,
+          0,
+          221,
+          308
+        ],
+        "frame": 13,
+        "opaque_area": 30026,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.41935483870968,
+        "bounds": [
+          50,
+          0,
+          217,
+          308
+        ],
+        "frame": 14,
+        "opaque_area": 29501,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.45283018867925,
+        "bounds": [
+          56,
+          0,
+          212,
+          308
+        ],
+        "frame": 15,
+        "opaque_area": 27841,
+        "touches_nominal_cell_edge": true
+      }
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "path": "reference/battle/chuheun-expressive-source.png",
+    "role": "original pre-character-sheet design reference",
+    "sha256": "fccc390f0facdd6e12677d5e528093b3fbb914e6ba0781ef58469fae794679f6",
+    "size": [
+      1254,
+      1254
+    ]
+  },
+  {
+    "bytes": 414462,
+    "path": "reference/battle/chuheun-expressive.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "52478bb0bd5b18698591299b0da2165f48c2057b87a9334e74bf90a0af24b1b7",
+    "size": [
+      1536,
+      960
+    ]
+  },
+  {
+    "bytes": 1702755,
+    "frames": [
+      {
+        "aspect": 1.62592592592593,
+        "bounds": [
+          129,
+          52,
+          270,
+          439
+        ],
+        "frame": 0,
+        "opaque_area": 58538,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.61977186311787,
+        "bounds": [
+          143,
+          63,
+          263,
+          426
+        ],
+        "frame": 1,
+        "opaque_area": 58354,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.59124087591241,
+        "bounds": [
+          154,
+          56,
+          274,
+          436
+        ],
+        "frame": 2,
+        "opaque_area": 59530,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.5724907063197,
+        "bounds": [
+          140,
+          51,
+          269,
+          423
+        ],
+        "frame": 3,
+        "opaque_area": 58061,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.6015037593985,
+        "bounds": [
+          146,
+          48,
+          266,
+          426
+        ],
+        "frame": 4,
+        "opaque_area": 57755,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.53214285714286,
+        "bounds": [
+          155,
+          48,
+          280,
+          429
+        ],
+        "frame": 5,
+        "opaque_area": 58872,
+        "touches_nominal_cell_edge": false
+      }
+    ],
+    "grid": [
+      3,
+      2
+    ],
+    "path": "reference/battle/chuheun-idle-calm-source.png",
+    "role": "original pre-character-sheet design reference",
+    "sha256": "3a442b09c55fa8b22be61b782624ead9f3d46d6df9376f171580b3c1f046619f",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  {
+    "bytes": 317215,
+    "path": "reference/battle/chuheun-idle-calm.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "5904b9cc552c824f1508c1e67b66fb1ce4dd3b8bf3bdcec2785471040745df05",
+    "size": [
+      1152,
+      480
+    ]
+  },
+  {
+    "bytes": 1496783,
+    "frames": [
+      {
+        "aspect": 1.39901477832512,
+        "bounds": [
+          69,
+          22,
+          203,
+          284
+        ],
+        "frame": 0,
+        "opaque_area": 25453,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.484375,
+        "bounds": [
+          85,
+          19,
+          192,
+          285
+        ],
+        "frame": 1,
+        "opaque_area": 23900,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.45918367346939,
+        "bounds": [
+          79,
+          20,
+          196,
+          286
+        ],
+        "frame": 2,
+        "opaque_area": 25389,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.3921568627451,
+        "bounds": [
+          71,
+          22,
+          204,
+          284
+        ],
+        "frame": 3,
+        "opaque_area": 25419,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.30875576036866,
+        "bounds": [
+          70,
+          22,
+          217,
+          284
+        ],
+        "frame": 4,
+        "opaque_area": 25578,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.46428571428571,
+        "bounds": [
+          88,
+          16,
+          196,
+          287
+        ],
+        "frame": 5,
+        "opaque_area": 23016,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.42639593908629,
+        "bounds": [
+          85,
+          20,
+          197,
+          281
+        ],
+        "frame": 6,
+        "opaque_area": 24119,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.30414746543779,
+        "bounds": [
+          71,
+          23,
+          217,
+          283
+        ],
+        "frame": 7,
+        "opaque_area": 25644,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.25862068965517,
+        "bounds": [
+          41,
+          14,
+          232,
+          292
+        ],
+        "frame": 8,
+        "opaque_area": 26797,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.15354330708661,
+        "bounds": [
+          35,
+          13,
+          254,
+          293
+        ],
+        "frame": 9,
+        "opaque_area": 26900,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.21576763485477,
+        "bounds": [
+          35,
+          13,
+          241,
+          293
+        ],
+        "frame": 10,
+        "opaque_area": 27233,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.22821576763485,
+        "bounds": [
+          39,
+          10,
+          241,
+          296
+        ],
+        "frame": 11,
+        "opaque_area": 26900,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.17741935483871,
+        "bounds": [
+          40,
+          14,
+          248,
+          292
+        ],
+        "frame": 12,
+        "opaque_area": 27807,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.27038626609442,
+        "bounds": [
+          47,
+          10,
+          233,
+          296
+        ],
+        "frame": 13,
+        "opaque_area": 27678,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.25957446808511,
+        "bounds": [
+          35,
+          10,
+          235,
+          296
+        ],
+        "frame": 14,
+        "opaque_area": 28180,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.26839826839827,
+        "bounds": [
+          44,
+          13,
+          231,
+          293
+        ],
+        "frame": 15,
+        "opaque_area": 27116,
+        "touches_nominal_cell_edge": false
+      }
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "path": "reference/battle/chuheun-motion-source.png",
+    "role": "original pre-character-sheet design reference",
+    "sha256": "83fbeae822580a9e934ad7ae730b538fa146d86c4a2d98f0fdbc5c99e23cdb26",
+    "size": [
+      1254,
+      1254
+    ]
+  },
+  {
+    "bytes": 493493,
+    "path": "reference/battle/chuheun-motion.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "1088c344946349baaaca5c4a1c28355dc9a5ca61e265dc39fefe7c7329392700",
+    "size": [
+      1536,
+      960
+    ]
+  },
+  {
+    "bytes": 1927889,
+    "frames": [
+      {
+        "aspect": 1.79245283018868,
+        "bounds": [
+          65,
+          12,
+          265,
+          475
+        ],
+        "frame": 0,
+        "opaque_area": 59192,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.4937106918239,
+        "bounds": [
+          66,
+          12,
+          318,
+          475
+        ],
+        "frame": 1,
+        "opaque_area": 59211,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.26302083333333,
+        "bounds": [
+          0,
+          27,
+          384,
+          485
+        ],
+        "frame": 2,
+        "opaque_area": 67001,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.02933333333333,
+        "bounds": [
+          0,
+          103,
+          375,
+          386
+        ],
+        "frame": 3,
+        "opaque_area": 58292,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.22159090909091,
+        "bounds": [
+          32,
+          39,
+          352,
+          430
+        ],
+        "frame": 4,
+        "opaque_area": 65044,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.1171875,
+        "bounds": [
+          0,
+          44,
+          384,
+          429
+        ],
+        "frame": 5,
+        "opaque_area": 55007,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.46827794561934,
+        "bounds": [
+          0,
+          0,
+          331,
+          486
+        ],
+        "frame": 6,
+        "opaque_area": 52061,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.9125,
+        "bounds": [
+          85,
+          25,
+          240,
+          459
+        ],
+        "frame": 7,
+        "opaque_area": 53495,
+        "touches_nominal_cell_edge": false
+      }
+    ],
+    "grid": [
+      4,
+      2
+    ],
+    "path": "reference/battle/chuheun-source.png",
+    "role": "original pre-character-sheet design reference",
+    "sha256": "dd60880c6c94234999685efb3e460449273bbc7b43547eff929d1e75face5708",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  {
+    "bytes": 767210,
+    "path": "reference/battle/chuheun-timer-v2.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "32bdabe6a858454c16e394aa9b3cccbd4bba197d838eff30afd5224c5bd086ca",
+    "size": [
+      1536,
+      960
+    ]
+  },
+  {
+    "bytes": 650699,
+    "path": "reference/battle/chuheun-timer.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "7d03f83397cc81ed2cd92d0f7dee792b8d62c32f2770406284997c9fe1feaef3",
+    "size": [
+      1536,
+      960
+    ]
+  },
+  {
+    "bytes": 193749,
+    "path": "reference/battle/chuheun.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "fdd6856b0ef74397fa22f6005b8e1ecd146df6e78dbd9848ee63abba151d1a1e",
+    "size": [
+      768,
+      400
+    ]
+  },
+  {
+    "bytes": 237292,
+    "path": "reference/battle/focus.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "12a03c32917e74e696016e65f58357c92f06070a9bfac041aeeb10b2dccbe67b",
+    "size": [
+      1536,
+      480
+    ]
+  },
+  {
+    "bytes": 1428926,
+    "path": "reference/battle/new-party-source.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "1cf8fed6b7581c05a80a8a17ae0a91489258115f9fcb41d53ca9914e4802fa99",
+    "size": [
+      1263,
+      1246
+    ]
+  },
+  {
+    "bytes": 5211,
+    "path": "reference/battle/recovery-food.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "342cd96dfe18e88ef3a569f938df5395bc60c416c94d393d33aa1bf0aadfad00",
+    "size": [
+      49,
+      38
+    ]
+  },
+  {
+    "bytes": 2036365,
+    "path": "reference/battle/seola-cohesive-source.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "899ef91beef53179d3b771e913060466b1a3ef501081dd512b0af83381a556c9",
+    "size": [
+      1024,
+      1536
+    ]
+  },
+  {
+    "bytes": 895962,
+    "path": "reference/battle/seola-overhead-source.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "29ed106ed7c820f7dd81753a6748a2a1f5cde20305327e567115a0d4bb25e3b7",
+    "size": [
+      2172,
+      724
+    ]
+  },
+  {
+    "bytes": 71693,
+    "path": "reference/battle/seola-overhead.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "b1ebeeaffb33c90c56a9b9b7afd7e1422ef86b78434cfb6c14bf0147ed733bb0",
+    "size": [
+      768,
+      256
+    ]
+  },
+  {
+    "bytes": 1940143,
+    "path": "reference/battle/seola-shield-source.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "66e48e9240c6ee3098e7cce7f8344b636758dceb2135e32bd30ae8a5b34987d2",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  {
+    "bytes": 186075,
+    "path": "reference/battle/seola-shield.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "bf17f908c88897f026c34008439582e519e87fe1451b45f29b89cd3e3bd38305",
+    "size": [
+      672,
+      672
+    ]
+  },
+  {
+    "bytes": 2032177,
+    "path": "reference/battle/seola-unified-source.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "e883aaf10a702a2be98d45796d4704e89e236160c18201804fe948235a617372",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  {
+    "bytes": 154628,
+    "path": "reference/battle/seola.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "367a20fac6a1cc12d7479c5ee2f96928a4b8d3532026b68d08708a65aefc6791",
+    "size": [
+      768,
+      400
+    ]
+  },
+  {
+    "bytes": 513393,
+    "path": "reference/battle/shadow-source.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "0f7659037786395f50f6bde1ce9818a16d6717fb39576247beacee2abcb70fd5",
+    "size": [
+      2172,
+      724
+    ]
+  },
+  {
+    "bytes": 52032,
+    "path": "reference/battle/shadow.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "c6b4da7a21297153aa8b9b5a83496749d0f217bea821149f2e3ca963b99d9b6f",
+    "size": [
+      576,
+      176
+    ]
+  },
+  {
+    "bytes": 281544,
+    "path": "reference/battle/support-skills.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "984c6d9c5484920e807e3fdb8b37dbdbec97fffd5e7d63131a677ccf42bd05c1",
+    "size": [
+      1536,
+      720
+    ]
+  },
+  {
+    "bytes": 207153,
+    "path": "reference/battle/wiseong.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "8704bcb9d1203951eba8eb7730b64cc2700527268861ce079ee4b355adc08d41",
+    "size": [
+      768,
+      400
+    ]
+  },
+  {
+    "bytes": 2161457,
+    "path": "reference/battle/yeonwoo-action-source.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "d2db7cb79bd3242d20f82f5bfecce880dfa962c19f56c17fc2161ac8b479ae24",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  {
+    "bytes": 354320,
+    "path": "reference/battle/yeonwoo-action.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "28322b2145c620f8f1dc4aeaf2228237b3d1c1bd012b1d0a11434b56c2f020b8",
+    "size": [
+      1152,
+      448
+    ]
+  },
+  {
+    "bytes": 480401,
+    "path": "reference/battle/yeonwoo-assassin.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "638b4a11670b08e93834658b604155b0df616e8568afdbe8ce4f03a75df5c8ba",
+    "size": [
+      1536,
+      960
+    ]
+  },
+  {
+    "bytes": 1672561,
+    "frames": [
+      {
+        "aspect": 1.05185185185185,
+        "bounds": [
+          43,
+          29,
+          270,
+          284
+        ],
+        "frame": 0,
+        "opaque_area": 36138,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 0.906451612903226,
+        "bounds": [
+          0,
+          32,
+          310,
+          281
+        ],
+        "frame": 1,
+        "opaque_area": 34364,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.03383458646617,
+        "bounds": [
+          39,
+          38,
+          266,
+          275
+        ],
+        "frame": 2,
+        "opaque_area": 32545,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 0.96830985915493,
+        "bounds": [
+          16,
+          38,
+          284,
+          275
+        ],
+        "frame": 3,
+        "opaque_area": 35453,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.11721611721612,
+        "bounds": [
+          40,
+          0,
+          273,
+          305
+        ],
+        "frame": 4,
+        "opaque_area": 36731,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 0.97444089456869,
+        "bounds": [
+          0,
+          0,
+          313,
+          305
+        ],
+        "frame": 5,
+        "opaque_area": 34483,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 0.97444089456869,
+        "bounds": [
+          0,
+          0,
+          313,
+          305
+        ],
+        "frame": 6,
+        "opaque_area": 32817,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.00328947368421,
+        "bounds": [
+          0,
+          0,
+          304,
+          305
+        ],
+        "frame": 7,
+        "opaque_area": 36019,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.30434782608696,
+        "bounds": [
+          54,
+          9,
+          230,
+          300
+        ],
+        "frame": 8,
+        "opaque_area": 32565,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.23553719008264,
+        "bounds": [
+          54,
+          10,
+          242,
+          299
+        ],
+        "frame": 9,
+        "opaque_area": 33054,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.26694915254237,
+        "bounds": [
+          51,
+          10,
+          236,
+          299
+        ],
+        "frame": 10,
+        "opaque_area": 32558,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.28936170212766,
+        "bounds": [
+          50,
+          10,
+          235,
+          303
+        ],
+        "frame": 11,
+        "opaque_area": 32206,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.22784810126582,
+        "bounds": [
+          69,
+          7,
+          237,
+          291
+        ],
+        "frame": 12,
+        "opaque_area": 33009,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.16867469879518,
+        "bounds": [
+          54,
+          7,
+          249,
+          291
+        ],
+        "frame": 13,
+        "opaque_area": 32874,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.225,
+        "bounds": [
+          58,
+          4,
+          240,
+          294
+        ],
+        "frame": 14,
+        "opaque_area": 32646,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.27896995708155,
+        "bounds": [
+          55,
+          0,
+          233,
+          298
+        ],
+        "frame": 15,
+        "opaque_area": 31699,
+        "touches_nominal_cell_edge": true
+      }
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "path": "reference/battle/yeonwoo-expressive-source.png",
+    "role": "original pre-character-sheet design reference",
+    "sha256": "c0afc4c8fab43ff6b793fe5582612e7d5941e17fc00e014a6a27f812e977f45d",
+    "size": [
+      1254,
+      1254
+    ]
+  },
+  {
+    "bytes": 382606,
+    "path": "reference/battle/yeonwoo-expressive.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "e2ac46f1a4a7dfe8f10c80bb3fd0ea5ba2e7240d71f51616b960bc582779f50e",
+    "size": [
+      1536,
+      960
+    ]
+  },
+  {
+    "bytes": 751190,
+    "path": "reference/battle/yeonwoo-eyes-v2.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "bf7e24347cc8b0c8eae1563f048374322a31bf0297e5d127426c82eb72a9eaa1",
+    "size": [
+      2172,
+      724
+    ]
+  },
+  {
+    "bytes": 1313650,
+    "path": "reference/battle/yeonwoo-eyes.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "0e7f2cb4b545494830a9548944ee9821b52aa00e102c27d30bab81521be91aa5",
+    "size": [
+      2172,
+      724
+    ]
+  },
+  {
+    "bytes": 1534509,
+    "frames": [
+      {
+        "aspect": 1.5,
+        "bounds": [
+          60,
+          19,
+          196,
+          294
+        ],
+        "frame": 0,
+        "opaque_area": 30326,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.38028169014085,
+        "bounds": [
+          51,
+          19,
+          213,
+          294
+        ],
+        "frame": 1,
+        "opaque_area": 31062,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.42718446601942,
+        "bounds": [
+          51,
+          19,
+          206,
+          294
+        ],
+        "frame": 2,
+        "opaque_area": 31076,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.40191387559809,
+        "bounds": [
+          54,
+          20,
+          209,
+          293
+        ],
+        "frame": 3,
+        "opaque_area": 30979,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.51941747572816,
+        "bounds": [
+          53,
+          0,
+          206,
+          313
+        ],
+        "frame": 4,
+        "opaque_area": 32247,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.45581395348837,
+        "bounds": [
+          52,
+          0,
+          215,
+          313
+        ],
+        "frame": 5,
+        "opaque_area": 32105,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.49760765550239,
+        "bounds": [
+          51,
+          0,
+          209,
+          313
+        ],
+        "frame": 6,
+        "opaque_area": 32317,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.47641509433962,
+        "bounds": [
+          53,
+          0,
+          212,
+          313
+        ],
+        "frame": 7,
+        "opaque_area": 32183,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.40990990990991,
+        "bounds": [
+          49,
+          0,
+          222,
+          313
+        ],
+        "frame": 8,
+        "opaque_area": 31380,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.5969387755102,
+        "bounds": [
+          71,
+          0,
+          196,
+          313
+        ],
+        "frame": 9,
+        "opaque_area": 30732,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.45581395348837,
+        "bounds": [
+          55,
+          0,
+          215,
+          313
+        ],
+        "frame": 10,
+        "opaque_area": 31077,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.7103825136612,
+        "bounds": [
+          84,
+          0,
+          183,
+          313
+        ],
+        "frame": 11,
+        "opaque_area": 29450,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.76470588235294,
+        "bounds": [
+          71,
+          0,
+          170,
+          300
+        ],
+        "frame": 12,
+        "opaque_area": 30387,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.54639175257732,
+        "bounds": [
+          61,
+          0,
+          194,
+          300
+        ],
+        "frame": 13,
+        "opaque_area": 30709,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.76470588235294,
+        "bounds": [
+          72,
+          0,
+          170,
+          300
+        ],
+        "frame": 14,
+        "opaque_area": 29692,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.50753768844221,
+        "bounds": [
+          47,
+          0,
+          199,
+          300
+        ],
+        "frame": 15,
+        "opaque_area": 30616,
+        "touches_nominal_cell_edge": true
+      }
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "path": "reference/battle/yeonwoo-motion-source.png",
+    "role": "original pre-character-sheet design reference",
+    "sha256": "a43f7107b7e0e9e813a9acc3f4f8b78b49e042f727e775caff58339f3eaefe2d",
+    "size": [
+      1254,
+      1254
+    ]
+  },
+  {
+    "bytes": 121170,
+    "path": "reference/battle/yeonwoo-motion.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "4640ce11ce451709275efb2a84ace94897ff119f9f900247999b4434da5b23a0",
+    "size": [
+      1536,
+      960
+    ]
+  },
+  {
+    "bytes": 2126051,
+    "frames": [
+      {
+        "aspect": 1.63157894736842,
+        "bounds": [
+          65,
+          22,
+          285,
+          465
+        ],
+        "frame": 0,
+        "opaque_area": 65832,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.34883720930233,
+        "bounds": [
+          40,
+          23,
+          344,
+          464
+        ],
+        "frame": 1,
+        "opaque_area": 68397,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.24479166666667,
+        "bounds": [
+          0,
+          10,
+          384,
+          478
+        ],
+        "frame": 2,
+        "opaque_area": 77988,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.078125,
+        "bounds": [
+          0,
+          74,
+          384,
+          414
+        ],
+        "frame": 3,
+        "opaque_area": 69607,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.36607142857143,
+        "bounds": [
+          48,
+          13,
+          336,
+          459
+        ],
+        "frame": 4,
+        "opaque_area": 75704,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 1.20810810810811,
+        "bounds": [
+          0,
+          25,
+          370,
+          447
+        ],
+        "frame": 5,
+        "opaque_area": 70038,
+        "touches_nominal_cell_edge": true
+      },
+      {
+        "aspect": 2.05286343612335,
+        "bounds": [
+          88,
+          6,
+          227,
+          466
+        ],
+        "frame": 6,
+        "opaque_area": 59536,
+        "touches_nominal_cell_edge": false
+      },
+      {
+        "aspect": 1.99145299145299,
+        "bounds": [
+          51,
+          6,
+          234,
+          466
+        ],
+        "frame": 7,
+        "opaque_area": 58281,
+        "touches_nominal_cell_edge": false
+      }
+    ],
+    "grid": [
+      4,
+      2
+    ],
+    "path": "reference/battle/yeonwoo-source.png",
+    "role": "original pre-character-sheet design reference",
+    "sha256": "b683554dff2e2c02e46263fa6e50a50ad542b14982b596e904b6c02f100eb1fc",
+    "size": [
+      1536,
+      1024
+    ]
+  },
+  {
+    "bytes": 35358,
+    "path": "reference/battle/yeonwoo-windup-body.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "acfb585cbb81715f8bf6141ec6c599adfaadd0a4229e0f248e7297b598923924",
+    "size": [
+      384,
+      240
+    ]
+  },
+  {
+    "bytes": 1354497,
+    "frames": [
+      {
+        "aspect": 1.84625668449198,
+        "bounds": [
+          157,
+          76,
+          748,
+          1381
+        ],
+        "frame": 0,
+        "opaque_area": 558294,
+        "touches_nominal_cell_edge": false
+      }
+    ],
+    "grid": [
+      1,
+      1
+    ],
+    "path": "reference/battle/yeonwoo-windup-fixed-source.png",
+    "role": "original pre-character-sheet design reference",
+    "sha256": "4386cba4e561c37c63d5db3a0c42b6748e192a3450b8e034d747d41e81f8289d",
+    "size": [
+      1024,
+      1536
+    ]
+  },
+  {
+    "bytes": 112,
+    "path": "reference/battle/yeonwoo-windup-rig.json",
+    "sha256": "98fe00e50c7a2db018c7fe6659dbdf90dcb868a2e94006d2b721d4d9ecc911ee"
+  },
+  {
+    "bytes": 1448,
+    "path": "reference/battle/yeonwoo-windup-wrist.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "af2d5a96aa3ada9ec7bc316eab89fb991e95fb16b5687eb2058330a0385e3ff1",
+    "size": [
+      384,
+      240
+    ]
+  },
+  {
+    "bytes": 211722,
+    "path": "reference/battle/yeonwoo.png",
+    "role": "historical supporting asset or later costume refresh; inspect before treating as original design",
+    "sha256": "c46daf8b9d08680084e531626731b4b2ff55e8fdb3e4f9be95b4d286c4ec4ba4",
+    "size": [
+      768,
+      400
+    ]
+  }
+]

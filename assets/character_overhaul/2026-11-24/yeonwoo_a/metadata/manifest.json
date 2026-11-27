@@ -1,0 +1,58 @@
+[
+  {
+    "path": "reference/battle_screen_A.gd",
+    "sha256": "73f0cc015c73871d16d0f822886bb74fb1f242db7f1276b56bef75ec77a72959"
+  },
+  {
+    "path": "reference/yeonwoo-expressive-source.png",
+    "sha256": "c0afc4c8fab43ff6b793fe5582612e7d5941e17fc00e014a6a27f812e977f45d"
+  },
+  {
+    "path": "reference/yeonwoo-motion-source.png",
+    "sha256": "a43f7107b7e0e9e813a9acc3f4f8b78b49e042f727e775caff58339f3eaefe2d"
+  },
+  {
+    "path": "reference/yeonwoo-source.png",
+    "sha256": "b683554dff2e2c02e46263fa6e50a50ad542b14982b596e904b6c02f100eb1fc"
+  },
+  {
+    "path": "reference/yeonwoo-windup-fixed-source.png",
+    "sha256": "4386cba4e561c37c63d5db3a0c42b6748e192a3450b8e034d747d41e81f8289d"
+  },
+  {
+    "path": "source/yeonwoo-base.png",
+    "sha256": "b874de27d429d5113679f424279e367b7843459d5f4e8ba05261ce6084dec7c7"
+  },
+  {
+    "path": "source/yeonwoo-expressive.png",
+    "sha256": "412811401732d5243f89e07401ef7ebebbf81c6c401c3ed9c041979245b38d59"
+  },
+  {
+    "path": "source/yeonwoo-fixed.png",
+    "sha256": "22855ba7375b72cd5195f71360212795bd6d47f8c5803823201def3911b70c5d"
+  },
+  {
+    "path": "source/yeonwoo-motion.png",
+    "sha256": "df30fbe6d85ece14a0b35aad17e305f68e597c4335b238babbffcbf8a45cc14a"
+  },
+  {
+    "path": "runtime/yeonwoo-base.png",
+    "sha256": "8b9f153ed01daa6f36da2b7b0619ba587a5213397b539843bac349ab6d657d2b"
+  },
+  {
+    "path": "runtime/yeonwoo-expressive.png",
+    "sha256": "07afd92906d7f88d5ec460919fddf715acc160071eff414c5b647c041014ac12"
+  },
+  {
+    "path": "runtime/yeonwoo-motion.png",
+    "sha256": "5687697eefa7121af099c2d28250fdd59169d2cf7a2cf0b97c3c5eaaa142c3ad"
+  },
+  {
+    "path": "runtime/yeonwoo-windup-body.png",
+    "sha256": "130461693069fa6d3c93b3c28b4792f0b3f31bc323871bf6668c61582865de89"
+  },
+  {
+    "path": "runtime/yeonwoo-windup-wrist.png",
+    "sha256": "478661a5092b05dfb394302066702653c4a3c0c18f8806146fbdb219ff67a8e3"
+  }
+]

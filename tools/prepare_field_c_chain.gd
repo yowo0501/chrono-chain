@@ -10,17 +10,17 @@ func _initialize():
 	var sw = src.get_width()/4
 	var sh = src.get_height()/4
 	var first = src.get_region(Rect2i(0,0,sw,sh)).get_used_rect()
-	var factor = 48.0/first.size.y
-	var out = Image.create(192,768,false,Image.FORMAT_RGBA8)
+	var factor = 256.0/first.size.y
+	var out = Image.create(1024,4096,false,Image.FORMAT_RGBA8)
 	var report = []
 	var dirs = [Vector2.DOWN,Vector2(-1,1),Vector2.LEFT,Vector2(-1,-1),Vector2.UP,Vector2(1,-1),Vector2.RIGHT,Vector2(1,1)]
 	for f in 16:
 		var cell = src.get_region(Rect2i(f%4*sw,f/4*sh,sw,sh))
 		var bounds = cell.get_used_rect()
-		var offset = Vector2(48,80)-Vector2(bounds.position.x+bounds.size.x*0.5,bounds.end.y)*factor
+		var offset = Vector2(256,426.666667)-Vector2(bounds.position.x+bounds.size.x*0.5,bounds.end.y)*factor
 		var crop = cell.get_region(bounds)
-		crop.resize(roundi(crop.get_width()*factor),roundi(crop.get_height()*factor),Image.INTERPOLATE_NEAREST)
-		out.blit_rect(crop,Rect2i(Vector2i.ZERO,crop.get_size()),Vector2i(f%2*96,f/2*96)+Vector2i((offset+Vector2(bounds.position)*factor).round()))
+		crop.resize(roundi(crop.get_width()*factor),roundi(crop.get_height()*factor),Image.INTERPOLATE_LANCZOS)
+		out.blit_rect(crop,Rect2i(Vector2i.ZERO,crop.get_size()),Vector2i(f%2*512,f/2*512)+Vector2i((offset+Vector2(bounds.position)*factor).round()))
 		var axis: Vector2 = dirs[f/2]
 		var expected = Vector2(bounds.position)+Vector2(bounds.size)*Vector2(0.5+axis.x*0.38,0.48+axis.y*0.2)
 		var best = 1.0e20

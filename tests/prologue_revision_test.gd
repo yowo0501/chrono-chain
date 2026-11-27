@@ -21,7 +21,7 @@ func run() -> void:
 	var buttons:=0
 	for child in menu.get_children():
 		if child is Button: buttons+=1
-	check(buttons==1,"Only one start button")
+	check(buttons==2,"Start and map movement test buttons")
 	menu.free()
 	var chapter=load("res://scripts/story/chapter/prologue_chapter.gd").new()
 	root.add_child(chapter)

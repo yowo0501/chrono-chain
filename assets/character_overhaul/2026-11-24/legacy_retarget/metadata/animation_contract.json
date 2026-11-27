@@ -1,0 +1,138 @@
+{
+  "source": "reference/code/battle_screen.gd",
+  "logical_cell": [
+    384,
+    240
+  ],
+  "logical_foot": [
+    128,
+    232
+  ],
+  "new_storage_cell": [
+    768,
+    480
+  ],
+  "display_scale": 0.64,
+  "party_positions": [
+    [
+      300,
+      390
+    ],
+    [
+      205,
+      265
+    ]
+  ],
+  "chuheun_idle": {
+    "frames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "durations": [
+      0.28,
+      0.22,
+      0.3,
+      0.28,
+      0.22,
+      0.3
+    ],
+    "cycle": 1.6,
+    "expression": "gentle open smile, gaze toward enemy; no upward head tilt"
+  },
+  "yeonwoo_idle": {
+    "frames": [
+      0,
+      1,
+      2,
+      1,
+      0
+    ],
+    "durations": [
+      0.65,
+      0.2,
+      0.2,
+      0.2,
+      0.55
+    ],
+    "cycle": 1.8,
+    "expression": "closed mouth restrained neutral; planted support foot"
+  },
+  "chuheun_windup": {
+    "frames": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+    ],
+    "fps": 5,
+    "loop": 1.2,
+    "form": "overhead horizontal chain ellipse"
+  },
+  "yeonwoo_windup": {
+    "cycle": 1.6,
+    "wrist_amplitude_radians": 0.12,
+    "loop_center": [
+      -64,
+      -112
+    ],
+    "loop_radius": [
+      25,
+      45
+    ],
+    "form": "fixed body; cuff-pivot wrist and vertical chain loop"
+  },
+  "attack": {
+    "frames": [
+      0,
+      2,
+      3,
+      4,
+      6,
+      7
+    ],
+    "boundaries": [
+      0.1,
+      0.2,
+      0.4,
+      0.54,
+      0.68
+    ],
+    "duration": 0.8,
+    "extension": [
+      0.1,
+      0.2
+    ],
+    "retraction": [
+      0.4,
+      0.54
+    ]
+  },
+  "focus": {
+    "frames": 4,
+    "duration": 1
+  },
+  "special_idle": {
+    "actor": 0,
+    "duration": 2.4,
+    "wait": 7
+  },
+  "design_invariants": [
+    "preserve original facing and pose sequence",
+    "one common scale per atlas; no per-pose stretching",
+    "feet registered to a common world ground point",
+    "no head/body split or procedural torso bounce",
+    "new gray hair and orange shoes for Chuheun",
+    "new gold hairclip and skirt for Yeonwoo"
+  ],
+  "limits": [
+    "No skeletal animation data exists: these are raster frames. Joint/face descriptions are visual annotations, not recovered bones.",
+    "Nominal grid measurements report edge contacts. Runtime packing finds transparent gutters to avoid cutting feet.",
+    "Retargeted images are redraws, not mathematically identical silhouettes; review sequences before final art approval."
+  ]
+}

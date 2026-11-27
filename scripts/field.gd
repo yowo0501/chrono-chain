@@ -3,6 +3,7 @@ extends Node2D
 const TILE_SIZE := 16
 const OFFSETS := [Vector2i.UP, Vector2i.LEFT, Vector2i.RIGHT, Vector2i.DOWN, Vector2i(-1,-1), Vector2i(1,-1), Vector2i(-1,1), Vector2i(1,1)]
 @export var test_grid := false
+@export var movement_only := false
 var settings: Dictionary
 var tiles: Array = []
 var lamps: Array[Vector2i] = []
@@ -148,6 +149,9 @@ func track_player_tile(player: Node2D) -> void:
 	last_player_lit = is_lit(player.grid_pos)
 
 func player_step_completed(player: Node2D) -> void:
+	if movement_only:
+		track_player_tile(player)
+		return
 	if test_grid or boss_defeated:
 		return
 	var area := area_at(player.grid_pos)
@@ -193,10 +197,10 @@ func _ready() -> void:
 	for definition in settings.areas:
 		var point: Array = definition.lamp
 		lamps.append(Vector2i(int(point[0]),int(point[1])))
-		lit.append(not settings.initial_dark_areas.has(float(lamps.size()-1)))
+		lit.append(movement_only or not settings.initial_dark_areas.has(float(lamps.size()-1)))
 	_index_areas()
 	for point in settings.enemy_spawns:
-		_spawn_symbol(Vector2i(int(point[0]),int(point[1])))
+		if not movement_only: _spawn_symbol(Vector2i(int(point[0]),int(point[1])))
 	var town := load("res://scripts/field_2d.gd").new() as Node2D
 	town.name = "Town2D"
 	add_child(town)
@@ -209,7 +213,7 @@ func _ready() -> void:
 	hud = load("res://scripts/field_hud.gd").new()
 	hud.field = self
 	layer.add_child(hud)
-	if get_parent().name == "Main":
+	if get_parent().name == "Main" and not movement_only:
 		get_node("/root/Tutorial").start.call_deferred(self)
 	queue_redraw()
 
@@ -260,6 +264,7 @@ func say(message: String) -> void:
 	notice_time = 4.0
 
 func _process(delta: float) -> void:
+	if movement_only: return
 	if test_grid or EncounterManager.active:
 		return
 	grace = maxf(0.0, grace - delta)
@@ -533,6 +538,7 @@ func complete_boss() -> void:
 	say("튜토리얼 클리어")
 
 func _spawn_boss() -> void:
+	if movement_only: return
 	if boss_spawned or dark_count() != 0:
 		return
 	boss_dark_count = 0

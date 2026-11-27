@@ -8,15 +8,15 @@ func _initialize():
 		var sw = src.get_width()/3
 		var sh = src.get_height()/4
 		var first = src.get_region(Rect2i(0,0,sw,sh)).get_used_rect()
-		var scale = 48.0/first.size.y
-		var atlas = Image.create(192,256,false,Image.FORMAT_RGBA8)
+		var scale = 256.0/first.size.y
+		var atlas = Image.create(960,1280,false,Image.FORMAT_RGBA8)
 		for f in 12:
 			var cell = src.get_region(Rect2i(f%3*sw,f/3*sh,sw,sh))
 			var bounds = cell.get_used_rect()
 			var crop = cell.get_region(bounds)
-			crop.resize(maxi(1,roundi(crop.get_width()*scale)),maxi(1,roundi(crop.get_height()*scale)),Image.INTERPOLATE_NEAREST)
-			assert(crop.get_width()<64 and crop.get_height()<62)
-			atlas.blit_rect(crop,Rect2i(Vector2i.ZERO,crop.get_size()),Vector2i(f%3*64+(64-crop.get_width())/2,f/3*64+62-crop.get_height()))
+			crop.resize(maxi(1,roundi(crop.get_width()*scale)),maxi(1,roundi(crop.get_height()*scale)),Image.INTERPOLATE_LANCZOS)
+			assert(crop.get_width()<320 and crop.get_height()<310)
+			atlas.blit_rect(crop,Rect2i(Vector2i.ZERO,crop.get_size()),Vector2i(f%3*320+(320-crop.get_width())/2,f/3*320+310-crop.get_height()))
 		atlas.save_png(ACTORS+"runtime/"+id+"-walk.png")
 	var props = Image.load_from_file(MAP+"source/props.png")
 	harden(props)
@@ -28,9 +28,6 @@ func _initialize():
 		var ys = [0,307,589,884,1167,1402]
 		var cell = props.get_region(Rect2i(xs[f%4],ys[f/4],xs[f%4+1]-xs[f%4],ys[f/4+1]-ys[f/4]))
 		var crop = cell.get_region(cell.get_used_rect())
-		var max_side = 96.0 if f in [0,1,2,3,4,10,11,12] else 64.0
-		var factor = max_side/maxi(crop.get_width(),crop.get_height())
-		crop.resize(maxi(1,roundi(crop.get_width()*factor)),maxi(1,roundi(crop.get_height()*factor)),Image.INTERPOLATE_NEAREST)
 		crop.save_png(MAP+"runtime/"+names[f]+".png")
 	var floors = Image.load_from_file(MAP+"source/floors.png")
 	sw = floors.get_width()/3
@@ -39,7 +36,6 @@ func _initialize():
 	for f in 6:
 		# Exclude atlas divider pixels; they must not become repeated road grid lines.
 		var crop = floors.get_region(Rect2i(f%3*sw+4,f/3*sh+4,sw-8,sh-8))
-		crop.resize(128,128,Image.INTERPOLATE_NEAREST)
 		crop.save_png(MAP+"runtime/"+materials[f]+".png")
 	quit()
 func harden(im):

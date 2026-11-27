@@ -58,6 +58,13 @@ func _draw() -> void:
 		return
 	var player: Node2D = field.walker()
 	var area: int = field.area_at(player.grid_pos)
+	if field.movement_only:
+		draw_rect(Rect2(0,0,768,64),Color("17252c"))
+		label_at("맵 이동 테스트",Vector2(22,27),GOLD,21)
+		label_at("방향키 이동 · Shift 달리기 · M 지도 · F10 메뉴",Vector2(22,51),PAPER,15)
+		_draw_minimap(player)
+		if show_map: _draw_map(player)
+		return
 	draw_rect(Rect2(0,0,768,64), Color("17252c"))
 	label_at("밤의 도시", Vector2(22,27), GOLD, 21)
 	label_at("%s  ·  %s" % [field.area_name(area), "빛" if field.lit[area] else "어둠"],Vector2(22,51),MUTED,15)

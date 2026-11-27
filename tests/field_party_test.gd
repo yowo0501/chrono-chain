@@ -23,20 +23,20 @@ func run() -> void:
 	assert(not player.field.is_blocked(Vector2i(3, 4)))
 	assert(player.field.is_blocked(Vector2i(-1, 6)))
 	for actor in [player.sprite, player.follower]:
-		assert(actor.texture.get_size() == Vector2(192, 256), "Restored three-frame four-direction art")
+		assert(actor.texture.get_size() == Vector2(960, 1280), "Restored three-frame four-direction art")
 		assert(actor.regions.size() == 12)
 		for region in actor.regions:
 			assert(actor.frame_rect(region) == Rect2(-8, -15, 32, 32), "C style fixed scale and shared feet anchor")
 		var atlas: Image = actor.texture.get_image()
 		for row in 4:
-			var idle := atlas.get_region(Rect2i(0, row * 64, 64, 64))
+			var idle := atlas.get_region(Rect2i(0, row * 320, 320, 320))
 			for pose in [1, 2]:
-				var stride := atlas.get_region(Rect2i(pose * 64, row * 64, 64, 64))
+				var stride := atlas.get_region(Rect2i(pose * 320, row * 320, 320, 320))
 				# Whole-body poses may turn their heads/shoulders. Check registration
 				# and clipping instead of forcing the idle upper half onto every stride.
 				var bounds := stride.get_used_rect()
-				assert(bounds.position.x > 0 and bounds.end.x < 64, "Walking pose stays within its atlas cell")
-				assert(bounds.position.y > 0 and bounds.end.y <= 63, "Head and feet are not clipped")
+				assert(bounds.position.x > 0 and bounds.end.x < 320, "Walking pose stays within its atlas cell")
+				assert(bounds.position.y > 0 and bounds.end.y <= 311, "Head and feet are not clipped")
 				assert(absi(bounds.end.y-idle.get_used_rect().end.y) <= 1, "Walking feet share the standing baseline")
 				assert(idle.get_data() != stride.get_data(), "Stride differs from standing")
 	for direction in ["right", "down", "left", "up", "up", "down"]:

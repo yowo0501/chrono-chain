@@ -4,6 +4,7 @@ var logo: Texture2D = preload("res://assets/prologue/logo-chain-lettering.png")
 var elapsed := 0.0
 var mark: TextureRect
 var start_button: Button
+var map_test_button: Button
 
 func _ready() -> void:
 	super._ready()
@@ -29,6 +30,9 @@ func _ready() -> void:
 	start_button.disabled = true
 	start_button.modulate.a = 0
 	start_button.hide()
+	map_test_button = button_at("맵 이동 테스트",Rect2(284,612,200,40),_open_map_test)
+	map_test_button.disabled = true
+	map_test_button.hide()
 
 func _process(delta: float) -> void:
 	advance_intro(delta)
@@ -38,6 +42,9 @@ func advance_intro(delta: float) -> void:
 	mark.modulate.a = smoothstep(2.7,4.7,elapsed)
 	start_button.modulate.a = smoothstep(5.0,6.0,elapsed)
 	start_button.visible = elapsed>=5.0
+	map_test_button.visible = elapsed>=5.0
+	map_test_button.modulate.a = start_button.modulate.a
+	map_test_button.disabled = elapsed<6.0
 	if elapsed>=6.0 and start_button.disabled:
 		start_button.disabled = false
 		start_button.grab_focus()
@@ -54,6 +61,10 @@ func _input(event: InputEvent) -> void:
 func _open_prologue() -> void:
 	if elapsed<6.0: return
 	get_node("/root/StoryRouter").open_scene("res://scenes/prologue/prologue.tscn")
+
+func _open_map_test() -> void:
+	if elapsed<6.0: return
+	get_node("/root/StoryRouter").open_scene("res://scenes/main/map_movement_test.tscn")
 
 func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO,DESIGN),Color.BLACK)

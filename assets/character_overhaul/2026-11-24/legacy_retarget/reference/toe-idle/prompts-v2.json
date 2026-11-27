@@ -1,0 +1,8 @@
+{
+  "mode": "built-in image generation",
+  "prompt": "Edit this existing 8-frame pixel-art idle sheet. Keep the same character, exact art style, face, expression, hair, outfit, image dimensions, 4-column x 2-row grid, character scale, and frame positions. Preserve transparency.\nChange ONLY the animated front/right foot, its ankle and knee, plus small follow-through of the chain and hair ends. Make the toe-tapping MUCH MORE LEGIBLE at small game size, with about THREE TIMES the existing amplitude. No side stepping and no walking.\nFrame1 neutral flat boot. Frame2 anticipation: front knee softens and toe starts rising about15degrees. Frame3 toe lifts about30degrees, heel stays fixed on ground. Frame4 clear peak: front boot toe tilts UP ABOUT45DEGREES (currently too flat), toes are visibly well above the heel with a clear triangular transparent gap under the forefoot; ankle and knee articulate naturally. Frame5 descends through30degrees. Frame6 descends through15degrees. Frame7 flat-foot tap/contact, knee slightly absorbs it. Frame8 settles into frame1. Supporting left leg and boot stay planted in the same location in all frames. Keep upper body composed and impassive but allow a tiny natural knee/hip response and delayed chain/hair tip settling, not whole-body translation.\nThe silhouette changes at the toe must be unmistakable. Do not just shift the whole boot upward. It rotates around its planted heel. Do not make the character smaller or enlarge her relative to the reference. No new props, glow, motion lines, effects, text or background. Genuine transparent PNG.",
+  "reference": "source.png",
+  "source": "source-v2.png",
+  "runtime": "toe-tap-v2.png",
+  "cycle_seconds": 0.8
+}
