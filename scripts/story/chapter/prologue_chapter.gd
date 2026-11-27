@@ -45,7 +45,7 @@ func _ready() -> void:
 	shaft_layer.draw.connect(_draw_shaft)
 	add_child(shaft_layer)
 	ending = load("res://assets/prologue/chapter/ending-v2.png")
-	logo = load("res://assets/prologue/logo-chain-lettering.png")
+	logo = load("res://assets/prologue/logo-fantasy.png")
 	field = Field.new()
 	add_child(field)
 	field.hide()
@@ -326,8 +326,8 @@ func _draw() -> void:
 	elif mode=="ending":
 		draw_texture_rect(ending,Rect2(0,0,768,512),false,Color(1,1,1,minf(1,elapsed)))
 	elif mode=="logo":
-		var zoom := 1.0
-		draw_texture_rect(logo,Rect2(Vector2(384,285)-Vector2(300,300)*zoom,Vector2(600,600)*zoom),false)
+		var logo_size := Vector2(680,680.0*logo.get_height()/logo.get_width())
+		draw_texture_rect(logo,Rect2(Vector2(384,285)-logo_size/2,logo_size),false)
 	if mode=="field":
 		draw_rect(Rect2(0,0,768,50),Color("0b1727"))
 		draw_string(story_font,Vector2(24,32),"흩어진 슬라임 추격  %d / 4   ·   방향키 이동 / Shift 달리기 / Enter 체인" % packs_cleared,HORIZONTAL_ALIGNMENT_LEFT,-1,17,Color("e4d3a6"))

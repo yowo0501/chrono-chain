@@ -1,6 +1,6 @@
 extends "res://scripts/story/story_screen.gd"
 var rooftop: Texture2D = preload("res://assets/prologue/chapter/skyscraper-roof.png")
-var logo: Texture2D = preload("res://assets/prologue/logo-chain-lettering.png")
+var logo: Texture2D = preload("res://assets/prologue/logo-fantasy.png")
 var elapsed := 0.0
 var mark: TextureRect
 var start_button: Button
@@ -13,12 +13,10 @@ func _ready() -> void:
 	mark.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	mark.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	mark.texture = logo
-	mark.position = Vector2(399,58)
-	mark.size = Vector2(342,342)
+	mark.position = Vector2(54,70)
+	mark.size = Vector2(660,220)
+	mark.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var blend := CanvasItemMaterial.new()
-	blend.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
-	mark.material = blend
 	mark.modulate.a = 0
 	add_child(mark)
 	start_button = button_at("시 작",Rect2(284,552,200,52),_open_prologue)

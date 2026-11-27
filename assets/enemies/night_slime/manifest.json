@@ -1,0 +1,36 @@
+{
+  "columns": 4,
+  "reference": "reference.png",
+  "atlas": "slime-atlas.png",
+  "generator": "built-in image generation",
+  "rows": 4,
+  "frames": {
+    "attack": [
+      8,
+      9,
+      10,
+      11
+    ],
+    "move": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "idle": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "rear": [
+      14,
+      15
+    ],
+    "hit": [
+      12,
+      13
+    ]
+  },
+  "prompt": "Create a production game sprite atlas from the reference low tier NIGHT SLIME. Preserve its exact identity: low black tar puddle body, pointed curling smoke peak, charcoal flowing edges, TWO small warm peach-orange eyes, NO mouth, NO arms or legs. Transparent background, no labels, no grid lines, no shadows. Exactly 4 columns x 4 rows equally spaced uniform cells, square atlas. Each cell contains one complete isolated slime, consistent scale and foot baseline, generous transparent padding. Side-view RPG art crisp hand-painted sprite readable at small size. Row 1: FOUR idle breathing frames facing front-left, subtle cohesive looping breathing and smoke curls. Row 2: FOUR movement frames facing left: compress, stretch forward, glide, settle. Row 3: FOUR attack frames facing left: crouched windup, stretched lunge with pointed tar leading edge, maximal attack, recover. Row 4: FOUR frames: hit flattened recoiling, hit recovery, rear-view idle (no eyes), rear-view movement (no eyes). Match the reference silhouettes closely. Every slime approximately same width, occupying 75 percent cell width and 65 percent height, centered x with ground baseline at 85 percent cell height. No white background."
+}

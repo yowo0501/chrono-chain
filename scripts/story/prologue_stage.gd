@@ -6,7 +6,7 @@ const MONSTER_RECT := Rect2(312,118,TILE*3,TILE*3)
 const STARTS := {"chuheun": Vector2(312,358), "yeonwoo": Vector2(408,358)}
 const ROWS := {"down":0, "left":1, "right":2, "up":3}
 var background: Texture2D = preload("res://assets/prologue/alley.png")
-var monster: Texture2D = preload("res://assets/prologue/monster.png")
+const SlimeVisual = preload("res://scripts/slime_visual.gd")
 var heroes := {
 	"chuheun": preload("res://assets/sprites/field/chuheun_night.png"),
 	"yeonwoo": preload("res://assets/sprites/field/yeonwoo_night.png")
@@ -29,14 +29,7 @@ func _process(delta: float) -> void:
 func _draw() -> void:
 	draw_texture_rect(background, Rect2(0,0,768,672), false)
 	draw_rect(Rect2(0,0,768,672),Color(0.01,0.02,0.06,0.13))
-	# Narrow horizontal strips deform continuously rather than sliding one rigid image.
-	var slices := 20
-	for i in slices:
-		var height := MONSTER_RECT.size.y / slices
-		var wobble := sin(clock * 2.5 + i * 0.55) * 2.2
-		var rect := Rect2(MONSTER_RECT.position + Vector2(wobble, i * height), Vector2(MONSTER_RECT.size.x, height + 0.4))
-		var source := Rect2(0, float(i) * monster.get_height() / slices, monster.get_width(), float(monster.get_height()) / slices)
-		draw_texture_rect_region(monster, rect, source)
+	SlimeVisual.draw_actor(self,MONSTER_RECT.position+Vector2(MONSTER_RECT.size.x/2,MONSTER_RECT.size.y),200.0,"idle",clock)
 	for id in ["chuheun", "yeonwoo"]:
 		var point: Vector2 = STARTS[id]
 		if rushing:

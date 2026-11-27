@@ -223,7 +223,8 @@ func _create_symbol(is_boss: bool) -> Node2D:
 	if is_boss:
 		symbol.z_base = 2300
 	add_child(symbol)
-	symbol.configure(load("res://assets/sprites/field/%s_night.png" % ("boss" if is_boss else "shadow")))
+	if is_boss:
+		symbol.configure(load("res://assets/sprites/field/boss_night.png"))
 	return symbol
 
 func width() -> int:

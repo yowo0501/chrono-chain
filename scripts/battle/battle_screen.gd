@@ -12,10 +12,15 @@ const MUTED := Color("97a7bc")
 const ORANGE := Color("ffb35a")
 const BLUE := Color("61cfff")
 const GREEN := Color("66dfb0")
-const HERO_POS := [Vector2(300, 390), Vector2(205, 265)]
-const SHIELD_POS := Vector2(382, 270)
-const FOE_POS := [Vector2(475, 416), Vector2(587, 340), Vector2(694, 264)]
-const FOUR_FOE_POS := [Vector2(475, 440), Vector2(660, 440), Vector2(475, 245), Vector2(660, 245)]
+const BATTLE_OFFSET := Vector2(0, 32)
+const ENEMY_OFFSET := BATTLE_OFFSET + Vector2(0, 12)
+const GROUND_SHADOW = preload("res://assets/sprites/battle/ground-shadow.svg")
+const SlimeVisual = preload("res://scripts/slime_visual.gd")
+const BattleLayout = preload("res://scripts/battle/battle_layout.gd")
+const HERO_POS := [Vector2(300, 390) + BATTLE_OFFSET, Vector2(205, 265) + BATTLE_OFFSET]
+const SHIELD_POS := Vector2(382, 270) + BATTLE_OFFSET
+const FOE_POS := [Vector2(475, 416) + ENEMY_OFFSET, Vector2(587, 340) + ENEMY_OFFSET, Vector2(694, 264) + ENEMY_OFFSET]
+const FOUR_FOE_POS := [Vector2(475, 440) + ENEMY_OFFSET, Vector2(660, 440) + ENEMY_OFFSET, Vector2(475, 245) + ENEMY_OFFSET, Vector2(660, 245) + ENEMY_OFFSET]
 const ACTOR_SCALE := 0.64
 const ANIMATION_CELL := Vector2(384, 240)
 const FOOT_ANCHOR := Vector2(128, 232)
@@ -57,6 +62,7 @@ var hurt_hero := -1
 var hurt_enemy := -1
 var last_grade := ""
 var font: SystemFont
+var city_background: Texture2D = preload("res://assets/backgrounds/midnight-city-plaza.png")
 var textures: Array[Texture2D] = []
 var motion_textures: Array[Texture2D] = []
 var expressive_textures: Array[Texture2D] = []
@@ -130,13 +136,13 @@ func position_hit(cursor: float) -> int:
 
 func _place_enemies() -> void:
 	enemy_positions.clear()
-	var slots: Array[float] = [250.0, 299.0, 348.0, 397.0, 443.0]
+	var slots: Array[float] = [300.0, 335.0, 370.0, 405.0, 440.0]
 	for i in enemies.size():
 		var slot := rng.randi_range(0, slots.size() - 1)
-		var y: float = slots[slot] + rng.randf_range(-5, 5)
+		var band := roundi((slots[slot]-300.0)/35.0)
+		var y: float = slots[slot] + rng.randf_range(-3, 3)
 		slots.remove_at(slot)
-		var band := roundi((y-250.0)/49.0)
-		enemy_positions.append(Vector2(485 if band%2 == 0 else 640, y))
+		enemy_positions.append(BattleLayout.enemy_foot(Vector2(485 if band%2 == 0 else 640, y)))
 
 func _boss_phase_check() -> void:
 	if not field_context.get("boss", false) or enemies.is_empty() or int(enemies[0].hp) <= 0:
@@ -166,7 +172,7 @@ func setup(heroes: Array, settings: Dictionary, random: RandomNumberGenerator, a
 		enemy.bind_turns = 0
 		enemy.name += " " + str(i + 1)
 		enemies.append(enemy)
-	message = "그림자 %d마리 출현" % enemies.size()
+	message = "밤 슬라임 %d마리 출현" % enemies.size()
 	if armored:
 		heading = "중장 그림자가 앞을 가로막았다"
 		message = "중장 그림자 %d마리 출현 · 두 라운드마다 공격" % enemies.size()
@@ -189,7 +195,7 @@ func _ready() -> void:
 	calm_idle_texture = load("res://assets/character_overhaul/2026-11-24/legacy_retarget/runtime/chuheun-idle.png")
 	yeonwoo_idle_texture = load("res://assets/character_overhaul/2026-11-24/yeonwoo_a/runtime/yeonwoo-motion.png")
 	chain_joins = JSON.parse_string(FileAccess.get_file_as_string("res://assets/character_overhaul/2026-11-24/yeonwoo_a/metadata/chain-joins.json"))
-	monster_texture = load("res://assets/sprites/battle/shadow.png")
+	monster_texture = SlimeVisual.ATLAS
 	armored_texture = load("res://assets/sprites/battle/armored-shadow.png")
 	timer_texture = load("res://assets/sprites/battle/chuheun-timer.png")
 	timer_motion_texture = load("res://assets/sprites/battle/chuheun-timer-v2.png")
@@ -703,8 +709,8 @@ func _enemy_action() -> void:
 		return
 	if field_context.get("boss", false) and enemy_index == 0 and int(enemies[0].get("bind_turns",0)) == 0 and round_number % int(balance.boss_phase.reposition_every_rounds) == 0 and boss_last_move_round != round_number:
 		boss_last_move_round = round_number
-		var old_y := enemy_positions[0].y
-		enemy_positions[0] = Vector2(rng.randf_range(510, 660), 260 if old_y > 340 else 430)
+		var old_y := enemy_positions[0].y - ENEMY_OFFSET.y
+		enemy_positions[0] = BattleLayout.enemy_foot(Vector2(rng.randf_range(510, 660), 260 if old_y > 340 else 430) + ENEMY_OFFSET)
 		message = "보스가 자리를 옮겼다 · 공격 타이밍 변경"
 		_schedule(0.65, _enemy_action)
 		return
@@ -929,7 +935,7 @@ func _draw() -> void:
 	draw_rect(Rect2(-8, -8, 784, 688), INK)
 	_draw_city()
 	if darkness_active():
-		draw_rect(Rect2(0,96,768,390), Color(0,0,0,1.0-visibility_strength()))
+		draw_rect(Rect2(0,96,768,400), Color(0,0,0,1.0-visibility_strength()))
 	_label("CHRONO CHAIN", Vector2(28, 34), MUTED, 14)
 	_label("ROUND %02d" % round_number, Vector2(627, 34), MUTED, 14)
 	_label(heading, Vector2(28, 73), PAPER, 22)
@@ -974,37 +980,32 @@ func _draw() -> void:
 	_label("방향키 선택   Space / Enter 확인·타이밍   Z 확인   Esc / X 취소", Vector2(28, 657), MUTED, 13)
 
 func _draw_city() -> void:
-	# Pixel geometry echoes the existing night-city field without introducing a new map.
-	draw_rect(Rect2(0, 96, 768, 390), Color("192a42"))
-	for i in 12:
-		var x := i * 70 - 24
-		var top := 113 + (i * 37) % 63
-		draw_rect(Rect2(x, top, 60, 219 - top), Color("101b2f"))
-		for j in 3:
-			for k in 3:
-				var color := Color("d8ab6c") if (i + j * 3 + k) % 4 == 0 else Color("293e58")
-				draw_rect(Rect2(x + 10 + j * 15, top + 15 + k * 22, 7, 10), color)
-	draw_rect(Rect2(0, 228, 768, 258), Color("202c3d"))
-	draw_rect(Rect2(0, 228, 768, 10), Color("4a5766"))
-	for y in range(258, 486, 38):
-		draw_line(Vector2(0, y), Vector2(768, y), Color("28374a"), 2)
-	for x in range(20, 768, 102):
-		draw_rect(Rect2(x, 452, 56, 4), Color("576275"))
-	for x in [48, 716]:
-		draw_rect(Rect2(x, 131, 4, 112), Color("718599"))
-		draw_rect(Rect2(x - 7, 126, 18, 7), Color("aed9ed"))
+	# Fill the battle area without distorting the supplied artwork.
+	var target := Rect2(0,96,768,400)
+	var source_size := city_background.get_size()
+	var source_height := source_size.x*target.size.y/target.size.x
+	var source := Rect2(0,(source_size.y-source_height)/2,source_size.x,source_height)
+	draw_texture_rect_region(city_background,target,source)
 
 func _frame(texture: Texture2D, frame: int, cols: int, rows: int, rect: Rect2, tint: Color = Color.WHITE) -> void:
 	if texture == null:
 		return
 	var cell := Vector2(texture.get_width() / float(cols), texture.get_height() / float(rows))
 	var region := Rect2(Vector2(frame % cols, int(frame / cols)) * cell, cell)
-	draw_texture_rect_region(texture, rect, region, tint)
+	_draw_arena_texture(texture,rect,region,tint)
+
+func _draw_arena_texture(texture: Texture2D, rect: Rect2, region: Rect2, tint: Color = Color.WHITE) -> void:
+	BattleLayout.draw_sprite(self,texture,rect,region,tint)
+
+func _draw_ground_shadow(at: Vector2, width: float = 64.0, opacity: float = 1.0) -> void:
+	var dimensions := Vector2(width, width / 4.0)
+	_draw_arena_texture(GROUND_SHADOW,Rect2(at-dimensions/2.0+Vector2(0,2),dimensions),Rect2(Vector2.ZERO,GROUND_SHADOW.get_size()),Color(1,1,1,opacity))
 
 func _draw_hero(index: int) -> void:
 	var hero: Dictionary = party[index]
 	var base: Vector2 = hero_position(index)
 	var alive := int(hero.hp) > 0
+	_draw_ground_shadow(base, 68.0, 1.0 if alive else 0.45)
 	var selected := index == hero_index and phase in [Phase.COMMAND, Phase.TARGET, Phase.SKILLS, Phase.ATTACK_QTE]
 	if selected:
 		var ring := PackedVector2Array()
@@ -1113,7 +1114,7 @@ func _draw_fixed_windup(base: Vector2, time: float, tint: Color) -> void:
 	_draw_chain_extension(tail, tint, true)
 	_draw_chain_extension(loop, tint, true)
 	var rect := Rect2(base - FOOT_ANCHOR * ACTOR_SCALE, ANIMATION_CELL * ACTOR_SCALE)
-	draw_texture_rect(fixed_windup_body, rect, false, tint)
+	_draw_arena_texture(fixed_windup_body,rect,Rect2(Vector2.ZERO,fixed_windup_body.get_size()),tint)
 	var corners := PackedVector2Array()
 	for corner in [Vector2.ZERO, Vector2(ANIMATION_CELL.x, 0), ANIMATION_CELL, Vector2(0, ANIMATION_CELL.y)]:
 		corners.append(base + (pivot + (corner - FOOT_ANCHOR - pivot).rotated(wrist_angle)) * ACTOR_SCALE)
@@ -1147,6 +1148,28 @@ func _draw_chain_extension(points: PackedVector2Array, tint: Color, short_links:
 			next_link += spacing
 		distance += length
 
+func _draw_slime_body(index: int, width: float) -> void:
+	var state := "idle"
+	var time := clock + index * 0.23
+	var foot := foe_position(index)
+	if action_index == index and action_kind == "enemy_windup":
+		state = "windup"
+	elif action_index == index and action_kind == "enemy_attack" and fx_time > 0:
+		state = "attack"
+		time = 0.8-fx_time
+		foot.x -= sin(time*PI/0.8)*25.0
+	if hurt_enemy == index and fx_time > 0:
+		state = "hit"
+		time = 0.8-fx_time
+		foot.x += sin(fx_time*29.0)*4.0
+	if phase == Phase.TIMER and timer_cast.stage == TimerSkill.Stage.LIGHTNING or phase == Phase.ASSASSIN and assassin_cast.stage == AssassinSkill.Stage.SLASHES and index in assassin_cast.marked:
+		state = "hit"
+	if int(enemies[index].hp) <= 0:
+		if hurt_enemy != index or fx_time <= 0: return
+		state = "defeat"
+		time = 0.8-fx_time
+	SlimeVisual.draw_actor(self,foot,width,state,time,"left",Color(1,1,1,visibility_strength()),true,BattleLayout.ARENA)
+
 func _draw_enemy(index: int) -> void:
 	var visibility := visibility_strength()
 	if visibility <= 0:
@@ -1167,13 +1190,18 @@ func _draw_enemy(index: int) -> void:
 		frame = 2
 		base.x += sin(fx_time * 29.0) * 5
 	if alive or lightning_hit or assassin_hit or fx_time > 0 and hurt_enemy == index:
+		if armored_encounter:
+			_draw_ground_shadow(base,72.0,visibility)
 		var tint := Color(1,1,1,visibility)
 		if taking_hit and fx_time > 0.5:
 			tint = Color(1.8, 1.5, 1.5, visibility)
 		var tex: Texture2D = armored_texture if armored_encounter else monster_texture
 		var dimensions := Vector2(230, 214) if armored_encounter else Vector2(192, 176)
 		var foe_scale := ACTOR_SCALE if armored_encounter else 0.48
-		_frame(tex, frame, 3, 1, Rect2(base - Vector2(dimensions.x * 0.5, dimensions.y - 8) * foe_scale, dimensions * foe_scale), tint)
+		if armored_encounter:
+			_frame(tex, frame, 3, 1, Rect2(base - Vector2(dimensions.x * 0.5, dimensions.y - 8) * foe_scale, dimensions * foe_scale), tint)
+		else:
+			_draw_slime_body(index,112.0)
 		if int(enemy.get("bind_turns",0)) > 0 or (action_kind == "bound" and action_index == index):
 			for row in 3:
 				var y := base.y-25-row*15

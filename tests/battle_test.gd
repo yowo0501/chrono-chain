@@ -75,7 +75,7 @@ func run() -> void:
 	check(manager.should_encounter(28, 0.99), "pity maximum")
 	var s := fixture()
 	check(s.textures[0].get_size() == Vector2(3072, 960), "High-resolution eight-pose base atlas")
-	check(s.monster_texture.get_size() == Vector2(576, 176), "monster sheet twice original resolution")
+	check(s.monster_texture == Screen.SlimeVisual.ATLAS and Screen.SlimeVisual.region_for(15).end == Vector2i(s.monster_texture.get_size()), "ordinary enemies use the complete shared sixteen-frame slime atlas")
 	check(s.motion_textures[0].get_size() == Vector2(3072, 1920) and s.expressive_textures[1].get_size() == Vector2(3072, 1920), "32-frame animation atlases have matching cells")
 	check(s.textures.size() == 2 and s.motion_textures[0].get_size() == Vector2(3072,1920), "Previous two-hero battle art restored")
 	check(s.calm_idle_texture.get_size() == Vector2(2304, 960), "calm idle six-frame sheet loaded")

@@ -12,6 +12,18 @@ var dormant := false
 var is_boss := false
 var patrol_area := -1
 var encounter_motion := "neutral"
+const SlimeVisual = preload("res://scripts/slime_visual.gd")
+var slime_clock := 0.0
+
+func _process(delta: float) -> void:
+	slime_clock += delta
+	super._process(delta)
+
+func _draw() -> void:
+	if is_boss:
+		super._draw()
+	elif not defeated:
+		SlimeVisual.draw_actor(self,Vector2(8,15),30.0,"move" if moving else "idle",slime_clock,facing)
 
 func place(tile: Vector2i) -> void:
 	grid_pos = tile

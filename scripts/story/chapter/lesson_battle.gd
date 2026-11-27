@@ -13,7 +13,6 @@ var guard_failed := false
 var multi_explained := false
 var comic := ""
 var comic_time := 0.0
-var slime: Texture2D
 var comic_poses: Texture2D
 var flick_poses: Texture2D
 
@@ -22,11 +21,10 @@ func _ready() -> void:
 	groups = JSON.parse_string(FileAccess.get_file_as_string("res://data/prologue_chapter.json")).groups
 	guide = Dialogue.new()
 	add_child(guide)
-	slime = load("res://assets/prologue/monster.png")
 	flick_poses = load("res://assets/prologue/chapter/flick-v2.png")
 	comic_poses = load("res://assets/prologue/chapter/comic-poses.png")
 	if lesson == 0:
-		enemy_positions[0] = Vector2(555,340)
+		enemy_positions[0] = Vector2(555,340) + ENEMY_OFFSET
 	preload("res://scripts/story/chapter/gold_palette.gd").apply(self)
 
 func _resize() -> void:
@@ -206,13 +204,16 @@ func _draw_hero(index: int) -> void:
 			if comic in ["hold","return"] or comic_time>=7.1: pose = 3
 			if comic=="focus" and comic_time>=6.4 and comic_time<6.75:
 				at += Vector2(sin((comic_time-6.4)*PI/0.35)*8,-sin((comic_time-6.4)*PI/0.35)*3)
+			_draw_ground_shadow(at,68.0)
 			_comic_frame(pose,at)
 			if comic=="focus" and comic_time<2.0: _label("번쩍!",at+Vector2(15,-115),ORANGE,18)
 		else:
 			var near := HERO_POS[0]+Vector2(-59,0)
 			if comic=="focus" and comic_time<2:
+				_draw_ground_shadow(at,68.0)
 				_draw_yeonwoo_idle(0,at,Color.WHITE)
 			elif comic=="focus" and comic_time<4:
+				_draw_ground_shadow(at,68.0)
 				_comic_frame(4,at)
 				_label("하아…",at+Vector2(30,-115),MUTED,18)
 			else:
@@ -235,6 +236,7 @@ func _draw_hero(index: int) -> void:
 				else:
 					at = near
 					frame = 2 if comic_time<5.85 else 3 if comic_time<6.2 else 4 if comic_time<6.4 else 5 if comic_time<6.58 else 6 if comic_time<7.1 else 7
+				_draw_ground_shadow(at,68.0)
 				if flip: draw_set_transform(at,0,Vector2(-1,1))
 				_frame(flick_poses,frame,4,2,Rect2((Vector2.ZERO if flip else at)-FOOT_ANCHOR*ACTOR_SCALE,ANIMATION_CELL*ACTOR_SCALE))
 				if flip: draw_set_transform(Vector2.ZERO)
@@ -246,16 +248,15 @@ func _draw_hero(index: int) -> void:
 					_label("딱!",hit+Vector2(12,-14),ORANGE,21)
 		return
 	if index == 1 and is_instance_valid(guide) and guide.active and guide.current.has("expression"):
+		_draw_ground_shadow(HERO_POS[1],68.0)
 		_comic_frame(6 if guide.current.expression == "embarrassed" else 7,HERO_POS[1])
 		return
 	super._draw_hero(index)
 
 func _draw_enemy(index: int) -> void:
+	var dim := Vector2(200,144) if lesson == 0 else Vector2(90,58)
+	_draw_slime_body(index,dim.x)
 	if int(enemies[index].hp)<=0: return
-	var dim := Vector2(144,144) if lesson == 0 else Vector2(58,58)
-	var at := foe_position(index)-Vector2(dim.x/2,dim.y)
-	var wobble := sin(clock*3.0+index)*2.0
-	draw_texture_rect(slime,Rect2(at+Vector2(wobble,0),dim),false)
 	_hp(enemies[index],foe_position(index)+Vector2(-42,10),Color("d2a1b4"))
 	_label(str(index+1),foe_position(index)+Vector2(-4,-dim.y-9),PAPER,14)
 

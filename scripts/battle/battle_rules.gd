@@ -28,7 +28,7 @@ static func living(units: Array) -> Array[int]:
 	return indices
 
 static func position_marker(y: float) -> float:
-	return clampf(inverse_lerp(220.0, 460.0, y), 0.06, 0.94)
+	return clampf(inverse_lerp(284.0, 456.0, y), 0.06, 0.94)
 
 static func position_hit(cursor: float, positions: Array, candidates: Array, half_width: float) -> int:
 	var target := -1

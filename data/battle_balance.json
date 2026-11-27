@@ -15,7 +15,7 @@
   ],
   "monster": {
     "id": "shadow",
-    "name": "그림자",
+    "name": "밤 슬라임",
     "max_hp": 66,
     "attack": 12
   },

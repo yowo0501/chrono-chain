@@ -27,7 +27,7 @@ var interactive := false
 var mode := "confrontation"
 var sequence := ""
 var sequence_time := 0.0
-var monster: Texture2D
+const SlimeVisual = preload("res://scripts/slime_visual.gd")
 var floor_art: Texture2D
 var props: Array = []
 var slime_positions: Array[Vector2] = []
@@ -61,7 +61,6 @@ func _ready() -> void:
 	font = SystemFont.new()
 	font.font_names = PackedStringArray(["Malgun Gothic"])
 	floor_art = load(BASE+"paving.png")
-	monster = load("res://assets/prologue/monster.png")
 	event_poses = load("res://assets/prologue/chapter/event-poses.png")
 	for id in ["chuheun","yeonwoo"]:
 		expressions.append(load("res://assets/sprites/battle/"+id+"-expressive.png"))
@@ -251,16 +250,15 @@ func _draw() -> void:
 		var r: Rect2i = prop.rect
 		draw_texture_rect(prop.art,Rect2(Vector2(r.position)*TILE-camera,Vector2(r.size)*TILE),false)
 	if mode == "confrontation" and sequence != "split":
-		var pos := Vector2(19,13)*TILE-camera-Vector2(32,64)
-		var amp := 5.0 if sequence=="roar" else 1.5
-		for i in 12:
-			draw_texture_rect_region(monster,Rect2(pos+Vector2(sin(clock*4+i)*amp,i*8),Vector2(96,8.4)),Rect2(0,i*monster.get_height()/12.0,monster.get_width(),monster.get_height()/12.0))
+		var foot := Vector2(19,13)*TILE-camera+Vector2(16,28)
+		SlimeVisual.draw_actor(self,foot,150.0,"windup" if sequence=="roar" else "idle",clock)
 	if mode=="chase" or sequence=="split":
 		for i in 4:
 			if i in defeated: continue
 			var pos := slime_positions[i]-camera
-			var pulse := sin(clock*4+i)*1.5
-			draw_texture_rect(monster,Rect2(pos+Vector2(-4, -12-pulse),Vector2(40,40+pulse)),false)
+			var direction := slime_to[i]-slime_from[i]
+			var face := "up" if direction.y<0 and absf(direction.y)>absf(direction.x) else "right" if direction.x>0 else "left"
+			SlimeVisual.draw_actor(self,pos+Vector2(16,24),56.0,"move" if slime_step[i]<1.0 or sequence=="split" else "idle",clock+i*0.23,face)
 			if locked==i:
 				var marker := pos+Vector2(16,-22)
 				draw_arc(marker,9,0,TAU,20,Color("f4d07a"),2)

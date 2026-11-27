@@ -140,7 +140,7 @@ func draw(screen) -> void:
 		# Resume the regular standing sprite before handing the turn back.
 		screen._frame(screen.calm_idle_texture, 0, 3, 2, Rect2(actor - screen.FOOT_ANCHOR * screen.ACTOR_SCALE, screen.ANIMATION_CELL * screen.ACTOR_SCALE))
 	else:
-		screen.draw_texture_rect_region(active_texture, actor_rect, region)
+		screen._draw_arena_texture(active_texture, actor_rect, region)
 
 func _draw_spear(screen, center: Vector2, angle: float) -> void:
 	var points := PackedVector2Array()

@@ -104,7 +104,7 @@ func actor_rect(frame: int, at: Vector2, battle_scale: float) -> Rect2:
 	return Rect2(at - Vector2(128, 232) * battle_scale, actor_region(frame).size * battle_scale)
 
 func _actor(screen, frame: int, at: Vector2, alpha: float = 1.0) -> void:
-	screen.draw_texture_rect_region(texture,actor_rect(frame,at,screen.ACTOR_SCALE),actor_region(frame),Color(1,1,1,alpha))
+	screen._draw_arena_texture(texture,actor_rect(frame,at,screen.ACTOR_SCALE),actor_region(frame),Color(1,1,1,alpha))
 
 func _slash(screen, index: int, time: float, multiple: bool) -> void:
 	var center: Vector2 = screen.foe_position(index) + Vector2(0, -58)
