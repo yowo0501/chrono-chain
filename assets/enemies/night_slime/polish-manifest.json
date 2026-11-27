@@ -1,0 +1,29 @@
+{
+  "atlas": "slime-atlas-polished.png",
+  "generator": "built-in image generation",
+  "reference_atlas": "slime-atlas.png",
+  "columns": 4,
+  "rows": 4,
+  "prompt": "Polish the enemy sprite atlas in image 1 to match the allied anime pixel-art sprites in the battle screenshot image 2. Image 1 is the edit target; image 2 is style reference only, do not reproduce the screenshot or humans. Deliver ONLY a transparent 4-column x 4-row sprite atlas with exactly sixteen full isolated slime frames. Preserve the low-tier slime design, black tar puddle, curled smoke peak, two small peach orange eyes, no mouth limbs. Match ally rendering: crisp dark one-pixel-like outlines, deliberate pixel clusters, compact stepped edges, restrained 3-4 tone charcoal/blue-gray cel shading and a few cool gray rim highlights so black body reads on blue ground. Remove soft painterly gradients, blur, fine wispy semi-transparent fringe and smooth vector-look contours. Sharp readable JRPG pixel sprite style at roughly 80px character size, then enlarged nearest-neighbor. Consistent pixel density across all poses. Keep same pose order as image 1: row 1 four idle breathing; row 2 four leftward crawl glide; row 3 crouch windup, left lunge, fully stretched left attack, recovery; row 4 flattened hit, recovery, rear idle without eyes, rear movement without eyes. Equal uniform cells with generous gutters; baseline at 85% cell height, body centered, 75% cell width. No text, no borders, no background, no baked shadows, no extra characters. Real alpha transparency including gutters. Keep all smoke inside each cell.",
+  "layout": {
+    "design": [
+      768,
+      672
+    ],
+    "arena": [
+      24,
+      104,
+      720,
+      380
+    ],
+    "enemy_feet": [
+      460,
+      300,
+      170,
+      140
+    ],
+    "command_ui_top": 506,
+    "minimum_clearance": 22,
+    "rule": "Keep ground anchors on the paving; crop every battle character texture and shadow to the arena, including attack, hit, giant forms and special skills. Keep UI portraits outside this clipping path."
+  }
+}

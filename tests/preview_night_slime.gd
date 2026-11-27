@@ -12,21 +12,21 @@ func run() -> void:
 	root.content_scale_size = Vector2i(768,672)
 	var manager = root.get_node("EncounterManager")
 	manager.reset_party()
-	for kind in [0,1,2]:
-		var b = Screen.new() if kind == 0 else Lesson.new()
-		if kind > 0: b.lesson = 0 if kind == 1 else 1
+	for kind in [0,1,2,3]:
+		var b = Screen.new() if kind in [0,3] else Lesson.new()
+		if kind in [1,2]: b.lesson = 0 if kind == 1 else 1
 		var config = manager.balance.duplicate(true)
-		config.monster_count = 1 if kind == 1 else 3
+		config.monster_count = 1 if kind == 1 else 5 if kind == 3 else 3
 		var random = RandomNumberGenerator.new()
 		random.seed = 33
 		b.setup(manager.party.duplicate(true),config,random)
 		root.add_child(b)
 		b.set_process(false)
 		b.advance(1.1)
-		if kind > 0:
+		if kind in [1,2]:
 			b.guide.active = false
 			b.guide.hide()
-		await capture(["battle","giant-battle","split-battle"][kind])
+		await capture(["battle","giant-battle","split-battle","five-battle"][kind])
 		if kind == 0:
 			b.action_index = 0
 			b.action_kind = "enemy_attack"

@@ -1,6 +1,6 @@
 extends RefCounted
 ## Shared authored atlas for ordinary enemies and every tutorial slime size.
-const ATLAS = preload("res://assets/enemies/night_slime/slime-atlas.png")
+const ATLAS = preload("res://assets/enemies/night_slime/slime-atlas-polished.png")
 const SHADOW = preload("res://assets/sprites/battle/ground-shadow.svg")
 const BattleLayout = preload("res://scripts/battle/battle_layout.gd")
 static var anchors: Array[Vector2] = []

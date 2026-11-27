@@ -237,9 +237,11 @@ func _draw_hero(index: int) -> void:
 					at = near
 					frame = 2 if comic_time<5.85 else 3 if comic_time<6.2 else 4 if comic_time<6.4 else 5 if comic_time<6.58 else 6 if comic_time<7.1 else 7
 				_draw_ground_shadow(at,68.0)
-				if flip: draw_set_transform(at,0,Vector2(-1,1))
-				_frame(flick_poses,frame,4,2,Rect2((Vector2.ZERO if flip else at)-FOOT_ANCHOR*ACTOR_SCALE,ANIMATION_CELL*ACTOR_SCALE))
-				if flip: draw_set_transform(Vector2.ZERO)
+				var rect := Rect2(at-FOOT_ANCHOR*ACTOR_SCALE,ANIMATION_CELL*ACTOR_SCALE)
+				if flip:
+					rect.position.x = at.x+FOOT_ANCHOR.x*ACTOR_SCALE
+					rect.size.x = -rect.size.x
+				_frame(flick_poses,frame,4,2,rect)
 				if comic=="focus" and comic_time>=6.4 and comic_time<6.58:
 					var hit := HERO_POS[0]+Vector2(-2,-96)
 					for ray in 5:

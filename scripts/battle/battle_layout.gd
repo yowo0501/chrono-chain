@@ -2,7 +2,7 @@ extends RefCounted
 ## 768x672 design coordinates. UI starts at y=506; actors stop at y=484.
 const ARENA := Rect2(24,104,720,380)
 ## Ground anchors stay on paving; the lowest slot reserves room for shadows/HP.
-const ENEMY_FEET := Rect2(460,300,200,140)
+const ENEMY_FEET := Rect2(460,300,170,140)
 
 static func enemy_foot(point: Vector2) -> Vector2:
 	return point.clamp(ENEMY_FEET.position,ENEMY_FEET.end)

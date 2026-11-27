@@ -19,7 +19,7 @@ const RETURN_END := 2.25
 func draw_pose(screen, frame: int, actor: int) -> void:
 	var region := Rect2((frame % 4) * 384, int(frame / 4) * 240, 384, 240)
 	var scale: float = screen.ACTOR_SCALE
-	screen.draw_texture_rect_region(texture, Rect2(screen.HERO_POS[actor] - screen.FOOT_ANCHOR * scale, screen.ANIMATION_CELL * scale), region)
+	screen._draw_arena_texture(texture, Rect2(screen.HERO_POS[actor] - screen.FOOT_ANCHOR * scale, screen.ANIMATION_CELL * scale), region)
 
 func advance(delta: float) -> void:
 	if done:

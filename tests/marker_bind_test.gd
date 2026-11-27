@@ -16,7 +16,7 @@ func start_bind(screen: Control, boss: bool = false) -> void:
 func run() -> void:
 	manager = root.get_node("EncounterManager")
 	var screen := battle()
-	screen.enemy_positions.assign([Vector2(480,240),Vector2(660,280),Vector2(480,330),Vector2(660,390),Vector2(480,440)])
+	screen.enemy_positions.assign([Vector2(480,300),Vector2(660,335),Vector2(480,370),Vector2(660,405),Vector2(480,440)])
 	check(screen.marker_opacity(0) == 0,"Unknown enemy line starts hidden in darkness")
 	screen.reveal(1)
 	screen.hero_index = 0
